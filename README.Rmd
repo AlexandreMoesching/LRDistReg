@@ -94,12 +94,12 @@ res <- dist.reg(X, Y, show.design = TRUE, indices = TRUE)
 ```
 
 The family of distributions is estimated at each points of this grid. The estimated conditional distribution functions are given by `res$CDF.LR`, an $\ell$-by-$m$ matrix.
-```{r show results, echo=FALSE}
+```{r show results, results=FALSE}
 res$CDF.LR
 ```
 
 One can also retrieve the jumps only.
-```{r show jumps, echo=FALSE}
+```{r show jumps, results=FALSE}
 res$q.LR
 rowSums(res$q.LR)
 
@@ -199,7 +199,7 @@ The LR-estimator is in general smoother than the ST-estimator. In this specific 
 
 Plot differences between the true CDF and LR/ST-estimators for all values of $x$. N.b.: it yields 4 pages of plots.
 
-```{r plot differences between truth and estimators}
+```{r plot differences between truth and estimators, fig.show='hide'}
 n.plot <- min(ceiling(sqrt(ell)), 5)
 par(mfrow = c(n.plot, n.plot), mar = c(2,2,1,1))
 unif.ylim <- range(c(CDF.LR - CDF.TRUE, CDF.ST - CDF.TRUE))
