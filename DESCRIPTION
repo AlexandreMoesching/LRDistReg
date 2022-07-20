@@ -1,0 +1,15 @@
+Package: LRDistReg
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Date: 2022-07-20
+Authors@R: 
+    person("Alexandre", "Moesching", , "alexandre.moesching@uni-goettingen.de", 
+    role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-8270-3724"))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.0
+Imports: Rcpp (>= 1.0.9)
+LinkingTo: Rcpp, RcppArmadillo
