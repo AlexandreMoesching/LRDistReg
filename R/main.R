@@ -1,3 +1,13 @@
+## usethis namespace: start
+#' @useDynLib LRDistReg, .registration = TRUE
+## usethis namespace: end
+NULL
+
+## usethis namespace: start
+#' @importFrom Rcpp sourceCpp
+## usethis namespace: end
+NULL
+
 #' Isotonic distributional regression (LR, US, EMP)
 #'
 #' @param X Covariates
@@ -76,7 +86,7 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
   return(res)
 }
 
-#' Title
+#' TP2 fit function
 #'
 #' @param D.Setup Parameters
 #' @param delta0 Threshhold

@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{TP2.fit}
 \alias{TP2.fit}
-\title{Title}
+\title{TP2 fit function}
 \usage{
 TP2.fit(D.Setup, delta0 = 0.1, echo = FALSE, out.file = FALSE)
 }
@@ -16,5 +16,5 @@ TP2.fit(D.Setup, delta0 = 0.1, echo = FALSE, out.file = FALSE)
 \item{out.file}{Whether or not to wwite intermediate steps in a separate file}
 }
 \description{
-Title
+TP2 fit function
 }
