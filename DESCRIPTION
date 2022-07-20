@@ -11,5 +11,5 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
-Imports: Rcpp (>= 1.0.9)
+Imports: stats, graphics, Iso, Rcpp (>= 1.0.9)
 LinkingTo: Rcpp, RcppArmadillo
