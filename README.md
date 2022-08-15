@@ -21,19 +21,15 @@ devtools::install_github("AlexandreMoesching/LRDistReg")
 ## PART 1: True model (parametric)
 
 The present demo uses a gamma family of distributions
-![(Q_x)\_{x\\in \\mathfrak{X}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%28Q_x%29_%7Bx%5Cin%20%5Cmathfrak%7BX%7D "(Q_x)_{x\in \mathfrak{X}").
+![(Q_x)\_{x\in \mathfrak{X}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%28Q_x%29_%7Bx%5Cin%20%5Cmathfrak%7BX%7D "(Q_x)_{x\in \mathfrak{X}").
 More precisely
 
-![
-Q_x := \\mathrm{Gamma}\\bigl(a(x), b(x)\\bigr),\\quad \\text{for all}\\ x \\in \\mathfrak{X} := \[1,4\],
-](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%0AQ_x%20%3A%3D%20%5Cmathrm%7BGamma%7D%5Cbigl%28a%28x%29%2C%20b%28x%29%5Cbigr%29%2C%5Cquad%20%5Ctext%7Bfor%20all%7D%5C%20x%20%5Cin%20%5Cmathfrak%7BX%7D%20%3A%3D%20%5B1%2C4%5D%2C%0A "
-Q_x := \mathrm{Gamma}\bigl(a(x), b(x)\bigr),\quad \text{for all}\ x \in \mathfrak{X} := [1,4],
-")
+![Q_x := \mathrm{Gamma}\bigl(a(x), b(x)\bigr),\quad \text{for all}\\ x \in \mathfrak{X} := \[1,4\],](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;Q_x%20%3A%3D%20%5Cmathrm%7BGamma%7D%5Cbigl%28a%28x%29%2C%20b%28x%29%5Cbigr%29%2C%5Cquad%20%5Ctext%7Bfor%20all%7D%5C%20x%20%5Cin%20%5Cmathfrak%7BX%7D%20%3A%3D%20%5B1%2C4%5D%2C "Q_x := \mathrm{Gamma}\bigl(a(x), b(x)\bigr),\quad \text{for all}\ x \in \mathfrak{X} := [1,4],")
 
 with some shape
-![a: \\mathfrak{X} \\to (0,\\infty)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;a%3A%20%5Cmathfrak%7BX%7D%20%5Cto%20%280%2C%5Cinfty%29 "a: \mathfrak{X} \to (0,\infty)")
+![a: \mathfrak{X} \to (0,\infty)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;a%3A%20%5Cmathfrak%7BX%7D%20%5Cto%20%280%2C%5Cinfty%29 "a: \mathfrak{X} \to (0,\infty)")
 and scale
-![b: \\mathfrak{X} \\to (0,\\infty)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;b%3A%20%5Cmathfrak%7BX%7D%20%5Cto%20%280%2C%5Cinfty%29 "b: \mathfrak{X} \to (0,\infty)").
+![b: \mathfrak{X} \to (0,\infty)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;b%3A%20%5Cmathfrak%7BX%7D%20%5Cto%20%280%2C%5Cinfty%29 "b: \mathfrak{X} \to (0,\infty)").
 
 ``` r
 rm(list = ls())
@@ -49,7 +45,7 @@ q.cond.dist <- function(x, alpha) qgamma(alpha, shape = a(x), scale = b(x))
 Visual output of the true family of distributions. For each
 ![(x,y)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%28x%2Cy%29 "(x,y)")
 in a certain rectangle, the value of
-![(\\mathrm{d}P_x/\\mathrm{d}y)(y)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%28%5Cmathrm%7Bd%7DP_x%2F%5Cmathrm%7Bd%7Dy%29%28y%29 "(\mathrm{d}P_x/\mathrm{d}y)(y)")
+![(\mathrm{d}P_x/\mathrm{d}y)(y)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%28%5Cmathrm%7Bd%7DP_x%2F%5Cmathrm%7Bd%7Dy%29%28y%29 "(\mathrm{d}P_x/\mathrm{d}y)(y)")
 is given by the color scale.
 
 ``` r
@@ -63,25 +59,26 @@ lattice::levelplot(outer(xx, yy, FUN = "d.cond.dist"),
                    xlim = range(xx), ylim = range(yy))
 ```
 
-<img src="man/figures/README-Visual output-1.png" width="100%" />
+<img src="man/figures/README-visual_output-1.png" width="100%" />
 
 ``` r
+
 contour(xx, yy, outer(xx, yy, FUN = "d.cond.dist"),
         nlevels = 20,
         xlab = expression(italic(x)), ylab = expression(italic(y)),
         xlim = range(xx), ylim = range(yy))
 ```
 
-<img src="man/figures/README-Visual output-2.png" width="100%" />
+<img src="man/figures/README-visual_output-2.png" width="100%" />
 
 ## PART 2: Small data example, first (nonparametric) fit
 
 Let us start with a small sample:
 ![n = 30](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;n%20%3D%2030 "n = 30")
 observations with covariates in a set
-![\\mathfrak{X}\_o := 1 + 3\*\\{1,2,...,\\ell_o\\}/\\ell_o](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmathfrak%7BX%7D_o%20%3A%3D%201%20%2B%203%2A%5C%7B1%2C2%2C...%2C%5Cell_o%5C%7D%2F%5Cell_o "\mathfrak{X}_o := 1 + 3*\{1,2,...,\ell_o\}/\ell_o"),
+![\mathfrak{X}\_o := 1 + 3\*\\{1,2,...,\ell_o\\}/\ell_o](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmathfrak%7BX%7D_o%20%3A%3D%201%20%2B%203%2A%5C%7B1%2C2%2C...%2C%5Cell_o%5C%7D%2F%5Cell_o "\mathfrak{X}_o := 1 + 3*\{1,2,...,\ell_o\}/\ell_o"),
 for
-![\\ell_o = 10](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cell_o%20%3D%2010 "\ell_o = 10").
+![\ell_o = 10](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cell_o%20%3D%2010 "\ell_o = 10").
 
 ``` r
 n <- 30
@@ -117,7 +114,7 @@ one observation pair, green points contain two observation pairs, etc.
 If `indices = TRUE`, then the values
 ![1,2,...,ell](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;1%2C2%2C...%2Cell "1,2,...,ell")
 are used for the plot instead of the unique elements
-![x_1 \< x_2 \< ... \< x\_\\ell](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;x_1%20%3C%20x_2%20%3C%20...%20%3C%20x_%5Cell "x_1 < x_2 < ... < x_\ell")
+![x_1 \< x_2 \< ... \< x\_\ell](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;x_1%20%3C%20x_2%20%3C%20...%20%3C%20x_%5Cell "x_1 < x_2 < ... < x_\ell")
 of
 ![\\{X_1,X_2,...,X_n\\}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5C%7BX_1%2CX_2%2C...%2CX_n%5C%7D "\{X_1,X_2,...,X_n\}"),
 and the values
@@ -132,12 +129,12 @@ This improves readability of the design plot.
 res <- dist.reg(X, Y, show.design = TRUE, indices = TRUE)
 ```
 
-<img src="man/figures/README-fit with indices-1.png" width="100%" />
+<img src="man/figures/README-fit_with_indices-1.png" width="100%" />
 
 The family of distributions is estimated at each points of this grid.
 The estimated conditional distribution functions are given by
 `res$CDF.LR`, an
-![\\ell](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cell "\ell")-by-![m](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;m "m")
+![\ell](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cell "\ell")-by-![m](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;m "m")
 matrix.
 
 ``` r
@@ -193,11 +190,11 @@ some kind of rule of thumb.
 res <- dist.reg(X, Y, show.design = TRUE, delta0 = 1e-4)
 ```
 
-<img src="man/figures/README-fit medium-1.png" width="100%" />
+<img src="man/figures/README-fit_medium-1.png" width="100%" />
 
 ``` r
 res$tot.time # Less than a tenth of a second on a 7th generation i7 CPU
-#> Time difference of 0.06216288 secs
+#> Time difference of 0.05826712 secs
 ```
 
 ## PART 4: A larger data example, comparison between Likelihood-Ratio ordering, usual STochastic ordering and the EMPirical
@@ -232,7 +229,7 @@ res <- dist.reg(X, Y, suggest.delta0 = TRUE, IDR = TRUE, echo = TRUE)
 res$delta0
 #> [1] 10
 res$tot.time
-#> Time difference of 5.322804 secs
+#> Time difference of 4.874189 secs
 ```
 
 Retrieve all CDF’s and some useful parameters.
@@ -286,7 +283,7 @@ for (xj in xx) {
 }
 ```
 
-<img src="man/figures/README-plot fit-1.png" width="100%" />
+<img src="man/figures/README-plot_fit-1.png" width="100%" />
 
 The LR-estimator is in general smoother than the ST-estimator. In this
 specific example, the LR-estimator is also closer to the true

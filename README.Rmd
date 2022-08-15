@@ -36,7 +36,7 @@ $$
 Q_x := \mathrm{Gamma}\bigl(a(x), b(x)\bigr),\quad \text{for all}\ x \in \mathfrak{X} := [1,4],
 $$
 with some shape $a: \mathfrak{X} \to (0,\infty)$ and scale $b: \mathfrak{X} \to (0,\infty)$.
-```{r true family of distributions}
+```{r true_family_of_distributions}
 rm(list = ls())
 set.seed(111)
 a <- function(x) 2 + (x+1)^2
@@ -48,7 +48,7 @@ q.cond.dist <- function(x, alpha) qgamma(alpha, shape = a(x), scale = b(x))
 ```
 
 Visual output of the true family of distributions. For each $(x,y)$ in a certain rectangle, the value of $(\mathrm{d}P_x/\mathrm{d}y)(y)$ is given by the color scale.
-```{r Visual output}
+```{r visual_output}
 xx <- seq(1, 4, length.out = 2e2)
 yy <- seq(q.cond.dist(1, 0.05), q.cond.dist(4, 0.95), length.out = 2e2)
 lattice::levelplot(outer(xx, yy, FUN = "d.cond.dist"), 
@@ -67,14 +67,14 @@ contour(xx, yy, outer(xx, yy, FUN = "d.cond.dist"),
 ## PART 2: Small data example, first (nonparametric) fit
 
 Let us start with a small sample: $n = 30$ observations with covariates in a set $\mathfrak{X}_o := 1 + 3*\{1,2,...,\ell_o\}/\ell_o$, for $\ell_o = 10$.
-```{r basic parameters}
+```{r basic_parameters}
 n <- 30
 ell0 <- 10
 x0 <- 1+(1:ell0)/ell0*3
 ```
 
 Generate observation pairs $(X_1,Y_1),(X_2,Y_2),...,(X_N,Y_N)$.
-```{r generate data}
+```{r generate_data}
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
 for (i in 1:n) Y[i] <- r.cond.dist(X[i])
@@ -89,17 +89,17 @@ res <- dist.reg(X, Y, show.design = TRUE)
 The design of the experiment should be shown. The color of a pair $(x,y)$ is equal to the number of observations at that location, plus 1. In consequence, black points contain no observations, red points contain one observation pair, green points contain two observation pairs, etc.
 
 If `indices = TRUE`, then the values $1,2,...,ell$ are used for the plot instead of the unique elements $x_1 < x_2 < ... < x_\ell$ of $\{X_1,X_2,...,X_n\}$, and the values $1,2,...,m$ are used instead of the unique elements $y_1 < y_2 < ... < y_m$ of $\{Y_1,Y_2,...,Y_n\}$. This improves readability of the design plot.
-```{r fit with indices}
+```{r fit_with_indices}
 res <- dist.reg(X, Y, show.design = TRUE, indices = TRUE)
 ```
 
 The family of distributions is estimated at each points of this grid. The estimated conditional distribution functions are given by `res$CDF.LR`, an $\ell$-by-$m$ matrix.
-```{r show results, results=FALSE}
+```{r show_results, results=FALSE}
 res$CDF.LR
 ```
 
 One can also retrieve the jumps only.
-```{r show jumps, results=FALSE}
+```{r show_jumps, results=FALSE}
 res$q.LR
 rowSums(res$q.LR)
 
@@ -110,7 +110,7 @@ colSums(res$h.TP2); res$D.Setup$w_plus.k/res$D.Setup$n
 
 To see how the stopping criteria is reached along with the corresponding values of the negative log-likelihood, the echo option can be activated.
 
-```{r fit with echo}
+```{r fit_with_echo}
 res <- dist.reg(X, Y, echo = TRUE)
 res$delta0
 ```
@@ -118,7 +118,7 @@ res$delta0
 ## PART 3: Medium data example, specification of precision parameter
 
 Options:
-```{r medium options and data}
+```{r medium_options_and_data}
 n <- 1e2
 ell0 <- 10
 x0 <- 1+(1:ell0)/ell0*3
@@ -130,14 +130,14 @@ Y <- round(Y, 1) # Should create some ties
 ```
 
 This time we obtain the fit using a self-specified value of the precision parameter epsilon. It is normally automatically specified via some kind of rule of thumb.
-```{r fit medium}
+```{r fit_medium}
 res <- dist.reg(X, Y, show.design = TRUE, delta0 = 1e-4)
 res$tot.time # Less than a tenth of a second on a 7th generation i7 CPU
 ```
 
 ## PART 4: A larger data example, comparison between Likelihood-Ratio ordering, usual STochastic ordering and the EMPirical
 
-```{r options and data large}
+```{r options_and_data_large}
 n <- 1e3
 ell0 <- 1e2
 x0 <- 1+(1:ell0)/ell0*3
@@ -148,7 +148,7 @@ for (i in 1:n) Y[i] <- r.cond.dist(X[i])
 ```
 
 We let the program advise us a "reasonable" value for epsilon.
-```{r fit large}
+```{r fit_large}
 res <- dist.reg(X, Y, suggest.delta0 = TRUE, IDR = TRUE, echo = TRUE)
 res$delta0
 res$tot.time
@@ -168,7 +168,7 @@ CDF.TRUE <- outer(x, y, p.cond.dist)
 ```
 
 Evaluate estimation quality.
-```{r evaulate quality}
+```{r evaulate_quality}
 DIFF.LR <- sum(abs(CDF.LR - CDF.TRUE))/(ell*m)
 DIFF.ST <- sum(abs(CDF.ST - CDF.TRUE))/(ell*m)
 DIFF.EMP <- sum(abs(CDF.EMP - CDF.TRUE))/(ell*m)
@@ -177,7 +177,7 @@ c(DIFF.LR, DIFF.ST, DIFF.EMP)
 
 Plot the true CDF $F_x$ as well as its estimators for two values of $x$, one 
 middle covariate ($x = 2.5$) and one boundary covariate ($x = 4$).
-```{r plot fit}
+```{r plot_fit}
 par(mfrow = c(2,1), mar = c(4.1,4.1,0.2,0.2))
 xx <- c(2.5, 4)
 for (xj in xx) {
@@ -199,7 +199,7 @@ The LR-estimator is in general smoother than the ST-estimator. In this specific 
 
 Plot differences between the true CDF and LR/ST-estimators for all values of $x$. N.b.: it yields 4 pages of plots.
 
-```{r plot differences between truth and estimators, fig.show='hide'}
+```{r plot_differences_between_truth_and_estimators, fig.show='hide'}
 n.plot <- min(ceiling(sqrt(ell)), 5)
 par(mfrow = c(n.plot, n.plot), mar = c(2,2,1,1))
 unif.ylim <- range(c(CDF.LR - CDF.TRUE, CDF.ST - CDF.TRUE))
@@ -214,7 +214,7 @@ for (j in 1:ell) {
 ## PART 5: Interpolation feature
 
 In case the estimators are desired for other values of $x$ than those provided by the set of covariates, it is still possible to obtain the estimated CDFs at these other $x$'s using linear interpolation
-```{r show linear interpolation}
+```{r show_linear_interpolation}
 n <- 50
 ell0 <- 50
 x0 <- 1+(1:ell0)/ell0*3
