@@ -19,6 +19,9 @@ vgamma.tilde2(theta, ell, m, n, lL, w_cumul.2)
 
 \item{w_cumul.2}{Cumulative column-sums of sample weights}
 }
+\value{
+v-tilde and gamma-tilde functions
+}
 \description{
 v-tilde and gamma-tilde functions (column)
 }

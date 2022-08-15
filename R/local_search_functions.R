@@ -9,10 +9,8 @@
 #' @param w Sample weights
 #' @param PP Reduced index space
 #'
-#' @return
+#' @return Updated theta parameter
 #' @export
-#'
-#' @examples
 simple.step <- function(theta, Psi, delta, ell, m, n, w, PP) {
   rho <- delta
   f.old <- f.theta(theta, n, w, PP)
@@ -44,10 +42,8 @@ simple.step <- function(theta, Psi, delta, ell, m, n, w, PP) {
 #' @param w Sample weights
 #' @param w_cumul.1 Cumulative row-sums of sample weights
 #'
-#' @return
+#' @return New proposal Psi and step-size delta
 #' @export
-#'
-#' @examples
 local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_cumul.1) {
   tmp <- vgamma.tilde1(theta, ell, m, n, mM, w_cumul.1)
   v.tilde <- tmp$v
@@ -68,7 +64,7 @@ local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_cumul.1) {
   return(list(Psi = Psi, delta = delta))
 }
 
-#' Title
+#' Local search (column)
 #'
 #' @param theta Log-parameter
 #' @param ell Number of unique covariates
@@ -80,10 +76,8 @@ local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_cumul.1) {
 #' @param w Sample weights
 #' @param w_cumul.2 Cumulative column-sums of sample weights
 #'
-#' @return
+#' @return New proposal Psi and step-size delta
 #' @export
-#'
-#' @examples
 local.search2 <- function(theta, ell, m, n, mM, lL, PP, w, w_cumul.2) {
   tmp <- vgamma.tilde2(theta, ell, m, n, lL, w_cumul.2)
   v.tilde <- tmp$v

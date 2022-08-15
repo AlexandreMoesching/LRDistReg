@@ -7,10 +7,8 @@
 #' @param mM (m_j,M_j) index pairs
 #' @param w_cumul.1 Cumulative row-sums of sample weights
 #'
-#' @return
+#' @return v-tilde and gamma-tilde functions
 #' @export
-#'
-#' @examples
 vgamma.tilde1 <- function(theta, ell, m, n, mM, w_cumul.1) {
   v <- matrix(0, nrow = ell, ncol = m)
   gamma <- matrix(0, nrow = ell, ncol = m)
@@ -33,10 +31,8 @@ vgamma.tilde1 <- function(theta, ell, m, n, mM, w_cumul.1) {
 #' @param lL (l_k,L_k) index pairs
 #' @param w_cumul.2 Cumulative column-sums of sample weights
 #'
-#' @return
+#' @return v-tilde and gamma-tilde functions
 #' @export
-#'
-#' @examples
 vgamma.tilde2 <- function(theta, ell, m, n, lL, w_cumul.2) {
   v <- matrix(0, nrow = ell, ncol = m)
   gamma <- matrix(0, nrow = ell, ncol = m)
@@ -57,10 +53,8 @@ vgamma.tilde2 <- function(theta, ell, m, n, lL, w_cumul.2) {
 #' @param w Sample weights
 #' @param PP Reduced index space
 #'
-#' @return
+#' @return Negative log-likelihood in terms of log-parameter
 #' @export
-#'
-#' @examples
 f.theta <- function(theta, n, w, PP) {
   return(sum(-w[PP] * theta[PP] + n * exp(theta[PP])))
 }

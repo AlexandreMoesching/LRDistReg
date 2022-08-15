@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_search_functions.R
 \name{local.search2}
 \alias{local.search2}
-\title{Title}
+\title{Local search (column)}
 \usage{
 local.search2(theta, ell, m, n, mM, lL, PP, w, w_cumul.2)
 }
@@ -25,6 +25,9 @@ local.search2(theta, ell, m, n, mM, lL, PP, w, w_cumul.2)
 
 \item{w_cumul.2}{Cumulative column-sums of sample weights}
 }
+\value{
+New proposal Psi and step-size delta
+}
 \description{
-Title
+Local search (column)
 }

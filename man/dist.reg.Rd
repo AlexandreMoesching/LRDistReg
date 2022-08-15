@@ -27,7 +27,7 @@ dist.reg(
 
 \item{show.design}{Whether or not to plot the design}
 
-\item{indices}{Something}
+\item{indices}{Whether or not to plot indices instead of true values}
 
 \item{suggest.delta0}{Whether or not to suggest the threshold delta0}
 
@@ -41,6 +41,12 @@ dist.reg(
 
 \item{x0}{Set of covariates on which to estimate the distributions}
 }
+\value{
+A list of results which depends on the option chosen
+}
 \description{
 Isotonic distributional regression (LR, US, EMP)
+}
+\examples{
+#To be done
 }

@@ -13,6 +13,9 @@ prepare.data(X, Y, W = rep(1, length(X)))
 
 \item{W}{User-specified weights}
 }
+\value{
+A list of pre-compute parameters necessary for the estimation
+}
 \description{
 Prepare the data
 }

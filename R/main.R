@@ -14,7 +14,7 @@ NULL
 #' @param Y Responses
 #' @param W User-specified sample weights
 #' @param show.design Whether or not to plot the design
-#' @param indices Something
+#' @param indices Whether or not to plot indices instead of true values
 #' @param suggest.delta0 Whether or not to suggest the threshold delta0
 #' @param delta0 Threshhold
 #' @param echo Whether or not to print intermediate steps
@@ -22,10 +22,10 @@ NULL
 #' @param IDR Whether or not to compute Isotonic Distributional Regression
 #' @param x0 Set of covariates on which to estimate the distributions
 #'
-#' @return
+#' @return A list of results which depends on the option chosen
 #' @export
 #'
-#' @examples
+#' @examples #To be done
 dist.reg <- function(X, Y, W = rep(1, length(X)),
                      show.design = FALSE, indices = FALSE,
                      suggest.delta0 = FALSE, delta0 = 1e-2,
@@ -93,10 +93,8 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
 #' @param echo Whether or not to print intermediate steps
 #' @param out.file Whether or not to wwite intermediate steps in a separate file
 #'
-#' @return
+#' @return h matrix and estimation time
 #' @export
-#'
-#' @examples
 TP2.fit <- function(D.Setup, delta0 = 1e-1, echo = FALSE, out.file = FALSE) {
   # Start timer
   start.time <- Sys.time()

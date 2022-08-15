@@ -15,6 +15,9 @@ TP2.fit(D.Setup, delta0 = 0.1, echo = FALSE, out.file = FALSE)
 
 \item{out.file}{Whether or not to wwite intermediate steps in a separate file}
 }
+\value{
+h matrix and estimation time
+}
 \description{
 TP2 fit function
 }

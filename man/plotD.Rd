@@ -7,9 +7,12 @@
 plotD(D.Setup, indices = FALSE)
 }
 \arguments{
-\item{D.Setup}{Something}
+\item{D.Setup}{Design}
 
-\item{indices}{Something}
+\item{indices}{Whether or not to plot indices instead of true values}
+}
+\value{
+Plot
 }
 \description{
 Plot the design

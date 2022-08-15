@@ -6,8 +6,6 @@
 #'
 #' @return Row-calibrated log-parameter
 #' @export
-#'
-#' @examples
 calibrate1 <- function(theta, n, w_j.plus) {
   theta <- theta - log(rowSums(exp(theta))) + log(w_j.plus / n)
   return(theta)
@@ -21,8 +19,6 @@ calibrate1 <- function(theta, n, w_j.plus) {
 #'
 #' @return Row-calibrated log-parameter
 #' @export
-#'
-#' @examples
 calibrate2 <- function(theta, n, w_plus.k) {
   theta <- t(t(theta) - log(colSums(exp(theta))) + log(w_plus.k / n))
   return(theta)
@@ -45,8 +41,6 @@ calibrate2 <- function(theta, n, w_plus.k) {
 #'
 #' @return Approximately calibrated log-parameter
 #' @export
-#'
-#' @examples
 calibrate <- function(theta, n, w, w_j.plus, w_plus.k, PP, prec = 1e-7)
 {
   ftheta.old <- f.theta(theta, n, w, PP)

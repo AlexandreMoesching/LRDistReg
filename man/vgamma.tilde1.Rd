@@ -19,6 +19,9 @@ vgamma.tilde1(theta, ell, m, n, mM, w_cumul.1)
 
 \item{w_cumul.1}{Cumulative row-sums of sample weights}
 }
+\value{
+v-tilde and gamma-tilde functions
+}
 \description{
 v-tilde and gamma-tilde functions (row)
 }

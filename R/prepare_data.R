@@ -4,10 +4,8 @@
 #' @param Y Responses
 #' @param W User-specified weights
 #'
-#' @return
+#' @return A list of pre-compute parameters necessary for the estimation
 #' @export
-#'
-#' @examples
 prepare.data <- function(X, Y, W = rep(1, length(X))) {
   # Number of observation pairs
   n <- length(X)

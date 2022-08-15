@@ -15,6 +15,9 @@ f.theta(theta, n, w, PP)
 
 \item{PP}{Reduced index space}
 }
+\value{
+Negative log-likelihood in terms of log-parameter
+}
 \description{
 Negative log-likelihood in terms of log-parameter
 }

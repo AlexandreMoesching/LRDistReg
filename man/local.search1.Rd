@@ -25,6 +25,9 @@ local.search1(theta, ell, m, n, mM, lL, PP, w, w_cumul.1)
 
 \item{w_cumul.1}{Cumulative row-sums of sample weights}
 }
+\value{
+New proposal Psi and step-size delta
+}
 \description{
 Local search (row)
 }

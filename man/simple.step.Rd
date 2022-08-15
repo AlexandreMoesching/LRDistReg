@@ -23,6 +23,9 @@ simple.step(theta, Psi, delta, ell, m, n, w, PP)
 
 \item{PP}{Reduced index space}
 }
+\value{
+Updated theta parameter
+}
 \description{
 Function to take a simple step
 }

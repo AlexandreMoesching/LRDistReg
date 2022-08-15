@@ -1,12 +1,10 @@
 #' Plot the design
 #'
-#' @param D.Setup Something
-#' @param indices Something
+#' @param D.Setup Design
+#' @param indices Whether or not to plot indices instead of true values
 #'
-#' @return
+#' @return Plot
 #' @export
-#'
-#' @examples
 plotD <- function(D.Setup, indices = FALSE)
 {
   ell <- D.Setup$ell
