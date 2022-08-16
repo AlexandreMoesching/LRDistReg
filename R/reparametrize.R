@@ -1,4 +1,4 @@
-#' Transforms lambda (row) into theta
+#' Transforms lambda (row) into theta, R version
 #'
 #' @param lambda Row-wise differences
 #' @param ell Number of unique covariates
@@ -16,7 +16,7 @@ lambda1.to.theta <- function(lambda, ell, m, mM) {
   return(theta)
 }
 
-#' Transforms lambda (column) into theta
+#' Transforms lambda (column) into theta, R version
 #'
 #' @param lambda Column-wise differences
 #' @param ell Number of unique covariates
