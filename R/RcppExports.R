@@ -7,8 +7,38 @@
 #' @param Y Responses
 #' @param W User-specified weights
 #'
+#' @return A list of pre-computed parameters necessary for the estimation
+#'
 #' @export
 prepare_data_cpp <- function(X, Y, W) {
     .Call(`_LRDistReg_prepare_data_cpp`, X, Y, W)
+}
+
+#' Transforms lambda (row) into theta
+#'
+#' @param lambda Row-wise differences
+#' @param ell Number of unique covariates
+#' @param m Number of unique responses
+#' @param mM (m_j,M_j) index pairs
+#'
+#' @return Transformed parameter
+#'
+#' @export
+lambda1_to_theta_cpp <- function(lambda, ell, m, mM) {
+    .Call(`_LRDistReg_lambda1_to_theta_cpp`, lambda, ell, m, mM)
+}
+
+#' Transforms lambda (column) into theta
+#'
+#' @param lambda Column-wise differences
+#' @param ell Number of unique covariates
+#' @param m Number of unique responses
+#' @param lL (l_k,L_k) index pairs
+#'
+#' @return Transformed parameter
+#'
+#' @export
+lambda2_to_theta_cpp <- function(lambda, ell, m, lL) {
+    .Call(`_LRDistReg_lambda2_to_theta_cpp`, lambda, ell, m, lL)
 }
 

@@ -24,9 +24,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// lambda1_to_theta_cpp
+arma::mat lambda1_to_theta_cpp(arma::mat lambda, int ell, int m, arma::imat mM);
+RcppExport SEXP _LRDistReg_lambda1_to_theta_cpp(SEXP lambdaSEXP, SEXP ellSEXP, SEXP mSEXP, SEXP mMSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< int >::type ell(ellSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< arma::imat >::type mM(mMSEXP);
+    rcpp_result_gen = Rcpp::wrap(lambda1_to_theta_cpp(lambda, ell, m, mM));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lambda2_to_theta_cpp
+arma::mat lambda2_to_theta_cpp(arma::mat lambda, int ell, int m, arma::imat lL);
+RcppExport SEXP _LRDistReg_lambda2_to_theta_cpp(SEXP lambdaSEXP, SEXP ellSEXP, SEXP mSEXP, SEXP lLSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< int >::type ell(ellSEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    Rcpp::traits::input_parameter< arma::imat >::type lL(lLSEXP);
+    rcpp_result_gen = Rcpp::wrap(lambda2_to_theta_cpp(lambda, ell, m, lL));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_LRDistReg_prepare_data_cpp", (DL_FUNC) &_LRDistReg_prepare_data_cpp, 3},
+    {"_LRDistReg_lambda1_to_theta_cpp", (DL_FUNC) &_LRDistReg_lambda1_to_theta_cpp, 4},
+    {"_LRDistReg_lambda2_to_theta_cpp", (DL_FUNC) &_LRDistReg_lambda2_to_theta_cpp, 4},
     {NULL, NULL, 0}
 };
 
