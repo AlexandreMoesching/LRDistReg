@@ -40,12 +40,12 @@ simple.step <- function(theta, Psi, delta, ell, m, n, w, PP) {
 #' @param lL (l_k,L_k) index pairs
 #' @param PP Reduced index space
 #' @param w Sample weights
-#' @param w_cumul.1 Cumulative row-sums of sample weights
+#' @param w_ul Cumulative row-sums of sample weights
 #'
 #' @return New proposal Psi and step-size delta
 #' @export
-local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_cumul.1) {
-  tmp <- vgamma.tilde1(theta, ell, m, n, mM, w_cumul.1)
+local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_ul) {
+  tmp <- vgamma.tilde1(theta, ell, m, n, mM, w_ul)
   v.tilde <- tmp$v
   gamma.tilde <- tmp$gamma
 
@@ -74,12 +74,12 @@ local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_cumul.1) {
 #' @param lL (l_k,L_k) index pairs
 #' @param PP Reduced index space
 #' @param w Sample weights
-#' @param w_cumul.2 Cumulative column-sums of sample weights
+#' @param w_ol Cumulative column-sums of sample weights
 #'
 #' @return New proposal Psi and step-size delta
 #' @export
-local.search2 <- function(theta, ell, m, n, mM, lL, PP, w, w_cumul.2) {
-  tmp <- vgamma.tilde2(theta, ell, m, n, lL, w_cumul.2)
+local.search2 <- function(theta, ell, m, n, mM, lL, PP, w, w_ol) {
+  tmp <- vgamma.tilde2(theta, ell, m, n, lL, w_ol)
   v.tilde <- tmp$v
   gamma.tilde <- tmp$gamma
   lambda.star <- matrix(0, nrow = ell, ncol = m)

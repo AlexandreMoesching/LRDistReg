@@ -5,11 +5,11 @@
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param mM (m_j,M_j) index pairs
-#' @param w_cumul.1 Cumulative row-sums of sample weights
+#' @param w_ul Cumulative row-sums of sample weights
 #'
 #' @return v-tilde and gamma-tilde functions
 #' @export
-vgamma.tilde1 <- function(theta, ell, m, n, mM, w_cumul.1) {
+vgamma.tilde1 <- function(theta, ell, m, n, mM, w_ul) {
   v <- matrix(0, nrow = ell, ncol = m)
   gamma <- matrix(0, nrow = ell, ncol = m)
   for (j in 1:ell) {
@@ -17,7 +17,7 @@ vgamma.tilde1 <- function(theta, ell, m, n, mM, w_cumul.1) {
     tmp1 <- n * rev(cumsum(rev(exp(theta[j, kk]))))
     tmp2 <- c(theta[j, mM[j, 1]], diff(theta[j, kk])) # theta^*
     v[j, kk] <- tmp1
-    gamma[j, kk] <- tmp2 + w_cumul.1[j, kk] / tmp1 - 1
+    gamma[j, kk] <- tmp2 + w_ul[j, kk] / tmp1 - 1
   }
   return(list(v = v, gamma = gamma))
 }
@@ -29,11 +29,11 @@ vgamma.tilde1 <- function(theta, ell, m, n, mM, w_cumul.1) {
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param lL (l_k,L_k) index pairs
-#' @param w_cumul.2 Cumulative column-sums of sample weights
+#' @param w_ol Cumulative column-sums of sample weights
 #'
 #' @return v-tilde and gamma-tilde functions
 #' @export
-vgamma.tilde2 <- function(theta, ell, m, n, lL, w_cumul.2) {
+vgamma.tilde2 <- function(theta, ell, m, n, lL, w_ol) {
   v <- matrix(0, nrow = ell, ncol = m)
   gamma <- matrix(0, nrow = ell, ncol = m)
   for (k in 1:m) {
@@ -41,7 +41,7 @@ vgamma.tilde2 <- function(theta, ell, m, n, lL, w_cumul.2) {
     tmp1 <- n * rev(cumsum(rev(exp(theta[jj, k]))))
     tmp2 <- c(theta[lL[k, 1], k], diff(theta[jj, k])) # theta^*
     v[jj, k] <- tmp1
-    gamma[jj, k] <- tmp2 + w_cumul.2[jj, k] / tmp1 - 1
+    gamma[jj, k] <- tmp2 + w_ol[jj, k] / tmp1 - 1
   }
   return(list(v = v, gamma = gamma))
 }

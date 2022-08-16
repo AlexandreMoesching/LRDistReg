@@ -4,14 +4,14 @@
 \alias{calibrate2}
 \title{Column-calibration of log-parameter}
 \usage{
-calibrate2(theta, n, w_plus.k)
+calibrate2(theta, n, w_plusk)
 }
 \arguments{
 \item{theta}{Log-parameter}
 
 \item{n}{Sample size}
 
-\item{w_plus.k}{Column-sums of sample weights}
+\item{w_plusk}{Column-sums of sample weights}
 }
 \value{
 Row-calibrated log-parameter

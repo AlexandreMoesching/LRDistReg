@@ -43,8 +43,8 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
   if (suggest.delta0 == TRUE) {
     theta <- matrix(-Inf, nrow = D.Setup$ell, ncol = D.Setup$m)
     theta[D.Setup$PP] <- -log(sum(D.Setup$PP))
-    theta <- calibrate1(theta, D.Setup$n, D.Setup$w_j.plus)
-    theta <- calibrate2(theta, D.Setup$n, D.Setup$w_plus.k)
+    theta <- calibrate1(theta, D.Setup$n, D.Setup$w_jplus)
+    theta <- calibrate2(theta, D.Setup$n, D.Setup$w_plusk)
     f.tmp <- f.theta(theta, D.Setup$n, D.Setup$w, D.Setup$PP)
     delta0 <- 10^floor(log10(f.tmp) * 1.1 - 3)
   }
@@ -105,10 +105,10 @@ TP2.fit <- function(D.Setup, delta0 = 1e-1, echo = FALSE, out.file = FALSE) {
   m <- D.Setup$m
   mM <- D.Setup$mM
   w <- D.Setup$w
-  w_j.plus <- D.Setup$w_j.plus
-  w_plus.k <- D.Setup$w_plus.k
-  w_cumul.1 <- D.Setup$w_cumul.1
-  w_cumul.2 <- D.Setup$w_cumul.2
+  w_jplus <- D.Setup$w_jplus
+  w_plusk <- D.Setup$w_plusk
+  w_ul <- D.Setup$w_ul
+  w_ol <- D.Setup$w_ol
   n <- D.Setup$n
   PP <- D.Setup$PP
 
@@ -133,20 +133,20 @@ TP2.fit <- function(D.Setup, delta0 = 1e-1, echo = FALSE, out.file = FALSE) {
   # Main while-loop
   while (delta > delta0) {
     # Calibrate
-    theta <- calibrate(theta, n, w, w_j.plus, w_plus.k, PP, prec = 1e-5)
+    theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-5)
 
     if (s %% 2 == 0) {
       # Old calibration
-      # theta <- calibrate1(theta, n, w_j.plus)
+      # theta <- calibrate1(theta, n, w_jplus)
 
       # New candidate
-      tmp <- local.search1(theta, ell, m, n, mM, lL, PP, w, w_cumul.1)
+      tmp <- local.search1(theta, ell, m, n, mM, lL, PP, w, w_ul)
     } else {
       # Old calibration
-      # theta <- calibrate2(theta, n, w_plus.k)
+      # theta <- calibrate2(theta, n, w_plusk)
 
       # New candidate
-      tmp <- local.search2(theta, ell, m, n, mM, lL, PP, w, w_cumul.2)
+      tmp <- local.search2(theta, ell, m, n, mM, lL, PP, w, w_ol)
     }
 
     Psi <- tmp$Psi

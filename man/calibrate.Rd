@@ -4,7 +4,7 @@
 \alias{calibrate}
 \title{Approximate calibration of log-parameter}
 \usage{
-calibrate(theta, n, w, w_j.plus, w_plus.k, PP, prec = 1e-07)
+calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-07)
 }
 \arguments{
 \item{theta}{Log-parameter}
@@ -13,9 +13,9 @@ calibrate(theta, n, w, w_j.plus, w_plus.k, PP, prec = 1e-07)
 
 \item{w}{Sample weights}
 
-\item{w_j.plus}{Row-sums of sample weights}
+\item{w_jplus}{Row-sums of sample weights}
 
-\item{w_plus.k}{Column sums of sample weights}
+\item{w_plusk}{Column sums of sample weights}
 
 \item{PP}{Reduced index space}
 

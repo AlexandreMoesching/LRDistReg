@@ -4,14 +4,14 @@
 \alias{calibrate1}
 \title{Row-calibration of log-parameter}
 \usage{
-calibrate1(theta, n, w_j.plus)
+calibrate1(theta, n, w_jplus)
 }
 \arguments{
 \item{theta}{Log-parameter}
 
 \item{n}{Sample size}
 
-\item{w_j.plus}{Row-sums of sample weights}
+\item{w_jplus}{Row-sums of sample weights}
 }
 \value{
 Row-calibrated log-parameter

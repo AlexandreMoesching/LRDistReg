@@ -4,7 +4,7 @@
 \alias{local.search2}
 \title{Local search (column)}
 \usage{
-local.search2(theta, ell, m, n, mM, lL, PP, w, w_cumul.2)
+local.search2(theta, ell, m, n, mM, lL, PP, w, w_ol)
 }
 \arguments{
 \item{theta}{Log-parameter}
@@ -23,7 +23,7 @@ local.search2(theta, ell, m, n, mM, lL, PP, w, w_cumul.2)
 
 \item{w}{Sample weights}
 
-\item{w_cumul.2}{Cumulative column-sums of sample weights}
+\item{w_ol}{Cumulative column-sums of sample weights}
 }
 \value{
 New proposal Psi and step-size delta

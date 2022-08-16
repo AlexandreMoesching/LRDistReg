@@ -39,16 +39,16 @@ prepare.data <- function(X, Y, W = rep(1, length(X))) {
   }
 
   # Compute the weights w_j+ = sum_k wjk and w_+k = sum_j wjk
-  w_j.plus <- rowSums(w)
-  w_plus.k <- colSums(w)
+  w_jplus <- rowSums(w)
+  w_plusk <- colSums(w)
 
   # Compute cumulative weights
   #     \underline{w}_jk := sum_{k'=k}^M_j w_jk'
   # for m_j <= k <= M_j and 1 <= j <= ell and
   #     \overline{w}_jk := sum_{j'=j}^L_k w_j'k
   # for ell_k <= j <= L_k and 1 <= k <= m and
-  w_cumul.1 <- t(apply(w, 1, function(v) rev(cumsum(rev(v)))))
-  w_cumul.2 <- apply(w, 2, function(v) rev(cumsum(rev(v))))
+  w_ul <- t(apply(w, 1, function(v) rev(cumsum(rev(v)))))
+  w_ol <-   apply(w, 2, function(v) rev(cumsum(rev(v))))
 
   # Determine mM
   mM <- matrix(0, ell, 2)
@@ -83,10 +83,21 @@ prepare.data <- function(X, Y, W = rep(1, length(X))) {
   }
 
   return(list(
-    x = x, X = X, ell = ell, lL = lL,
-    y = y, Y = Y, m = m, mM = mM,
-    w = w, w_j.plus = w_j.plus, w_plus.k = w_plus.k,
-    w_cumul.1 = w_cumul.1, w_cumul.2 = w_cumul.2,
-    n = n, PP = PP
+    ell = ell,
+    lL = lL,
+    m = m,
+    mM = mM,
+    n = n,
+    PP = PP,
+    w = w,
+    w_jplus = w_jplus,
+    w_plusk = w_plusk,
+    w_ul = w_ul,
+    w_ol = w_ol,
+    W = W,
+    x = x,
+    X = X,
+    y = y,
+    Y = Y
   ))
 }

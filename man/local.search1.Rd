@@ -4,7 +4,7 @@
 \alias{local.search1}
 \title{Local search (row)}
 \usage{
-local.search1(theta, ell, m, n, mM, lL, PP, w, w_cumul.1)
+local.search1(theta, ell, m, n, mM, lL, PP, w, w_ul)
 }
 \arguments{
 \item{theta}{Log-parameter}
@@ -23,7 +23,7 @@ local.search1(theta, ell, m, n, mM, lL, PP, w, w_cumul.1)
 
 \item{w}{Sample weights}
 
-\item{w_cumul.1}{Cumulative row-sums of sample weights}
+\item{w_ul}{Cumulative row-sums of sample weights}
 }
 \value{
 New proposal Psi and step-size delta
