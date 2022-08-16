@@ -115,6 +115,8 @@ void prepare_data_void_cpp(par& par) {
 //' @param Y Responses
 //' @param W User-specified weights
 //'
+//' @return A list of pre-computed parameters necessary for the estimation
+//'
 //' @export
 // [[Rcpp::export]]
 List prepare_data_cpp(arma::vec X, arma::vec Y, arma::vec W) {

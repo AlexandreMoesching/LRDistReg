@@ -1,10 +1,11 @@
-#' Prepare the data
+#' Prepare the data, R version
 #'
 #' @param X Covariates
 #' @param Y Responses
 #' @param W User-specified weights
 #'
-#' @return A list of pre-compute parameters necessary for the estimation
+#' @return A list of pre-computed parameters necessary for the estimation
+#'
 #' @export
 prepare.data <- function(X, Y, W = rep(1, length(X))) {
   # Number of observation pairs

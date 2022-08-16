@@ -13,6 +13,9 @@ prepare_data_cpp(X, Y, W)
 
 \item{W}{User-specified weights}
 }
+\value{
+A list of pre-computed parameters necessary for the estimation
+}
 \description{
 Prepare the data, C++ version
 }

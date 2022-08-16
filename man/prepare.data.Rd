@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare_data.R
 \name{prepare.data}
 \alias{prepare.data}
-\title{Prepare the data}
+\title{Prepare the data, R version}
 \usage{
 prepare.data(X, Y, W = rep(1, length(X)))
 }
@@ -14,8 +14,8 @@ prepare.data(X, Y, W = rep(1, length(X)))
 \item{W}{User-specified weights}
 }
 \value{
-A list of pre-compute parameters necessary for the estimation
+A list of pre-computed parameters necessary for the estimation
 }
 \description{
-Prepare the data
+Prepare the data, R version
 }
