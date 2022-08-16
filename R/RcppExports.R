@@ -14,7 +14,7 @@ prepare_data_cpp <- function(X, Y, W) {
     .Call(`_LRDistReg_prepare_data_cpp`, X, Y, W)
 }
 
-#' Transforms lambda (row) into theta
+#' Transforms lambda (row) into theta, C++ version
 #'
 #' @param lambda Row-wise differences
 #' @param ell Number of unique covariates
@@ -28,7 +28,7 @@ lambda1_to_theta_cpp <- function(lambda, ell, m, mM) {
     .Call(`_LRDistReg_lambda1_to_theta_cpp`, lambda, ell, m, mM)
 }
 
-#' Transforms lambda (column) into theta
+#' Transforms lambda (column) into theta, C++ version
 #'
 #' @param lambda Column-wise differences
 #' @param ell Number of unique covariates
