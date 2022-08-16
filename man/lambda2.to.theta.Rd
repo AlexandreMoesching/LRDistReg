@@ -2,7 +2,7 @@
 % Please edit documentation in R/reparametrize.R
 \name{lambda2.to.theta}
 \alias{lambda2.to.theta}
-\title{Transforms lambda (column) into theta}
+\title{Transforms lambda (column) into theta, R version}
 \usage{
 lambda2.to.theta(lambda, ell, m, lL)
 }
@@ -19,5 +19,5 @@ lambda2.to.theta(lambda, ell, m, lL)
 Transformed parameter
 }
 \description{
-Transforms lambda (column) into theta
+Transforms lambda (column) into theta, R version
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{lambda2_to_theta_cpp}
 \alias{lambda2_to_theta_cpp}
-\title{Transforms lambda (column) into theta}
+\title{Transforms lambda (column) into theta, C++ version}
 \usage{
 lambda2_to_theta_cpp(lambda, ell, m, lL)
 }
@@ -19,5 +19,5 @@ lambda2_to_theta_cpp(lambda, ell, m, lL)
 Transformed parameter
 }
 \description{
-Transforms lambda (column) into theta
+Transforms lambda (column) into theta, C++ version
 }
