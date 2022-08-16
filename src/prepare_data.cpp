@@ -1,6 +1,6 @@
 #include "prepare_data.h"
 
-void prepare_data_void_cpp(par& par) {
+void prepare_data_ref_cpp(par& par) {
   // Number of observations
   par.n = par.X.n_elem;
 
@@ -127,7 +127,7 @@ List prepare_data_cpp(arma::vec X, arma::vec Y, arma::vec W) {
   par.W = W;
 
   // Compute parameters
-  prepare_data_void_cpp(par);
+  prepare_data_ref_cpp(par);
 
   // Return
   return List::create(Named("ell") = par.ell,
