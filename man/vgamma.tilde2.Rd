@@ -4,7 +4,7 @@
 \alias{vgamma.tilde2}
 \title{v-tilde and gamma-tilde functions (column)}
 \usage{
-vgamma.tilde2(theta, ell, m, n, lL, w_cumul.2)
+vgamma.tilde2(theta, ell, m, n, lL, w_ol)
 }
 \arguments{
 \item{theta}{Log-parameter}
@@ -17,7 +17,7 @@ vgamma.tilde2(theta, ell, m, n, lL, w_cumul.2)
 
 \item{lL}{(l_k,L_k) index pairs}
 
-\item{w_cumul.2}{Cumulative column-sums of sample weights}
+\item{w_ol}{Cumulative column-sums of sample weights}
 }
 \value{
 v-tilde and gamma-tilde functions
