@@ -1,14 +1,14 @@
 #include "calibrate.h"
 
-void calibrate1_ref_cpp(arma::mat& theta, par& par) {
+void calibrate1_ref_cpp(arma::mat& theta, const par& par) {
   theta.each_col() += - log(sum(exp(theta), 1)) + log(par.w_jplus / par.n);
 }
 
-void calibrate2_ref_cpp(arma::mat& theta, par& par) {
+void calibrate2_ref_cpp(arma::mat& theta, const par& par) {
   theta.each_row() += - log(sum(exp(theta), 0)) + log(par.w_plusk.t() / par.n);
 }
 
-void calibrate_ref_cpp(arma::mat& theta, par& par, double& prec) {
+void calibrate_ref_cpp(arma::mat& theta, const par& par, double& prec) {
   // Declare variable
   double f_theta, f_theta_old = f_theta_ref_cpp(theta, par);
   double delta = R_PosInf;

@@ -1,8 +1,8 @@
 #include "likelihood_functions.h"
 
-void calibrate1_ref_cpp(arma::mat& theta, par& par);
-void calibrate2_ref_cpp(arma::mat& theta, par& par);
-void  calibrate_ref_cpp(arma::mat& theta, par& par, double& prec);
+void calibrate1_ref_cpp(arma::mat& theta, const par& par);
+void calibrate2_ref_cpp(arma::mat& theta, const par& par);
+void  calibrate_ref_cpp(arma::mat& theta, const par& par, double& prec);
 
 arma::mat calibrate1_cpp(arma::mat theta, int n, arma::vec w_jplus);
 arma::mat calibrate2_cpp(arma::mat theta, int n, arma::vec w_plusk);
