@@ -93,3 +93,32 @@ f.theta(theta, n, w, PP) == f_theta_cpp(theta, ell, n, mM, w)
 # microbenchmark::microbenchmark(f.theta(theta, n, w, PP),
 #                                f_theta_cpp(theta, ell, n, mM, w),
 #                                times = 1e2)
+
+####____________________________________________________________________________
+#### TEST calibrate                                                         ####
+
+w_jplus <- c(res_cpp$w_jplus)
+w_plusk <- c(res_cpp$w_plusk)
+
+all.equal(calibrate1(theta, n, w_jplus),
+          calibrate1_cpp(theta, n, w_jplus),
+          tolerance = 1e-14)
+all.equal(calibrate2(theta, n, w_plusk),
+          calibrate2_cpp(theta, n, w_plusk),
+          tolerance = 1e-14)
+
+prec <- 1e-10
+
+all.equal(calibrate(theta, n, w, w_jplus, w_plusk, PP, prec),
+          calibrate_cpp(theta, ell, mM, n, w, w_jplus, w_plusk, prec),
+          tolerance = 1e-14)
+
+# microbenchmark::microbenchmark(calibrate1(theta, n, w_jplus),
+#                                calibrate1_cpp(theta, n, w_jplus),
+#                                times = 1e2)
+# microbenchmark::microbenchmark(calibrate2(theta, n, w_plusk),
+#                                calibrate2_cpp(theta, n, w_plusk),
+#                                times = 1e2)
+# microbenchmark::microbenchmark(calibrate(theta, n, w, w_jplus, w_plusk, PP, prec),
+#                                calibrate_cpp(theta, ell, mM, n, w, w_jplus, w_plusk, prec),
+#                                times = 1e2)
