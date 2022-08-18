@@ -97,6 +97,59 @@ f_theta_cpp <- function(theta, ell, n, mM, w) {
     .Call(`_LRDistReg_f_theta_cpp`, theta, ell, n, mM, w)
 }
 
+#' Function to take a simple step
+#'
+#' @param theta Log-parameter
+#' @param Psi Proposal
+#' @param delta Delta
+#' @param ell Number of unique covariates
+#' @param mM (m_j,M_j) index pairs
+#' @param n Sample size
+#' @param w Sample weights
+#'
+#' @return Updated theta parameter
+#'
+#' @export
+simple_step_cpp <- function(theta, Psi, delta, ell, mM, n, w) {
+    .Call(`_LRDistReg_simple_step_cpp`, theta, Psi, delta, ell, mM, n, w)
+}
+
+#' Local search (row)
+#'
+#' @param theta Log-parameter
+#' @param ell Number of unique covariates
+#' @param m Number of unique responses
+#' @param n Sample size
+#' @param lL (l_k,L_k) index pairs
+#' @param mM (m_j,M_j) index pairs
+#' @param w Sample weights
+#' @param w_ul Cumulative row-sums of sample weights
+#'
+#' @return New proposal Psi and step-size delta
+#'
+#' @export
+local_search1_cpp <- function(theta, ell, m, n, lL, mM, w, w_ul) {
+    .Call(`_LRDistReg_local_search1_cpp`, theta, ell, m, n, lL, mM, w, w_ul)
+}
+
+#' Local search (column)
+#'
+#' @param theta Log-parameter
+#' @param ell Number of unique covariates
+#' @param m Number of unique responses
+#' @param n Sample size
+#' @param lL (l_k,L_k) index pairs
+#' @param mM (m_j,M_j) index pairs
+#' @param w Sample weights
+#' @param w_ol Cumulative column-sums of sample weights
+#'
+#' @return New proposal Psi and step-size delta
+#'
+#' @export
+local_search2_cpp <- function(theta, ell, m, n, lL, mM, w, w_ol) {
+    .Call(`_LRDistReg_local_search2_cpp`, theta, ell, m, n, lL, mM, w, w_ol)
+}
+
 #' Prepare the data, C++ version
 #'
 #' @param X Covariates

@@ -48,7 +48,6 @@ local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_ul) {
   tmp <- vgamma.tilde1(theta, ell, m, n, mM, w_ul)
   v.tilde <- tmp$v
   gamma.tilde <- tmp$gamma
-
   lambda.star <- matrix(0, nrow = ell, ncol = m)
   lambda.star[cbind(1:ell, mM[, 1])] <- gamma.tilde[cbind(1:ell, mM[, 1])]
   if (m >= 2) {
