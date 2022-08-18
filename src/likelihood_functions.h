@@ -1,4 +1,4 @@
-#include "prepare_data.h"
+#include "reparametrize.h"
 
 void vgamma_tilde1_ref_cpp(arma::mat& theta, arma::mat& v, arma::mat& gamma, const par& par);
 void vgamma_tilde2_ref_cpp(arma::mat& theta, arma::mat& v, arma::mat& gamma, const par& par);
