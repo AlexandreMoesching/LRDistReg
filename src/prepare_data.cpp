@@ -1,12 +1,16 @@
 #include "prepare_data.h"
 
-void prepare_data_ref_cpp(par& par) {
-  // Number of observations
-  par.n = par.X.n_elem;
+par prepare_data_par_cpp(arma::vec X, arma::vec Y, arma::vec W) {
+  // Declare variables
+  par par;
+  par.X = X;
+  par.Y = Y;
+  par.W = W;
+  par.n = X.n_elem;
 
   // Sorted values of X and Y
-  arma::vec sorted_X = sort(par.X);
-  arma::vec sorted_Y = sort(par.Y);
+  arma::vec sorted_X = sort(X);
+  arma::vec sorted_Y = sort(Y);
 
   // New values of from the sorted X and Y
   arma::uvec new_X(par.n, arma::fill::zeros);
@@ -51,9 +55,9 @@ void prepare_data_ref_cpp(par& par) {
   // Weight matrix
   arma::mat w(par.ell, par.m, arma::fill::zeros);
   for (int i = 0; i < par.n; i++) {
-    xk_Xi = find(par.X[i] == x);
-    yj_Yi = find(par.Y[i] == y);
-    w.at(xk_Xi[0], yj_Yi[0]) += par.W[i];
+    xk_Xi = find(X[i] == x);
+    yj_Yi = find(Y[i] == y);
+    w.at(xk_Xi[0], yj_Yi[0]) += W[i];
   }
   par.w = w;
 
@@ -107,6 +111,9 @@ void prepare_data_ref_cpp(par& par) {
     PP.row(j).subvec(mM.at(j, 0), mM.at(j, 1)).fill(1);
   }
   par.PP = PP;
+
+  // Return
+  return par;
 }
 
 //' Prepare the data, C++ version
@@ -121,13 +128,7 @@ void prepare_data_ref_cpp(par& par) {
 // [[Rcpp::export]]
 List prepare_data_cpp(arma::vec X, arma::vec Y, arma::vec W) {
   // Declare variables
-  par par;
-  par.X = X;
-  par.Y = Y;
-  par.W = W;
-
-  // Compute parameters
-  prepare_data_ref_cpp(par);
+  par par = prepare_data_par_cpp(X, Y, W);
 
   // Return
   return List::create(Named("ell") = par.ell,
