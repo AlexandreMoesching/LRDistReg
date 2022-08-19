@@ -150,6 +150,20 @@ local_search2_cpp <- function(theta, ell, m, n, lL, mM, w, w_ol) {
     .Call(`_LRDistReg_local_search2_cpp`, theta, ell, m, n, lL, mM, w, w_ol)
 }
 
+#' TP2 fit function
+#'
+#' @param X Covariates
+#' @param Y Responses
+#' @param W User-specified weights
+#' @param delta0 Threshhold
+#'
+#' @return h matrix, delta and parameters (estimation time)
+#'
+#' @export
+TP2_fit_cpp <- function(X, Y, W, delta0) {
+    .Call(`_LRDistReg_TP2_fit_cpp`, X, Y, W, delta0)
+}
+
 #' Prepare the data, C++ version
 #'
 #' @param X Covariates

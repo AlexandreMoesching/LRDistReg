@@ -1,7 +1,7 @@
 ####____________________________________________________________________________
 #### SETUP                                                                  ####
 
-n <- 1e2; ell0 <- 1e2; m0 <- 1e2
+n <- 1e5; ell0 <- 1e2; m0 <- 1e2
 # set.seed(1)
 X <- sample(rnorm(ell0), n, replace = TRUE)
 Y <- sample(rnorm(m0), n, replace = TRUE)
@@ -156,3 +156,16 @@ cat(all.equal(res_R[PP], res_cpp[PP], tolerance = 1e-12), "\n")
 # microbenchmark::microbenchmark(simple.step(theta, Psi, delta, ell, m, n, w, PP),
 #                                simple_step_cpp(theta, Psi, delta, ell, mM, n, w),
 #                                times = 1e2)
+
+
+####____________________________________________________________________________
+#### TEST main                                                              ####
+delta0 <- 1e-8
+
+par_R <- prepare.data(X, Y, W)
+res_R <- TP2.fit(par_R, delta0, echo = TRUE, out.file = FALSE)
+
+res_cpp <- TP2_fit_cpp(X, Y, W, delta0)
+
+all.equal(res_R$h.TP2, res_cpp$h_TP2, tolerance = 1e-10)
+
