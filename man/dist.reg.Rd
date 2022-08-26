@@ -31,11 +31,11 @@ dist.reg(
 
 \item{suggest.delta0}{Whether or not to suggest the threshold delta0}
 
-\item{delta0}{Threshhold}
+\item{delta0}{Threshold}
 
 \item{echo}{Whether or not to print intermediate steps}
 
-\item{out.file}{Whether or not to wwite intermediate steps in a separate file}
+\item{out.file}{Whether or not to write intermediate steps in a separate file}
 
 \item{IDR}{Whether or not to compute Isotonic Distributional Regression}
 
@@ -48,5 +48,5 @@ A list of results which depends on the option chosen
 Isotonic distributional regression (LR, US, EMP)
 }
 \examples{
-#To be done
+# To be done
 }

@@ -6,8 +6,7 @@
 #'
 #' @return Linear interpolation of the cdf's on the new set x0
 #' @export
-interpolate <- function(x0, x, CDF.MAT)
-{
+interpolate <- function(x0, x, CDF.MAT) {
   my.approx <- function(z) stats::approx(x, z, xout = x0, rule = 2)$y
   res <- apply(CDF.MAT, 2, my.approx)
   return(res)

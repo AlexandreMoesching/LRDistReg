@@ -16,70 +16,71 @@ NULL
 #' @param show.design Whether or not to plot the design
 #' @param indices Whether or not to plot indices instead of true values
 #' @param suggest.delta0 Whether or not to suggest the threshold delta0
-#' @param delta0 Threshhold
+#' @param delta0 Threshold
 #' @param echo Whether or not to print intermediate steps
-#' @param out.file Whether or not to wwite intermediate steps in a separate file
+#' @param out.file Whether or not to write intermediate steps in a separate file
 #' @param IDR Whether or not to compute Isotonic Distributional Regression
 #' @param x0 Set of covariates on which to estimate the distributions
 #'
 #' @return A list of results which depends on the option chosen
 #' @export
 #'
-#' @examples #To be done
+#' @examples # To be done
 dist.reg <- function(X, Y, W = rep(1, length(X)),
                      show.design = FALSE, indices = FALSE,
                      suggest.delta0 = FALSE, delta0 = 1e-2,
                      echo = FALSE, out.file = FALSE,
                      IDR = FALSE, x0 = NULL) {
   # Setup of the design
-  D.Setup <- prepare.data(X, Y, W)
+  par <- prepare.data(X, Y, W)
 
   # Plot design
   if (show.design == TRUE) {
-    plotD(D.Setup, indices = indices)
+    plotD(par, indices = indices)
   }
 
   # Suggest delta0
   if (suggest.delta0 == TRUE) {
-    theta <- matrix(-Inf, nrow = D.Setup$ell, ncol = D.Setup$m)
-    theta[D.Setup$PP] <- -log(sum(D.Setup$PP))
-    theta <- calibrate1(theta, D.Setup$n, D.Setup$w_jplus)
-    theta <- calibrate2(theta, D.Setup$n, D.Setup$w_plusk)
-    f.tmp <- f.theta(theta, D.Setup$n, D.Setup$w, D.Setup$PP)
+    theta <- matrix(-Inf, nrow = par$ell, ncol = par$m)
+    theta[par$PP] <- -log(sum(par$PP))
+    calibrate(
+      theta, par$n, par$w, par$w_jplus, par$w_plusk, par$PP
+    )
+    f.tmp <- f.theta(theta, par$n, par$w, par$PP)
     delta0 <- 10^floor(log10(f.tmp) * 1.1 - 3)
   }
 
   # Fit under LR constraint
-  res <- TP2.fit(D.Setup, delta0, echo, out.file)
+  res <- TP2.fit(par, delta0, echo, out.file)
   res$q.LR <- res$h.TP2 / rowSums(res$h.TP2)
   CDF.LR <- t(apply(res$q.LR, 1, cumsum))
 
   # Interpolate to x0 if x0 != NULL
   if (!is.null(x0)) {
-    CDF.LR <- interpolate(x0, D.Setup$x, CDF.LR)
+    CDF.LR <- interpolate(x0, par$x, CDF.LR)
   }
   res$CDF.LR <- CDF.LR
 
   # Fit under usual stochastic ordering constraint
   if (IDR == TRUE) {
-    CDF.EMP <- matrix(0, D.Setup$ell, D.Setup$m)
-    for (j in 1:D.Setup$ell) {
-      CDF.EMP.fun <- stats::ecdf(Y[X == D.Setup$x[j]])
-      CDF.EMP[j, ] <- CDF.EMP.fun(D.Setup$y)
+    CDF.EMP <- matrix(0, par$ell, par$m)
+    for (j in 1:par$ell) {
+      CDF.EMP.fun <- stats::ecdf(Y[X == par$x[j]])
+      CDF.EMP[j, ] <- CDF.EMP.fun(par$y)
     }
     CDF.ST <- apply(CDF.EMP, 2, function(z) Iso::pava(z, decreasing = TRUE))
 
     # Interpolate to x0 if x0 != NULL
     if (any(!is.null(x0))) {
-      CDF.EMP <- interpolate(x0, D.Setup$x, CDF.EMP)
-      CDF.ST <- interpolate(x0, D.Setup$x, CDF.ST)
+      CDF.EMP <- interpolate(x0, par$x, CDF.EMP)
+      CDF.ST <- interpolate(x0, par$x, CDF.ST)
     }
     res$CDF.EMP <- CDF.EMP
     res$CDF.ST <- CDF.ST
   }
 
   # Return results
-  res$D.Setup <- D.Setup
+  res$par <- par
   res$delta0 <- delta0
   res$x0 <- x0
 
@@ -88,29 +89,29 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
 
 #' TP2 fit function
 #'
-#' @param D.Setup Parameters
-#' @param delta0 Threshhold
+#' @param par Model parameters
+#' @param delta0 Threshold
 #' @param echo Whether or not to print intermediate steps
-#' @param out.file Whether or not to wwite intermediate steps in a separate file
+#' @param out.file Whether or not to write intermediate steps in a separate file
 #'
 #' @return h matrix and estimation time
 #' @export
-TP2.fit <- function(D.Setup, delta0 = 1e-1, echo = FALSE, out.file = FALSE) {
+TP2.fit <- function(par, delta0 = 1e-1, echo = FALSE, out.file = FALSE) {
   # Start timer
   start.time <- Sys.time()
 
   # Extract parameters
-  ell <- D.Setup$ell
-  lL <- D.Setup$lL
-  m <- D.Setup$m
-  mM <- D.Setup$mM
-  w <- D.Setup$w
-  w_jplus <- D.Setup$w_jplus
-  w_plusk <- D.Setup$w_plusk
-  w_ul <- D.Setup$w_ul
-  w_ol <- D.Setup$w_ol
-  n <- D.Setup$n
-  PP <- D.Setup$PP
+  ell <- par$ell
+  lL <- par$lL
+  m <- par$m
+  mM <- par$mM
+  w <- par$w
+  w_jplus <- par$w_jplus
+  w_plusk <- par$w_plusk
+  w_ul <- par$w_ul
+  w_ol <- par$w_ol
+  n <- par$n
+  PP <- par$PP
 
   # Initialize
   theta <- matrix(-Inf, nrow = ell, ncol = m)

@@ -41,8 +41,7 @@ calibrate2 <- function(theta, n, w_plusk) {
 #'
 #' @return Approximately calibrated log-parameter
 #' @export
-calibrate <- function(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-7)
-{
+calibrate <- function(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-7) {
   ftheta.old <- f.theta(theta, n, w, PP)
   delta <- Inf
   while (delta > prec) {

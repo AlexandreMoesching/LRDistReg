@@ -49,7 +49,7 @@ prepare.data <- function(X, Y, W = rep(1, length(X))) {
   #     \overline{w}_jk := sum_{j'=j}^L_k w_j'k
   # for ell_k <= j <= L_k and 1 <= k <= m and
   w_ul <- t(apply(w, 1, function(v) rev(cumsum(rev(v)))))
-  w_ol <-   apply(w, 2, function(v) rev(cumsum(rev(v))))
+  w_ol <- apply(w, 2, function(v) rev(cumsum(rev(v))))
 
   # Determine mM
   mM <- matrix(0, ell, 2)

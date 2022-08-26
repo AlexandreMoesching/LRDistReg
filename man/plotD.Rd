@@ -4,10 +4,10 @@
 \alias{plotD}
 \title{Plot the design}
 \usage{
-plotD(D.Setup, indices = FALSE)
+plotD(par, indices = FALSE)
 }
 \arguments{
-\item{D.Setup}{Design}
+\item{par}{Model parameters}
 
 \item{indices}{Whether or not to plot indices instead of true values}
 }
