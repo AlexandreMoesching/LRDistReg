@@ -31,7 +31,7 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
                      suggest.delta0 = FALSE, delta0 = 1e-2,
                      echo = FALSE, out.file = FALSE,
                      IDR = FALSE, x0 = NULL) {
-  # Setup of the design
+  # Compute model parameters
   par <- prepare.data(X, Y, W)
 
   # Plot design
