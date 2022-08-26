@@ -19,7 +19,7 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& theta, arma::mat& Psi,
   while (delta > delta0) {
     // Calibrate theta
     calibrate_ref_cpp(theta, par, prec);
-    std::cout << "Iteration = " << s << "\n";
+    // std::cout << "Iteration = " << s << "\n";
 
     // Find a new proposal
     if (s % 2 == 0) {
@@ -30,13 +30,13 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& theta, arma::mat& Psi,
 
     // Perform real improvement
     simple_step_ref_cpp(theta, Psi, delta, par);
-    std::cout << "delta = " << delta << "\n\n";
+    // std::cout << "delta = " << delta << "\n\n";
 
     // Change parity
     s++;
   }
 
-  std::cout << "delta is smaller than delta0 = " << delta0 << "\n";
+  // std::cout << "delta is smaller than delta0 = " << delta0 << "\n";
 
   // Return probability weights
   h_TP2 = exp(theta);

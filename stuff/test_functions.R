@@ -1,3 +1,5 @@
+library(LRDistReg)
+
 ####____________________________________________________________________________
 #### SETUP                                                                  ####
 
@@ -163,7 +165,7 @@ cat(all.equal(res_R[PP], res_cpp[PP], tolerance = 1e-12), "\n")
 delta0 <- 1e-8
 
 par_R <- prepare.data(X, Y, W)
-res_R <- TP2.fit(par_R, delta0, echo = TRUE, out.file = FALSE)
+res_R <- TP2.fit(par_R, delta0, echo = FALSE, out.file = FALSE)
 
 res_cpp <- TP2_fit_cpp(X, Y, W, delta0)
 
