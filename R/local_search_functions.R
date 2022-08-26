@@ -21,8 +21,8 @@ simple.step <- function(theta, Psi, delta, ell, m, n, w, PP) {
     f.new <- f.theta(Psi, n, w, PP)
   }
   c0 <- rho - f.old + f.new
-  if (c0 <= 0) {
-    stop("c0 is not strictly positive!")
+  if (c0 < 0) { # It may happen that c0 = 0, in which case theta = Psi
+    stop("c0 is not positive!")
   }
   t.star <- min(1, rho / (2 * c0))
   theta.new <- matrix(-Inf, nrow = ell, ncol = m)
