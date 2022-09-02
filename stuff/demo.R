@@ -4,6 +4,8 @@ rm(list = ls())
 a <- function(x) 2 + (x+1)^2
 b <- function(x) 1 - exp(-10*x)
 r.cond.dist <- function(x) rgamma(1, shape = a(x), scale = b(x))
+d.cond.dist <- function(x, alpha) dgamma(alpha, shape = a(x), scale = b(x))
+p.cond.dist <- function(x, alpha) pgamma(alpha, shape = a(x), scale = b(x))
 q.cond.dist <- function(x, alpha) qgamma(alpha, shape = a(x), scale = b(x))
 
 xx <- seq(1, 4, length.out = 2e2)
@@ -14,7 +16,7 @@ lattice::levelplot(outer(xx, yy, FUN = "d.cond.dist"), nlevels = 1e2,
                    xlab = expression(italic(x)), ylab = expression(italic(y)),
                    xlim = range(xx), ylim = range(yy))
 
-n <- 1e4
+n <- 5e2
 ell0 <- 1e2
 x0 <- 1+(1:ell0)/ell0*3
 
@@ -31,7 +33,25 @@ res_R <- TP2.fit(par_R, delta0, echo = FALSE, out.file = FALSE)
 
 res_cpp <- TP2_fit_cpp(X, Y, W, delta0)
 
-max(abs(res_R$h.TP2 - res_cpp$h_TP2))
+sum(abs(res_R$h.TP2 - res_cpp$h_TP2))
+sum(abs(res_R$q.LR - res_cpp$q_LR))
+sum(abs(res_R$CDF.LR - res_cpp$CDF_LR))
+
+n_boot <- 1e2
+res_bag <- TP2_fit_bag_cpp(X, Y, W, delta0, n_boot)
+max(abs(res_bag$h_TP2 - res_cpp$h_TP2))
+
+beta <- (1:9)/10
+plot(0, xlim = range(yy), ylim = c(0,1), xlab = expression(italic(y)), ylab = "CDF")
+for (s in seq_along(beta)) {
+  j0 <- floor(par_R$ell * beta[s])
+  x0 <- par_R$x[j0]
+  lines(yy, p.cond.dist(x0, yy))
+  lines(par_R$y, res_cpp$CDF_LR[j0,], col = "blue")
+  lines(par_R$y, res_bag$CDF_LR[j0,], col = "red")
+}
+
+
 
 # microbenchmark::microbenchmark(TP2.fit(prepare.data(X, Y, W), delta0, echo = FALSE, out.file = FALSE),
 #                                TP2_fit_cpp(X, Y, W, delta0),

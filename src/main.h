@@ -5,3 +5,6 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& theta, arma::mat& Psi,
                      pava_par& par1, pava_par& par2,
                      double& delta, double delta0, par& par);
 List TP2_fit_cpp(arma::vec X, arma::vec Y, arma::vec W, double delta0);
+
+List TP2_fit_bag_cpp(arma::vec X, arma::vec Y, arma::vec W, double delta0,
+                     int n_boot);
