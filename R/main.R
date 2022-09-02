@@ -52,14 +52,11 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
 
   # Fit under LR constraint
   res <- TP2.fit(par, delta0, echo, out.file)
-  res$q.LR <- res$h.TP2 / rowSums(res$h.TP2)
-  CDF.LR <- t(apply(res$q.LR, 1, cumsum))
 
   # Interpolate to x0 if x0 != NULL
   if (!is.null(x0)) {
-    CDF.LR <- interpolate(x0, par$x, CDF.LR)
+    res$CDF.LR <- interpolate(x0, par$x, res$CDF.LR)
   }
-  res$CDF.LR <- CDF.LR
 
   # Fit under usual stochastic ordering constraint
   if (IDR == TRUE) {
@@ -180,5 +177,12 @@ TP2.fit <- function(par, delta0 = 1e-1, echo = FALSE, out.file = FALSE) {
   # End timer
   tot.time <- Sys.time() - start.time
 
-  return(list(h.TP2 = h.TP2, tot.time = tot.time))
+  # Compute q
+  q.LR <- h.TP2 / rowSums(h.TP2)
+
+  # Compute CDF
+  CDF.LR <- t(apply(q.LR, 1, cumsum))
+
+  # Return
+  return(list(h.TP2 = h.TP2, q.LR = q.LR, CDF.LR = CDF.LR, tot.time = tot.time))
 }
