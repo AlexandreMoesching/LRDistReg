@@ -176,14 +176,14 @@ List TP2_fit_bag_cpp(arma::vec X, arma::vec Y, arma::vec W, double delta0,
 
   // Declare variables for bagging
   arma::vec W_boot(par.n);
-  arma::mat h_TP2_bag(par.ell, par.m, arma::fill::ones);
-  arma::mat theta_bag(par.ell, par.m, arma::fill::zeros);
+  arma::mat h_TP2_bag(par.ell, par.m, arma::fill::zeros);
+  // arma::mat theta_bag(par.ell, par.m, arma::fill::zeros);
 
   // Perform bagging
   for (int i = 0; i < n_boot; i++) {
     // Create bootstrap weights
     W_boot = arma::randg(par.n);
-    W_boot = W_boot/sum(W_boot);
+    W_boot *= par.n/sum(W_boot);
 
     // Recompute parameters
     par = prepare_data_par_cpp(X, Y, W_boot);
@@ -193,12 +193,13 @@ List TP2_fit_bag_cpp(arma::vec X, arma::vec Y, arma::vec W, double delta0,
                     par1, par2, delta, delta0, par);
 
     // Combine with previous estimators
-    theta_bag += theta;
+    // theta_bag += theta;
+    h_TP2_bag += h_TP2 / n_boot;
   }
 
   // Compute final bagging estimator
-  theta_bag = theta_bag/n_boot;
-  h_TP2_bag = exp(theta_bag);
+  // theta_bag = theta_bag/n_boot;
+  // h_TP2_bag = exp(theta_bag);
 
   // Compute q_LR
   for (int j = 0; j < par.ell; j++) {

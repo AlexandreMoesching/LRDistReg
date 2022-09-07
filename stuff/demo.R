@@ -16,7 +16,7 @@ lattice::levelplot(outer(xx, yy, FUN = "d.cond.dist"), nlevels = 1e2,
                    xlab = expression(italic(x)), ylab = expression(italic(y)),
                    xlim = range(xx), ylim = range(yy))
 
-n <- 5e2
+n <- 2e2
 ell0 <- 1e2
 x0 <- 1+(1:ell0)/ell0*3
 
@@ -26,7 +26,7 @@ for (i in 1:n) Y[i] <- r.cond.dist(X[i])
 Y <- round(Y, 1) # Should create some ties
 W <- rep(1, n)
 
-delta0 <- 1e-6
+delta0 <- 1e-8
 
 par_R <- prepare.data(X, Y, W)
 res_R <- TP2.fit(par_R, delta0, echo = FALSE, out.file = FALSE)
@@ -38,6 +38,18 @@ sum(abs(res_R$q.LR - res_cpp$q_LR))
 sum(abs(res_R$CDF.LR - res_cpp$CDF_LR))
 
 n_boot <- 1e2
+
+h_boot_manual <- matrix(0, nrow = nrow(res_R$h.TP2), ncol = ncol(res_R$h.TP2))
+CDF_boot_manual <- matrix(0, nrow = nrow(res_R$h.TP2), ncol = ncol(res_R$h.TP2))
+
+for (i in 1:n_boot) {
+  W <- rexp(n, rate = 0.5)
+  W <- W * (n/sum(W))
+  tmp <- TP2_fit_cpp(X, Y, W, delta0)
+  h_boot_manual <- h_boot_manual + tmp$h_TP2 / n_boot
+  CDF_boot_manual <- CDF_boot_manual + tmp$CDF_LR / n_boot
+}
+
 res_bag <- TP2_fit_bag_cpp(X, Y, W, delta0, n_boot)
 max(abs(res_bag$h_TP2 - res_cpp$h_TP2))
 
@@ -49,6 +61,7 @@ for (s in seq_along(beta)) {
   lines(yy, p.cond.dist(x0, yy))
   lines(par_R$y, res_cpp$CDF_LR[j0,], col = "blue")
   lines(par_R$y, res_bag$CDF_LR[j0,], col = "red")
+  lines(par_R$y, CDF_boot_manual[j0,], col = "green")
 }
 
 
@@ -56,3 +69,5 @@ for (s in seq_along(beta)) {
 # microbenchmark::microbenchmark(TP2.fit(prepare.data(X, Y, W), delta0, echo = FALSE, out.file = FALSE),
 #                                TP2_fit_cpp(X, Y, W, delta0),
 #                                times = 10)
+
+
