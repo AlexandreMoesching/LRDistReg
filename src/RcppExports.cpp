@@ -169,21 +169,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// TP2_fit_bag_cpp
-List TP2_fit_bag_cpp(arma::vec X, arma::vec Y, arma::vec W, double delta0, int n_boot);
-RcppExport SEXP _LRDistReg_TP2_fit_bag_cpp(SEXP XSEXP, SEXP YSEXP, SEXP WSEXP, SEXP delta0SEXP, SEXP n_bootSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::vec >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type W(WSEXP);
-    Rcpp::traits::input_parameter< double >::type delta0(delta0SEXP);
-    Rcpp::traits::input_parameter< int >::type n_boot(n_bootSEXP);
-    rcpp_result_gen = Rcpp::wrap(TP2_fit_bag_cpp(X, Y, W, delta0, n_boot));
-    return rcpp_result_gen;
-END_RCPP
-}
 // prepare_data_cpp
 List prepare_data_cpp(arma::vec X, arma::vec Y, arma::vec W);
 RcppExport SEXP _LRDistReg_prepare_data_cpp(SEXP XSEXP, SEXP YSEXP, SEXP WSEXP) {
@@ -237,7 +222,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_LRDistReg_local_search1_cpp", (DL_FUNC) &_LRDistReg_local_search1_cpp, 8},
     {"_LRDistReg_local_search2_cpp", (DL_FUNC) &_LRDistReg_local_search2_cpp, 8},
     {"_LRDistReg_TP2_fit_cpp", (DL_FUNC) &_LRDistReg_TP2_fit_cpp, 4},
-    {"_LRDistReg_TP2_fit_bag_cpp", (DL_FUNC) &_LRDistReg_TP2_fit_bag_cpp, 5},
     {"_LRDistReg_prepare_data_cpp", (DL_FUNC) &_LRDistReg_prepare_data_cpp, 3},
     {"_LRDistReg_lambda1_to_theta_cpp", (DL_FUNC) &_LRDistReg_lambda1_to_theta_cpp, 4},
     {"_LRDistReg_lambda2_to_theta_cpp", (DL_FUNC) &_LRDistReg_lambda2_to_theta_cpp, 4},

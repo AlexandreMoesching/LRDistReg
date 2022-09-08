@@ -164,21 +164,6 @@ TP2_fit_cpp <- function(X, Y, W, delta0) {
     .Call(`_LRDistReg_TP2_fit_cpp`, X, Y, W, delta0)
 }
 
-#' TP2 fit function, with bagging
-#'
-#' @param X Covariates
-#' @param Y Responses
-#' @param W User-specified weights
-#' @param delta0 Threshhold
-#' @param n_boot Number of boostrap samples
-#'
-#' @return h matrix, delta and parameters (estimation time)
-#'
-#' @export
-TP2_fit_bag_cpp <- function(X, Y, W, delta0, n_boot) {
-    .Call(`_LRDistReg_TP2_fit_bag_cpp`, X, Y, W, delta0, n_boot)
-}
-
 #' Prepare the data, C++ version
 #'
 #' @param X Covariates
