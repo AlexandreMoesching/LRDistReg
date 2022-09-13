@@ -3,7 +3,7 @@ library(LRDistReg)
 ####____________________________________________________________________________
 #### SETUP                                                                  ####
 
-n <- 1e6; ell0 <- 1e2; m0 <- 1e2
+n <- 1e4; ell0 <- 1e2; m0 <- 1e2
 # set.seed(1)
 X <- sample(rnorm(ell0), n, replace = TRUE)
 Y <- sample(rnorm(m0), n, replace = TRUE)

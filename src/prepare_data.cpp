@@ -8,56 +8,60 @@ par prepare_data_par_cpp(arma::vec X, arma::vec Y, arma::vec W) {
   par.W = W;
   par.n = X.n_elem;
 
-  // Sorted values of X and Y
-  arma::vec sorted_X = sort(X);
-  arma::vec sorted_Y = sort(Y);
+  // Preprocess X and Y:
+  arma::uvec ordX = stable_sort_index(X); // Sorted indices of elements in X
+  arma::uvec ordY = stable_sort_index(Y); // Sorted indices of elements in Y
 
-  // New values of from the sorted X and Y
-  arma::uvec new_X(par.n, arma::fill::zeros);
-  arma::uvec new_Y(par.n, arma::fill::zeros);
-  new_X[0] = 1;
-  new_Y[0] = 1;
-  for (int i = 1; i < par.n; i++) {
-    if (sorted_X[i-1] < sorted_X[i]) {
-      new_X[i] = 1;
-    }
-    if (sorted_Y[i-1] < sorted_Y[i]) {
-      new_Y[i] = 1;
-    }
-  }
-
-  // Number of unique X and Y
-  par.ell = sum(new_X);
-  par.m = sum(new_Y);
-
-  // Unique values of X and Y
-  arma::vec x(par.ell);
-  arma::vec y(par.m);
-  int j = 0, k = 0;
+  arma::vec Xs(par.n); // Sorted X's with repetition
+  arma::vec Ys(par.n); // Sorted Y's with repetition
   for (int i = 0; i < par.n; i++) {
-    if (new_X[i] == 1) {
-      x[j] = sorted_X[i];
-      j++;
-    }
-    if (new_Y[i] == 1) {
-      y[k] = sorted_Y[i];
-      k++;
-    }
+    Xs[i] = X[ordX[i]];
+    Ys[i] = Y[ordY[i]];
   }
-  par.x = x;
-  par.y = y;
 
-  // Index of x/y corresponding to a given X_i/Y_i
-  // Function 'find' requires uvec type
-  arma::uvec xk_Xi;
-  arma::uvec yj_Yi;
+  int ell = 0;
+  int m   = 0;
+
+  // Xj_tmp[i] gives the index j of x such that x[j] = Xs[i]
+  // Yk_tmp[i] gives the index k of y such that y[k] = Ys[i]
+  arma::vec Xj_tmp(par.n, arma::fill::zeros);
+  arma::vec Yk_tmp(par.n, arma::fill::zeros);
+
+  arma::vec x_tmp(par.n, arma::fill::value(Xs[0])); // Unique sorted X's
+  arma::vec y_tmp(par.n, arma::fill::value(Ys[0])); // Unique sorted Y's
+
+  for (int i = 1; i < par.n; i++) {
+    if (Xs[i] > x_tmp[ell]) {
+      ell++;
+      x_tmp[ell] = Xs[i];
+    }
+    Xj_tmp[i] = ell;
+    if (Ys[i] > y_tmp[m]) {
+      m++;
+      y_tmp[m] = Ys[i];
+    }
+    Yk_tmp[i] = m;
+  }
+
+  par.x = x_tmp.subvec(0, ell); // Sorted unique covariates
+  par.y = y_tmp.subvec(0, m);   // Sorted unique responses
+
+  par.ell = ell + 1; // Number of unique covariates
+  par.m   = m   + 1; // Number of unique responses
+
+  // Xj[i] gives the index j of x such that x[j] = X[i]
+  // Yk[i] gives the index k of y such that y[k] = Y[i]
+  arma::uvec Xj(par.n);
+  arma::uvec Yk(par.n);
+  for (int i = 0; i < par.n; i++) {
+    Xj[ordX[i]] = Xj_tmp[i];
+    Yk[ordY[i]] = Yk_tmp[i];
+  }
 
   // Weight matrix
   arma::mat w(par.ell, par.m, arma::fill::zeros);
   for (int i = 0; i < par.n; i++) {
-    xk_Xi = find(X[i] == x);
-    yj_Yi = find(Y[i] == y);
-    w.at(xk_Xi[0], yj_Yi[0]) += W[i];
+    w.at(Xj[i], Yk[i]) += W[i];
   }
   par.w = w;
 
