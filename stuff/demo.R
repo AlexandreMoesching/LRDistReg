@@ -46,13 +46,14 @@ delta0 <- 1e-8                # Threshold for estimation precision
 # ESTIMATE
 #
 # (1) Estimation with R
-par_R <- prepare.data(X, Y, W)
-res_R <- TP2.fit(par_R, delta0, echo = FALSE, out.file = FALSE)
+res_R <- dist.reg(X, Y, W, FALSE, FALSE, FALSE, delta0, TRUE)
 
 # (2) Estimation with C++
-res_cpp <- TP2_fit_cpp(X, Y, W, delta0)
+res_cpp <- dist_reg_cpp(X, Y, W, delta0, TRUE)
 
 # Compare results
 sum(abs(res_R$h.TP2 - res_cpp$h_TP2))
 sum(abs(res_R$q.LR - res_cpp$q_LR))
 sum(abs(res_R$CDF.LR - res_cpp$CDF_LR))
+sum(abs(res_R$CDF.ST - res_cpp$CDF_ST))
+sum(abs(res_R$CDF.EMP - res_cpp$CDF_EMP))

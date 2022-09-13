@@ -8,92 +8,14 @@ NULL
 ## usethis namespace: end
 NULL
 
-#' Isotonic distributional regression (LR, US, EMP)
-#'
-#' @param X Covariates
-#' @param Y Responses
-#' @param W User-specified sample weights
-#' @param show.design Whether or not to plot the design
-#' @param indices Whether or not to plot indices instead of true values
-#' @param suggest.delta0 Whether or not to suggest the threshold delta0
-#' @param delta0 Threshold
-#' @param echo Whether or not to print intermediate steps
-#' @param out.file Whether or not to write intermediate steps in a separate file
-#' @param IDR Whether or not to compute Isotonic Distributional Regression
-#' @param x0 Set of covariates on which to estimate the distributions
-#'
-#' @return A list of results which depends on the option chosen
-#' @export
-#'
-#' @examples # To be done
-dist.reg <- function(X, Y, W = rep(1, length(X)),
-                     show.design = FALSE, indices = FALSE,
-                     suggest.delta0 = FALSE, delta0 = 1e-2,
-                     echo = FALSE, out.file = FALSE,
-                     IDR = FALSE, x0 = NULL) {
-  # Compute model parameters
-  par <- prepare.data(X, Y, W)
-
-  # Plot design
-  if (show.design == TRUE) {
-    plotD(par, indices = indices)
-  }
-
-  # Suggest delta0
-  if (suggest.delta0 == TRUE) {
-    theta <- matrix(-Inf, nrow = par$ell, ncol = par$m)
-    theta[par$PP] <- -log(sum(par$PP))
-    calibrate(
-      theta, par$n, par$w, par$w_jplus, par$w_plusk, par$PP
-    )
-    f.tmp <- f.theta(theta, par$n, par$w, par$PP)
-    delta0 <- 10^floor(log10(f.tmp) * 1.1 - 3)
-  }
-
-  # Fit under LR constraint
-  res <- TP2.fit(par, delta0, echo, out.file)
-
-  # Interpolate to x0 if x0 != NULL
-  if (!is.null(x0)) {
-    res$CDF.LR <- interpolate(x0, par$x, res$CDF.LR)
-  }
-
-  # Fit under usual stochastic ordering constraint
-  if (IDR == TRUE) {
-    CDF.EMP <- matrix(0, par$ell, par$m)
-    for (j in 1:par$ell) {
-      CDF.EMP.fun <- stats::ecdf(Y[X == par$x[j]])
-      CDF.EMP[j, ] <- CDF.EMP.fun(par$y)
-    }
-    CDF.ST <- apply(CDF.EMP, 2, function(z) Iso::pava(z, decreasing = TRUE))
-
-    # Interpolate to x0 if x0 != NULL
-    if (any(!is.null(x0))) {
-      CDF.EMP <- interpolate(x0, par$x, CDF.EMP)
-      CDF.ST <- interpolate(x0, par$x, CDF.ST)
-    }
-    res$CDF.EMP <- CDF.EMP
-    res$CDF.ST <- CDF.ST
-  }
-
-  # Return results
-  res$par <- par
-  res$delta0 <- delta0
-  res$x0 <- x0
-
-  return(res)
-}
-
 #' TP2 fit function
 #'
 #' @param par Model parameters
 #' @param delta0 Threshold
-#' @param echo Whether or not to print intermediate steps
-#' @param out.file Whether or not to write intermediate steps in a separate file
 #'
 #' @return h matrix and estimation time
 #' @export
-TP2.fit <- function(par, delta0 = 1e-1, echo = FALSE, out.file = FALSE) {
+TP2.fit <- function(par, delta0 = 1e-1) {
   # Start timer
   start.time <- Sys.time()
 
@@ -115,35 +37,16 @@ TP2.fit <- function(par, delta0 = 1e-1, echo = FALSE, out.file = FALSE) {
   theta[PP] <- -log(sum(PP))
   delta <- Inf
 
-  # Start writing an output file
-  s <- 0
-  if (out.file == TRUE) {
-    sink("outfile.txt")
-  }
-  if (echo == TRUE | out.file == TRUE) {
-    cat("iteration ", s,
-      ", delta = ", delta,
-      ", f(theta) = ", f.theta(theta, n, w, PP), "\n",
-      sep = ""
-    )
-  }
-
   # Main while-loop
+  s <- 0
   while (delta > delta0) {
     # Calibrate
     theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-5)
 
+    # New candidate
     if (s %% 2 == 0) {
-      # Old calibration
-      # theta <- calibrate1(theta, n, w_jplus)
-
-      # New candidate
       tmp <- local.search1(theta, ell, m, n, mM, lL, PP, w, w_ul)
     } else {
-      # Old calibration
-      # theta <- calibrate2(theta, n, w_plusk)
-
-      # New candidate
       tmp <- local.search2(theta, ell, m, n, mM, lL, PP, w, w_ol)
     }
 
@@ -155,20 +58,6 @@ TP2.fit <- function(par, delta0 = 1e-1, echo = FALSE, out.file = FALSE) {
 
     # Change parity
     s <- s + 1
-
-    # Write into a file
-    if (echo == TRUE | out.file == TRUE) {
-      cat("iteration ", s,
-        ", delta = ", delta,
-        ", f(theta) = ", f.theta(theta, n, w, PP), "\n",
-        sep = ""
-      )
-    }
-  }
-
-  # End writing an output file
-  if (out.file == TRUE) {
-    sink()
   }
 
   # Return probability weights
@@ -185,4 +74,80 @@ TP2.fit <- function(par, delta0 = 1e-1, echo = FALSE, out.file = FALSE) {
 
   # Return
   return(list(h.TP2 = h.TP2, q.LR = q.LR, CDF.LR = CDF.LR, tot.time = tot.time))
+}
+
+#' Isotonic distributional regression (LR, ST, EMP)
+#'
+#' @param X Covariates
+#' @param Y Responses
+#' @param W User-specified sample weights
+#' @param show.design Whether or not to plot the design
+#' @param indices Whether or not to plot indices instead of true values
+#' @param suggest.delta0 Whether or not to suggest the threshold delta0
+#' @param delta0 Threshold
+#' @param ST Boolean indicating whether or not the classical isotonic
+#' distributional regression will also be computed
+#' @param x0 Set of covariates on which to estimate the distributions
+#'
+#' @return A list of results which depends on the option chosen
+#' @export
+#'
+#' @examples # To be done
+dist.reg <- function(X, Y, W = rep(1, length(X)),
+                     show.design = FALSE, indices = FALSE,
+                     suggest.delta0 = FALSE, delta0 = 1e-2,
+                     ST = FALSE, x0 = NULL) {
+  # Compute model parameters
+  par <- prepare.data(X, Y, W)
+
+  # Plot design
+  if (show.design == TRUE) {
+    plotD(par, indices = indices)
+  }
+
+  # Suggest delta0
+  if (suggest.delta0 == TRUE) {
+    theta <- matrix(-Inf, nrow = par$ell, ncol = par$m)
+    theta[par$PP] <- -log(sum(par$PP))
+    calibrate(
+      theta, par$n, par$w, par$w_jplus, par$w_plusk, par$PP
+    )
+    f.tmp <- f.theta(theta, par$n, par$w, par$PP)
+    delta0 <- 10^floor(log10(f.tmp) * 1.1 - 3)
+  }
+
+  # Fit under LR constraint
+  res <- TP2.fit(par, delta0)
+
+  # Interpolate to x0 if x0 != NULL
+  if (!is.null(x0)) {
+    res$CDF.LR <- interpolate(x0, par$x, res$CDF.LR)
+  }
+
+  # Fit under usual stochastic ordering constraint
+  if (ST) {
+    CDF.EMP <- matrix(0, par$ell, par$m)
+    for (j in 1:par$ell) {
+      CDF.EMP[j, ] <- cumsum(par$w[j, ]) / par$w_jplus[j]
+    }
+    CDF.ST <- apply(
+      CDF.EMP, 2,
+      function(z) Iso::pava(z, w = par$w_jplus, decreasing = TRUE)
+    )
+
+    # Interpolate to x0 if x0 != NULL
+    if (any(!is.null(x0))) {
+      CDF.EMP <- interpolate(x0, par$x, CDF.EMP)
+      CDF.ST <- interpolate(x0, par$x, CDF.ST)
+    }
+    res$CDF.EMP <- CDF.EMP
+    res$CDF.ST <- CDF.ST
+  }
+
+  # Return results
+  res$par <- par
+  res$delta0 <- delta0
+  res$x0 <- x0
+
+  return(res)
 }

@@ -4,16 +4,12 @@
 \alias{TP2.fit}
 \title{TP2 fit function}
 \usage{
-TP2.fit(par, delta0 = 0.1, echo = FALSE, out.file = FALSE)
+TP2.fit(par, delta0 = 0.1)
 }
 \arguments{
 \item{par}{Model parameters}
 
 \item{delta0}{Threshold}
-
-\item{echo}{Whether or not to print intermediate steps}
-
-\item{out.file}{Whether or not to write intermediate steps in a separate file}
 }
 \value{
 h matrix and estimation time

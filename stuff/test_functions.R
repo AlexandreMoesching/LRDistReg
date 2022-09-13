@@ -178,11 +178,17 @@ cat("simple.step's are the same:",
 #### TEST main                                                              ####
 delta0 <- 1e-9
 
-par_R <- prepare.data(X, Y, W)
-res_R <- TP2.fit(par_R, delta0, echo = FALSE, out.file = FALSE)
-
-res_cpp <- TP2_fit_cpp(X, Y, W, delta0)
+res_R <- dist.reg(X, Y, W,
+                  show.design = FALSE, indices = FALSE, suggest.delta0 = FALSE,
+                  delta0 = delta0, ST = TRUE)
+res_cpp <- dist_reg_cpp(X, Y, W, delta0, ST = TRUE)
 
 cat("h.TP2's are the same:",
-    all.equal(res_R$h.TP2, res_cpp$h_TP2, tolerance = 1e-10))
+    all.equal(res_R$h.TP2, res_cpp$h_TP2, tolerance = 1e-10), "\n")
+cat("CDF_LR's are the same:",
+    all.equal(res_R$CDF.LR, res_cpp$CDF_LR, tolerance = 1e-10), "\n")
+cat("CDF_ST's are the same:",
+    all.equal(res_R$CDF.ST, res_cpp$CDF_ST, tolerance = 1e-10), "\n")
+cat("CDF_EMP's are the same:",
+    all.equal(res_R$CDF.EMP, res_cpp$CDF_EMP, tolerance = 1e-10), "\n")
 

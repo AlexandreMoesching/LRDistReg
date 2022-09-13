@@ -150,18 +150,20 @@ local_search2_cpp <- function(theta, ell, m, n, lL, mM, w, w_ol) {
     .Call(`_LRDistReg_local_search2_cpp`, theta, ell, m, n, lL, mM, w, w_ol)
 }
 
-#' TP2 fit function
+#' Isotonic distributional regression (LR, ST, EMP)
 #'
 #' @param X Covariates
 #' @param Y Responses
-#' @param W User-specified weights
+#' @param W User-specified sample weights
 #' @param delta0 Threshhold
+#' @param ST Boolean indicating whether or not the classical isotonic
+#' distributional regression will also be computed
 #'
-#' @return h matrix, delta and parameters (estimation time)
+#' @return Isotonic distributional regression(s) and estimation parameters
 #'
 #' @export
-TP2_fit_cpp <- function(X, Y, W, delta0) {
-    .Call(`_LRDistReg_TP2_fit_cpp`, X, Y, W, delta0)
+dist_reg_cpp <- function(X, Y, W, delta0, ST = FALSE) {
+    .Call(`_LRDistReg_dist_reg_cpp`, X, Y, W, delta0, ST)
 }
 
 #' Prepare the data, C++ version

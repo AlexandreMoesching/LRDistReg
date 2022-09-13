@@ -2,7 +2,7 @@
 % Please edit documentation in R/main.R
 \name{dist.reg}
 \alias{dist.reg}
-\title{Isotonic distributional regression (LR, US, EMP)}
+\title{Isotonic distributional regression (LR, ST, EMP)}
 \usage{
 dist.reg(
   X,
@@ -12,9 +12,7 @@ dist.reg(
   indices = FALSE,
   suggest.delta0 = FALSE,
   delta0 = 0.01,
-  echo = FALSE,
-  out.file = FALSE,
-  IDR = FALSE,
+  ST = FALSE,
   x0 = NULL
 )
 }
@@ -33,11 +31,8 @@ dist.reg(
 
 \item{delta0}{Threshold}
 
-\item{echo}{Whether or not to print intermediate steps}
-
-\item{out.file}{Whether or not to write intermediate steps in a separate file}
-
-\item{IDR}{Whether or not to compute Isotonic Distributional Regression}
+\item{ST}{Boolean indicating whether or not the classical isotonic
+distributional regression will also be computed}
 
 \item{x0}{Set of covariates on which to estimate the distributions}
 }
@@ -45,7 +40,7 @@ dist.reg(
 A list of results which depends on the option chosen
 }
 \description{
-Isotonic distributional regression (LR, US, EMP)
+Isotonic distributional regression (LR, ST, EMP)
 }
 \examples{
 # To be done
