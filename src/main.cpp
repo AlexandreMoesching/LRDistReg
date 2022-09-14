@@ -7,7 +7,7 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
                      double& delta, double delta0, par& par) {
   // Declare variables
   double tmp_dbl = -log(accu(par.PP)); // SHOULD WE ALSO REPLACE SUM BY ACCU ELSEWHERE ??
-  double prec = 1e-5;
+  double prec = 1e-10;
   int s = 0;
 
   // Initialize delta and theta

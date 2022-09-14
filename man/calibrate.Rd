@@ -4,7 +4,7 @@
 \alias{calibrate}
 \title{Approximate calibration of log-parameter}
 \usage{
-calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-07)
+calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-10)
 }
 \arguments{
 \item{theta}{Log-parameter}

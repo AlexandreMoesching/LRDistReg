@@ -41,7 +41,7 @@ TP2.fit <- function(par, delta0 = 1e-1) {
   s <- 0
   while (delta > delta0) {
     # Calibrate
-    theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-5)
+    theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-10)
 
     # New candidate
     if (s %% 2 == 0) {
