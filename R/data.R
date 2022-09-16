@@ -6,7 +6,7 @@
 #'
 #' @format A data frame with 50076 rows and 22 variables:
 #' \describe{
-#'   \item{sex}{Gender}
+#'   \item{sex}{Gender (1 = Male, 2 = Female)}
 #'   \item{age.years}{Age at examination in years}
 #'   \item{age.months}{Age at examination in total months}
 #'   \item{std.height}{Standing height in centimeters}
