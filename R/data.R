@@ -1,0 +1,32 @@
+#' Weight, height, age and other attributes of 50'076 children and young adults.
+#'
+#' A dataset containing the public release data from three NHANES and two NHES
+#' surveys used in the development of the 2000 CDC growth charts for the United
+#' States.
+#'
+#' @format A data frame with 50076 rows and 22 variables:
+#' \describe{
+#'   \item{sex}{Gender}
+#'   \item{age.years}{Age at examination in years}
+#'   \item{age.months}{Age at examination in total months}
+#'   \item{std.height}{Standing height in centimeters}
+#'   \item{rec.height}{Recumbent length in centimeters}
+#'   \item{dif.flg}{Indicates more than 5 cm difference between height and length}
+#'   \item{weight}{Weight in kilograms}
+#'   \item{bmi}{Body mass index (kg/m^2)}
+#'   \item{bwt.r}{Reported birth weight in gramms}
+#'   \item{l.bwt.flg.r}{Low birth weight flag based on report}
+#'   \item{vl.bwt.flg.r}{Very low birth weight flag based on report}
+#'   \item{bwt.c}{Birth weight in grams from Birth Certificates}
+#'   \item{l.bwt.flg.c}{Low birth weight flag based on Birth Certificate}
+#'   \item{vl.bwt.flg.c}{Very low birth weight flag based on Birth Certificates}
+#'   \item{head.circ}{Head circumference in centimeters}
+#'   \item{number}{Respondent sequence number}
+#'   \item{survey}{Survey number 1 to 5}
+#'   \item{psu}{Pseudo-primary sampling unit}
+#'   \item{strata}{Pseudo-strata}
+#'   \item{stat.wt}{Exam statistical weight}
+#'   \item{relation}{Respondent's relationship to sample child}
+#' }
+#' @source \url{https://wwwn.cdc.gov/nchs/nhanes/nhanes3/DataFiles.aspx}
+"growthdata"
