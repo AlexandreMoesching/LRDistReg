@@ -1,6 +1,6 @@
 #include "prepare_data.h"
 
-par prepare_data_par_cpp(arma::vec X, arma::vec Y, arma::vec W) {
+par prepare_data_par_cpp(arma::vec& X, arma::vec& Y, arma::vec& W) {
   // Declare variables
   par par;
   par.X = X;
@@ -130,7 +130,7 @@ par prepare_data_par_cpp(arma::vec X, arma::vec Y, arma::vec W) {
 //'
 //' @export
 // [[Rcpp::export]]
-List prepare_data_cpp(arma::vec X, arma::vec Y, arma::vec W) {
+List prepare_data_cpp(arma::vec& X, arma::vec& Y, arma::vec& W) {
   // Declare variables
   par par = prepare_data_par_cpp(X, Y, W);
 

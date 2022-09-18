@@ -206,8 +206,8 @@ void local_search2_ref_cpp(arma::mat& theta, arma::mat& Psi,
 //'
 //' @export
 //[[Rcpp::export]]
-arma::mat simple_step_cpp(arma::mat theta, arma::mat Psi, double delta,
-                          int ell, arma::imat mM, int n, arma::mat w) {
+arma::mat simple_step_cpp(arma::mat& theta, arma::mat& Psi, double delta,
+                          int ell, arma::imat& mM, int n, arma::mat& w) {
   // Declare variables
   par par;
   par.ell = ell;
@@ -237,9 +237,9 @@ arma::mat simple_step_cpp(arma::mat theta, arma::mat Psi, double delta,
 //'
 //' @export
 //[[Rcpp::export]]
-List local_search1_cpp(arma::mat theta, int ell, int m, int n,
-                       arma::imat lL, arma::imat mM,
-                       arma::mat w, arma::mat w_ul) {
+List local_search1_cpp(arma::mat& theta, int ell, int m, int n,
+                       arma::imat& lL, arma::imat& mM,
+                       arma::mat& w, arma::mat& w_ul) {
   // Declare variables
   arma::mat Psi(ell, m, arma::fill::value(R_NegInf));
   arma::mat v(ell, m), gamma(ell, m), lambda_star(ell, m);
@@ -280,9 +280,9 @@ List local_search1_cpp(arma::mat theta, int ell, int m, int n,
 //'
 //' @export
 //[[Rcpp::export]]
-List local_search2_cpp(arma::mat theta, int ell, int m, int n,
-                       arma::imat lL, arma::imat mM,
-                       arma::mat w, arma::mat w_ol) {
+List local_search2_cpp(arma::mat& theta, int ell, int m, int n,
+                       arma::imat& lL, arma::imat& mM,
+                       arma::mat& w, arma::mat& w_ol) {
   // Declare variables
   arma::mat Psi(ell, m, arma::fill::value(R_NegInf));
   arma::mat v(ell, m), gamma(ell, m), lambda_star(ell, m);

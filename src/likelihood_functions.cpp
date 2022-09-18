@@ -104,9 +104,9 @@ double f_theta_ref_cpp(arma::mat& theta, const par& par) {
 //'
 //' @export
 //[[Rcpp::export]]
-List vgamma_tilde1_cpp(arma::mat theta,
+List vgamma_tilde1_cpp(arma::mat& theta,
                        int ell, int m, int n,
-                       arma::imat mM, arma::mat w_ul) {
+                       arma::imat& mM, arma::mat& w_ul) {
   // Declare variables
   par par;
   par.ell = ell;
@@ -138,9 +138,9 @@ List vgamma_tilde1_cpp(arma::mat theta,
 //'
 //' @export
 //[[Rcpp::export]]
-List vgamma_tilde2_cpp(arma::mat theta,
+List vgamma_tilde2_cpp(arma::mat& theta,
                        int ell, int m, int n,
-                       arma::imat lL, arma::mat w_ol) {
+                       arma::imat& lL, arma::mat& w_ol) {
   // Declare variables
   par par;
   par.ell = ell;
@@ -171,7 +171,8 @@ List vgamma_tilde2_cpp(arma::mat theta,
 //'
 //' @export
 //[[Rcpp::export]]
-double f_theta_cpp(arma::mat theta, int ell, int n, arma::imat mM, arma::mat w) {
+double f_theta_cpp(arma::mat& theta, int ell, int n,
+                   arma::imat& mM, arma::mat& w) {
   // Declare variables
   par par;
   par.ell = ell;

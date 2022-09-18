@@ -27,7 +27,8 @@ void lambda2_to_theta_ref_cpp(arma::mat& lambda, arma::mat& theta, const par& pa
 //'
 //' @export
 // [[Rcpp::export]]
-arma::mat lambda1_to_theta_cpp(arma::mat lambda, int ell, int m, arma::imat mM) {
+arma::mat lambda1_to_theta_cpp(arma::mat& lambda,
+                               int ell, int m, arma::imat& mM) {
   // Declare variables
   par par;
   par.ell = ell;
@@ -53,7 +54,8 @@ arma::mat lambda1_to_theta_cpp(arma::mat lambda, int ell, int m, arma::imat mM) 
 //'
 //' @export
 // [[Rcpp::export]]
-arma::mat lambda2_to_theta_cpp(arma::mat lambda, int ell, int m, arma::imat lL) {
+arma::mat lambda2_to_theta_cpp(arma::mat& lambda,
+                               int ell, int m, arma::imat& lL) {
   // Declare variables
   par par;
   par.ell = ell;

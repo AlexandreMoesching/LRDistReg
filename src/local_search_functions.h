@@ -17,11 +17,11 @@ void local_search2_ref_cpp(arma::mat& theta, arma::mat& Psi,
                            arma::mat& lambda_star, pava_par& par2,
                            double& delta, const par& par);
 
-arma::mat simple_step_cpp(arma::mat theta, arma::mat Psi, double delta,
-                          int ell, arma::imat mM, int n, arma::mat w);
-List local_search1_cpp(arma::mat theta, int ell, int m, int n,
-                       arma::imat lL, arma::imat mM,
-                       arma::mat w, arma::mat w_ul);
-List local_search2_cpp(arma::mat theta, int ell, int m, int n,
-                       arma::imat lL, arma::imat mM,
-                       arma::mat w, arma::mat w_ol);
+arma::mat simple_step_cpp(arma::mat& theta, arma::mat& Psi, double delta,
+                          int ell, arma::imat& mM, int n, arma::mat& w);
+List local_search1_cpp(arma::mat& theta, int ell, int m, int n,
+                       arma::imat& lL, arma::imat& mM,
+                       arma::mat& w, arma::mat& w_ul);
+List local_search2_cpp(arma::mat& theta, int ell, int m, int n,
+                       arma::imat& lL, arma::imat& mM,
+                       arma::mat& w, arma::mat& w_ol);

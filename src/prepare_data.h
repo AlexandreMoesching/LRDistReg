@@ -22,5 +22,5 @@ struct par {
   arma::vec W;
 };
 
-par  prepare_data_par_cpp(arma::vec X, arma::vec Y, arma::vec W);
-List prepare_data_cpp(    arma::vec X, arma::vec Y, arma::vec W);
+par  prepare_data_par_cpp(arma::vec& X, arma::vec& Y, arma::vec& W);
+List prepare_data_cpp(    arma::vec& X, arma::vec& Y, arma::vec& W);
