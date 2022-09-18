@@ -180,8 +180,8 @@ delta0 <- 1e-9
 
 res_R <- dist.reg(X, Y, W,
                   show.design = FALSE, indices = FALSE, suggest.delta0 = FALSE,
-                  delta0 = delta0, ST = TRUE)
-res_cpp <- dist_reg_cpp(X, Y, W, delta0, ST = TRUE)
+                  delta0 = delta0, x0 = NULL, ST = TRUE)
+res_cpp <- dist_reg_cpp(X, Y, W, delta0, x0 = numeric(), ST = TRUE)
 
 cat("h.TP2's are the same:",
     all.equal(res_R$h.TP2, res_cpp$h_TP2, tolerance = 1e-10), "\n")
@@ -192,3 +192,41 @@ cat("CDF_ST's are the same:",
 cat("CDF_EMP's are the same:",
     all.equal(res_R$CDF.EMP, res_cpp$CDF_EMP, tolerance = 1e-10), "\n")
 
+####____________________________________________________________________________
+#### TEST main with interpolate                                             ####
+delta0 <- 1e-9
+x0 <- unique(sort(floor(X)))
+
+res_R <- dist.reg(X, Y, W,
+                  show.design = FALSE, indices = FALSE, suggest.delta0 = FALSE,
+                  delta0 = delta0, x0 = x0, ST = TRUE)
+res_cpp <- dist_reg_cpp(X, Y, W, delta0, x0 = x0, ST = TRUE)
+
+cat("CDF0_LR's are the same:",
+    all.equal(res_R$CDF.LR, res_cpp$CDF_LR, tolerance = 1e-10), "\n")
+cat("CDF0_ST's are the same:",
+    all.equal(res_R$CDF.ST, res_cpp$CDF_ST, tolerance = 1e-10), "\n")
+cat("CDF0_EMP's are the same:",
+    all.equal(res_R$CDF.EMP, res_cpp$CDF_EMP, tolerance = 1e-10), "\n")
+
+
+####____________________________________________________________________________
+#### TEST interpolate                                                       ####
+ell <- 1e1
+m <- 1e1
+
+x <- 1:ell
+x0 <- c(runif(1), x + sort(runif(ell)))
+# x0 <- (x + sort(runif(ell)))[-ell]
+
+CDF <- t(apply(matrix(rnorm(ell * m), nrow = ell, ncol = m), 1, sort))
+
+res_R <- interpolate(x0, x, CDF)
+res_CPP <- interpolate_cpp(x0, x, CDF)
+
+cat("Interpolations are the same:",
+    all.equal(res_R, res_CPP, tolerance = 1e-12), "\n")
+
+# microbenchmark::microbenchmark(interpolate(x0, x, CDF),
+#                                interpolate_cpp(x0, x, CDF),
+#                                times = 1e2)

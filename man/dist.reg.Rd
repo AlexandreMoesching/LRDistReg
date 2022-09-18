@@ -12,8 +12,8 @@ dist.reg(
   indices = FALSE,
   suggest.delta0 = FALSE,
   delta0 = 0.01,
-  ST = FALSE,
-  x0 = NULL
+  x0 = NULL,
+  ST = FALSE
 )
 }
 \arguments{
@@ -31,10 +31,10 @@ dist.reg(
 
 \item{delta0}{Threshold}
 
+\item{x0}{Set of covariates on which to estimate the distributions}
+
 \item{ST}{Boolean indicating whether or not the classical isotonic
 distributional regression will also be computed}
-
-\item{x0}{Set of covariates on which to estimate the distributions}
 }
 \value{
 A list of results which depends on the option chosen

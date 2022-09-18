@@ -85,9 +85,9 @@ TP2.fit <- function(par, delta0 = 1e-1) {
 #' @param indices Whether or not to plot indices instead of true values
 #' @param suggest.delta0 Whether or not to suggest the threshold delta0
 #' @param delta0 Threshold
+#' @param x0 Set of covariates on which to estimate the distributions
 #' @param ST Boolean indicating whether or not the classical isotonic
 #' distributional regression will also be computed
-#' @param x0 Set of covariates on which to estimate the distributions
 #'
 #' @return A list of results which depends on the option chosen
 #' @export
@@ -95,8 +95,8 @@ TP2.fit <- function(par, delta0 = 1e-1) {
 #' @examples # To be done
 dist.reg <- function(X, Y, W = rep(1, length(X)),
                      show.design = FALSE, indices = FALSE,
-                     suggest.delta0 = FALSE, delta0 = 1e-2,
-                     ST = FALSE, x0 = NULL) {
+                     suggest.delta0 = FALSE,
+                     delta0 = 1e-2, x0 = NULL, ST = FALSE) {
   # Compute model parameters
   par <- prepare.data(X, Y, W)
 
@@ -130,18 +130,17 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
     for (j in 1:par$ell) {
       CDF.EMP[j, ] <- cumsum(par$w[j, ]) / par$w_jplus[j]
     }
-    CDF.ST <- apply(
+    res$CDF.EMP <- CDF.EMP
+    res$CDF.ST <- apply(
       CDF.EMP, 2,
       function(z) Iso::pava(z, w = par$w_jplus, decreasing = TRUE)
     )
 
     # Interpolate to x0 if x0 != NULL
     if (any(!is.null(x0))) {
-      CDF.EMP <- interpolate(x0, par$x, CDF.EMP)
-      CDF.ST <- interpolate(x0, par$x, CDF.ST)
+      res$CDF.EMP <- interpolate(x0, par$x, res$CDF.EMP)
+      res$CDF.ST  <- interpolate(x0, par$x, res$CDF.ST)
     }
-    res$CDF.EMP <- CDF.EMP
-    res$CDF.ST <- CDF.ST
   }
 
   # Return results

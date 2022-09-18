@@ -50,6 +50,19 @@ calibrate_cpp <- function(theta, ell, mM, n, w, w_jplus, w_plusk, prec) {
     .Call(`_LRDistReg_calibrate_cpp`, theta, ell, mM, n, w, w_jplus, w_plusk, prec)
 }
 
+#' Linear interpolation of the cdf's, C++ version
+#'
+#' @param x0 Set of covariates on which to extend CDF
+#' @param x Set of covariates of CDF, {X_1, X_2, ..., X_N}
+#' @param CDF Step-function matrix, its j-th row contains the cdf for X = x_j
+#'
+#' @return Linear interpolation of the cdf's on the new set x0
+#'
+#' @export
+interpolate_cpp <- function(x0, x, CDF) {
+    .Call(`_LRDistReg_interpolate_cpp`, x0, x, CDF)
+}
+
 #' v-tilde and gamma-tilde functions (row), C++ version
 #'
 #' @param theta Log-parameter
@@ -156,14 +169,15 @@ local_search2_cpp <- function(theta, ell, m, n, lL, mM, w, w_ol) {
 #' @param Y Responses
 #' @param W User-specified sample weights
 #' @param delta0 Threshhold
+#' @param x0 Set of covariates on which to estimate the distributions
 #' @param ST Boolean indicating whether or not the classical isotonic
 #' distributional regression will also be computed
 #'
 #' @return Isotonic distributional regression(s) and estimation parameters
 #'
 #' @export
-dist_reg_cpp <- function(X, Y, W, delta0, ST = FALSE) {
-    .Call(`_LRDistReg_dist_reg_cpp`, X, Y, W, delta0, ST)
+dist_reg_cpp <- function(X, Y, W, delta0, x0, ST = FALSE) {
+    .Call(`_LRDistReg_dist_reg_cpp`, X, Y, W, delta0, x0, ST)
 }
 
 #' Prepare the data, C++ version

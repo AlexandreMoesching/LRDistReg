@@ -4,7 +4,7 @@
 \alias{dist_reg_cpp}
 \title{Isotonic distributional regression (LR, ST, EMP)}
 \usage{
-dist_reg_cpp(X, Y, W, delta0, ST = FALSE)
+dist_reg_cpp(X, Y, W, delta0, x0, ST = FALSE)
 }
 \arguments{
 \item{X}{Covariates}
@@ -14,6 +14,8 @@ dist_reg_cpp(X, Y, W, delta0, ST = FALSE)
 \item{W}{User-specified sample weights}
 
 \item{delta0}{Threshhold}
+
+\item{x0}{Set of covariates on which to estimate the distributions}
 
 \item{ST}{Boolean indicating whether or not the classical isotonic
 distributional regression will also be computed}

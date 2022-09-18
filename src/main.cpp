@@ -7,6 +7,7 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
                      double& delta, double delta0, par& par) {
   // Declare variables
   double tmp_dbl = -log(accu(par.PP)); // SHOULD WE ALSO REPLACE SUM BY ACCU ELSEWHERE ??
+  // ALSO CAN WE NOT AVOID USING PP ??
   double prec = 1e-10;
   int s = 0;
 
@@ -117,6 +118,7 @@ void ST_fit_ref_cpp(arma::mat& CDF_EMP, arma::mat& CDF_ST,
 //' @param Y Responses
 //' @param W User-specified sample weights
 //' @param delta0 Threshhold
+//' @param x0 Set of covariates on which to estimate the distributions
 //' @param ST Boolean indicating whether or not the classical isotonic
 //' distributional regression will also be computed
 //'
@@ -124,8 +126,8 @@ void ST_fit_ref_cpp(arma::mat& CDF_EMP, arma::mat& CDF_ST,
 //'
 //' @export
 // [[Rcpp::export]]
-List dist_reg_cpp(arma::vec X, arma::vec Y, arma::vec W, double delta0,
-                  bool ST = false) {
+List dist_reg_cpp(arma::vec& X, arma::vec& Y, arma::vec& W,
+                  double delta0, arma::vec x0, bool ST = false) {
   // Compute parameters
   par par = prepare_data_par_cpp(X, Y, W);
 
@@ -175,7 +177,19 @@ List dist_reg_cpp(arma::vec X, arma::vec Y, arma::vec W, double delta0,
                   theta, Psi, v, gamma, lambda_star,
                   par1, par2, delta, delta0, par);
 
+  // Create list to return
+  List ResList = List::create(Named("h_TP2") = h_TP2,
+                              Named("q_LR") = q_LR,
+                              Named("CDF_LR") = CDF_LR,
+                              Named("delta") = delta,
+                              Named("par") = par_list);
 
+  // Interpolate
+  if (x0.n_elem > 0) {
+    ResList["CDF_LR"] = interpolate_cpp(x0, par.x, CDF_LR);
+  }
+
+  // If isotonic dsitributional regression has to be computed or not
   if (ST) {
     // Declare variables for isotonic distributional regression
     arma::mat CDF_EMP(par.ell, par.m);
@@ -188,21 +202,17 @@ List dist_reg_cpp(arma::vec X, arma::vec Y, arma::vec W, double delta0,
 
     // Estimate ST-ordered family of distributions
     ST_fit_ref_cpp(CDF_EMP, CDF_ST, par3, par);
+    ResList.push_back(CDF_ST,  "CDF_ST");
+    ResList.push_back(CDF_EMP, "CDF_EMP");
 
-    // Return
-    return List::create(Named("h_TP2") = h_TP2,
-                        Named("q_LR") = q_LR,
-                        Named("CDF_LR") = CDF_LR,
-                        Named("CDF_ST") = CDF_ST,
-                        Named("CDF_EMP") = CDF_EMP,
-                        Named("delta") = delta,
-                        Named("par") = par_list);
-  } else {
-    // Return
-    return List::create(Named("h_TP2") = h_TP2,
-                        Named("q_LR") = q_LR,
-                        Named("CDF_LR") = CDF_LR,
-                        Named("delta") = delta,
-                        Named("par") = par_list);
+    // Interpolate
+    if (x0.n_elem > 0) {
+      ResList["CDF_LR"]  = interpolate_cpp(x0, par.x, CDF_LR);
+      ResList["CDF_ST"]  = interpolate_cpp(x0, par.x, CDF_ST);
+      ResList["CDF_EMP"] = interpolate_cpp(x0, par.x, CDF_EMP);
+    }
   }
+
+  // Return
+  return ResList;
 }
