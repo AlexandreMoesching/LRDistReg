@@ -30,8 +30,8 @@ lattice::levelplot(outer(xx, yy, FUN = "d.cond.dist"),
 #_______________________________________________________________________________
 # GENERATE A SAMPLE
 #
-ell0 <- 5e0                   # Number of potential covariates
-x0 <- 1 + 3 * (1:ell0) / ell0 # Potential covariates
+l0 <- 5e0                   # Number of potential covariates
+x0 <- 1 + 3 * (1:l0) / l0 # Potential covariates
 
 n <- 1e3                     # Sample size
 X <- sort(sample(x0, size = n, replace = TRUE))
@@ -46,14 +46,14 @@ delta0 <- 1e-8                # Threshold for estimation precision
 # ESTIMATE
 #
 # (1) Estimation with R
-res_R <- dist.reg(X, Y, W, FALSE, FALSE, FALSE, delta0, TRUE)
+res_R <- dist.reg(X, Y, W, FALSE, FALSE, FALSE, delta0, NULL, TRUE)
 
 # (2) Estimation with C++
-res_cpp <- dist_reg_cpp(X, Y, W, delta0, TRUE)
+res_cpp <- dist_reg_cpp(X, Y, W, delta0, numeric(), TRUE)
 
 # Compare results
 sum(abs(res_R$h.TP2 - res_cpp$h_TP2))
 sum(abs(res_R$q.LR - res_cpp$q_LR))
-sum(abs(res_R$CDF.LR - res_cpp$CDF_LR))
-sum(abs(res_R$CDF.ST - res_cpp$CDF_ST))
-sum(abs(res_R$CDF.EMP - res_cpp$CDF_EMP))
+sum(abs(res_R$CDF_LR - res_cpp$CDF_LR))
+sum(abs(res_R$CDF_ST - res_cpp$CDF_ST))
+sum(abs(res_R$CDF_EMP - res_cpp$CDF_EMP))
