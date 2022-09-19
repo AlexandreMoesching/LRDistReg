@@ -4,12 +4,12 @@
 \alias{calibrate_cpp}
 \title{Approximate calibration of log-parameter}
 \usage{
-calibrate_cpp(theta, ell, mM, n, w, w_jplus, w_plusk, prec)
+calibrate_cpp(theta, l, mM, n, w, w_jplus, w_plusk, prec)
 }
 \arguments{
 \item{theta}{Log-parameter}
 
-\item{ell}{Number of unique covariates}
+\item{l}{Number of unique covariates}
 
 \item{mM}{(m_j,M_j) index pairs}
 

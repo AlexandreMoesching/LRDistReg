@@ -4,12 +4,12 @@
 \alias{lambda1.to.theta}
 \title{Transforms lambda (row) into theta, R version}
 \usage{
-lambda1.to.theta(lambda, ell, m, mM)
+lambda1.to.theta(lambda, l, m, mM)
 }
 \arguments{
 \item{lambda}{Row-wise differences}
 
-\item{ell}{Number of unique covariates}
+\item{l}{Number of unique covariates}
 
 \item{m}{Number of unique responses}
 

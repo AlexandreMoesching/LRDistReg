@@ -4,12 +4,12 @@
 \alias{f_theta_cpp}
 \title{Negative log-likelihood in terms of log-parameter, C++ version}
 \usage{
-f_theta_cpp(theta, ell, n, mM, w)
+f_theta_cpp(theta, l, n, mM, w)
 }
 \arguments{
 \item{theta}{Log-parameter}
 
-\item{ell}{Number of unique covariates}
+\item{l}{Number of unique covariates}
 
 \item{n}{Sample size}
 

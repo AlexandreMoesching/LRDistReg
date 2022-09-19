@@ -4,12 +4,12 @@
 \alias{lambda2_to_theta_cpp}
 \title{Transforms lambda (column) into theta, C++ version}
 \usage{
-lambda2_to_theta_cpp(lambda, ell, m, lL)
+lambda2_to_theta_cpp(lambda, l, m, lL)
 }
 \arguments{
 \item{lambda}{Column-wise differences}
 
-\item{ell}{Number of unique covariates}
+\item{l}{Number of unique covariates}
 
 \item{m}{Number of unique responses}
 

@@ -4,12 +4,12 @@
 \alias{local.search2}
 \title{Local search (column)}
 \usage{
-local.search2(theta, ell, m, n, mM, lL, PP, w, w_ol)
+local.search2(theta, l, m, n, mM, lL, PP, w, w_ol)
 }
 \arguments{
 \item{theta}{Log-parameter}
 
-\item{ell}{Number of unique covariates}
+\item{l}{Number of unique covariates}
 
 \item{m}{Number of unique responses}
 
