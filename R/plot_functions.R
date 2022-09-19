@@ -6,14 +6,14 @@
 #' @return Plot
 #' @export
 plotD <- function(par, indices = FALSE) {
-  ell <- par$ell
+  l <- par$l
   m <- par$m
   P <- which(par$PP, arr.ind = TRUE)
 
   if (indices == TRUE) {
     D <- which(par$w >= 1, arr.ind = TRUE)
     D0 <- D
-    x <- 1:ell
+    x <- 1:l
     y <- 1:m
     G <- P
     graphics::plot(D,
@@ -36,7 +36,7 @@ plotD <- function(par, indices = FALSE) {
 
   # Vertical segments
   mM <- par$mM
-  for (j in 1:ell) {
+  for (j in 1:l) {
     graphics::segments(
       x0 = x[j], y0 = y[mM[j, 1]], x1 = x[j], y1 = y[mM[j, 2]],
       col = "lightgrey"

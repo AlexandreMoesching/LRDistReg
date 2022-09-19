@@ -13,7 +13,7 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
 
   // Initialize delta and theta
   delta = R_PosInf;
-  for (int j = 0; j < par.ell; j++) {
+  for (int j = 0; j < par.l; j++) {
     theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)).fill(tmp_dbl);
   }
 
@@ -44,7 +44,7 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
   h_TP2 = exp(theta);
 
   // Compute q_LR
-  for (int j = 0; j < par.ell; j++) {
+  for (int j = 0; j < par.l; j++) {
     q_LR.row(j) = h_TP2.row(j) / sum(h_TP2.row(j));
   }
 
@@ -82,7 +82,7 @@ void ST_fit_ref_cpp(arma::mat& CDF_EMP, arma::mat& CDF_ST,
     par3.MM[d] = CDF_EMP.at(0, k);
 
     // PAVA (antitonic regression)
-    for (int j = 1; j < par.ell; j++) {
+    for (int j = 1; j < par.l; j++) {
       // Increase partition
       d++;
       par3.PP[d] = j;
@@ -132,7 +132,7 @@ List dist_reg_cpp(arma::vec& X, arma::vec& Y, arma::vec& W,
   par par = prepare_data_par_cpp(X, Y, W);
 
   // Prepare parameter list to return
-  List par_list = List::create(Named("ell") = par.ell,
+  List par_list = List::create(Named("l") = par.l,
                                Named("lL") = par.lL,
                                Named("m") = par.m,
                                Named("mM") = par.mM,
@@ -150,19 +150,19 @@ List dist_reg_cpp(arma::vec& X, arma::vec& Y, arma::vec& W,
                                Named("Y") = par.Y);
 
   // Declare variables for TP2 estimation
-  arma::mat  h_TP2(par.ell, par.m);
-  arma::mat   q_LR(par.ell, par.m);
-  arma::mat CDF_LR(par.ell, par.m);
+  arma::mat  h_TP2(par.l, par.m);
+  arma::mat   q_LR(par.l, par.m);
+  arma::mat CDF_LR(par.l, par.m);
 
-  arma::mat       theta(par.ell, par.m, arma::fill::value(R_NegInf));
-  arma::mat         Psi(par.ell, par.m);
-  arma::mat           v(par.ell, par.m);
-  arma::mat       gamma(par.ell, par.m);
-  arma::mat lambda_star(par.ell, par.m);
+  arma::mat       theta(par.l, par.m, arma::fill::value(R_NegInf));
+  arma::mat         Psi(par.l, par.m);
+  arma::mat           v(par.l, par.m);
+  arma::mat       gamma(par.l, par.m);
+  arma::mat lambda_star(par.l, par.m);
 
-  arma::ivec PP1(par.ell + 1);
-  arma::vec  MM1(par.ell + 1);
-  arma::vec  WW1(par.ell + 1);
+  arma::ivec PP1(par.l + 1);
+  arma::vec  MM1(par.l + 1);
+  arma::vec  WW1(par.l + 1);
   pava_par par1 = {PP1, MM1, WW1};
 
   arma::ivec PP2(par.m + 1);
@@ -192,12 +192,12 @@ List dist_reg_cpp(arma::vec& X, arma::vec& Y, arma::vec& W,
   // If isotonic dsitributional regression has to be computed or not
   if (ST) {
     // Declare variables for isotonic distributional regression
-    arma::mat CDF_EMP(par.ell, par.m);
-    arma::mat  CDF_ST(par.ell, par.m);
+    arma::mat CDF_EMP(par.l, par.m);
+    arma::mat  CDF_ST(par.l, par.m);
 
-    arma::ivec PP3(par.ell + 1);
-    arma::vec  MM3(par.ell + 1);
-    arma::vec  WW3(par.ell + 1);
+    arma::ivec PP3(par.l + 1);
+    arma::vec  MM3(par.l + 1);
+    arma::vec  WW3(par.l + 1);
     pava_par par3 = {PP3, MM3, WW3};
 
     // Estimate ST-ordered family of distributions
