@@ -3,7 +3,7 @@
 //' Linear interpolation of the cdf's, C++ version
 //'
 //' @param x0 Set of covariates on which to extend CDF
-//' @param x Set of covariates of CDF, {X_1, X_2, ..., X_N}
+//' @param x Set of covariates of CDF
 //' @param CDF Step-function matrix, its j-th row contains the cdf for X = x_j
 //'
 //' @return Linear interpolation of the cdf's on the new set x0
@@ -32,9 +32,9 @@ arma::mat interpolate_cpp(arma::vec& x0, arma::vec& x, arma::mat& CDF) {
   if (s - r + 1 > 0) {
     arma::vec x_int = x0.subvec(r, s);
     arma::vec y_int(s - r + 1);
-    for (int j = 0; j < m; j++) {
-      interp1(x, CDF.col(j), x_int, y_int, "*linear");
-      CDF0.col(j).subvec(r, s) = y_int;
+    for (int k = 0; k < m; k++) {
+      interp1(x, CDF.col(k), x_int, y_int, "*linear");
+      CDF0.col(k).subvec(r, s) = y_int;
     }
   }
 
