@@ -31,7 +31,7 @@ devtools::install_github("AlexandreMoesching/LRDistReg")
 
 ## PART 1: True model (parametric)
 
-The present demo uses a gamma family of distributions $(Q_x)_{x\in \mathfrak{X}$. More precisely
+The present demo uses a gamma family of distributions $(Q_x)_{x\in \mathfrak{X}}$. More precisely
 $$
 Q_x := \mathrm{Gamma}\bigl(a(x), b(x)\bigr),\quad \text{for all}\ x \in \mathfrak{X} := [1,4],
 $$
@@ -73,7 +73,7 @@ ell0 <- 10
 x0 <- 1+(1:ell0)/ell0*3
 ```
 
-Generate observation pairs $(X_1,Y_1),(X_2,Y_2),...,(X_N,Y_N)$.
+Generate observation pairs $(X_1,Y_1),(X_2,Y_2),...,(X_n,Y_n)$.
 ```{r generate_data}
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
@@ -93,25 +93,25 @@ If `indices = TRUE`, then the values $1,2,...,ell$ are used for the plot instead
 res <- dist.reg(X, Y, show.design = TRUE, indices = TRUE)
 ```
 
-The family of distributions is estimated at each points of this grid. The estimated conditional distribution functions are given by `res$CDF.LR`, an $\ell$-by-$m$ matrix.
+The family of distributions is estimated at each points of this grid. The estimated conditional distribution functions are given by `res$CDF_LR`, an $\ell$-by-$m$ matrix.
 ```{r show_results, results=FALSE}
-res$CDF.LR
+res$CDF_LR
 ```
 
 One can also retrieve the jumps only.
 ```{r show_jumps, results=FALSE}
-res$q.LR
-rowSums(res$q.LR)
+res$q_LR
+rowSums(res$q_LR)
 
-res$h.TP2
-rowSums(res$h.TP2); res$D.Setup$w_j.plus/res$D.Setup$n
-colSums(res$h.TP2); res$D.Setup$w_plus.k/res$D.Setup$n
+res$h_TP2
+rowSums(res$h_TP2); res$par$w_j.plus/res$par$n
+colSums(res$h_TP2); res$par$w_plus.k/res$par$n
 ```
 
 To see how the stopping criteria is reached along with the corresponding values of the negative log-likelihood, the echo option can be activated.
 
 ```{r fit_with_echo}
-res <- dist.reg(X, Y, echo = TRUE)
+res <- dist.reg(X, Y)
 res$delta0
 ```
 
@@ -149,30 +149,30 @@ for (i in 1:n) Y[i] <- r.cond.dist(X[i])
 
 We let the program advise us a "reasonable" value for epsilon.
 ```{r fit_large}
-res <- dist.reg(X, Y, suggest.delta0 = TRUE, IDR = TRUE, echo = TRUE)
+res <- dist.reg(X, Y, suggest.delta0 = TRUE, ST = TRUE)
 res$delta0
 res$tot.time
 ```
 
 Retrieve all CDF's and some useful parameters.
 ```{r retrieve}
-x <- res$D.Setup$x
-y <- res$D.Setup$y
-ell <- res$D.Setup$ell
-m <- res$D.Setup$m
+x <- res$par$x
+y <- res$par$y
+ell <- res$par$ell
+m <- res$par$m
 
-CDF.LR <- res$CDF.LR
-CDF.ST <- res$CDF.ST
-CDF.EMP <- res$CDF.EMP
-CDF.TRUE <- outer(x, y, p.cond.dist)
+CDF_LR <- res$CDF_LR
+CDF_ST <- res$CDF_ST
+CDF_EMP <- res$CDF_EMP
+CDF_TRUE <- outer(x, y, p.cond.dist)
 ```
 
 Evaluate estimation quality.
 ```{r evaulate_quality}
-DIFF.LR <- sum(abs(CDF.LR - CDF.TRUE))/(ell*m)
-DIFF.ST <- sum(abs(CDF.ST - CDF.TRUE))/(ell*m)
-DIFF.EMP <- sum(abs(CDF.EMP - CDF.TRUE))/(ell*m)
-c(DIFF.LR, DIFF.ST, DIFF.EMP)
+DIFF_LR <- sum(abs(CDF_LR - CDF_TRUE))/(ell*m)
+DIFF.ST <- sum(abs(CDF_ST - CDF_TRUE))/(ell*m)
+DIFF.EMP <- sum(abs(CDF_EMP - CDF_TRUE))/(ell*m)
+c(DIFF_LR, DIFF.ST, DIFF.EMP)
 ```
 
 Plot the true CDF $F_x$ as well as its estimators for two values of $x$, one 
@@ -182,16 +182,16 @@ par(mfrow = c(2,1), mar = c(4.1,4.1,0.2,0.2))
 xx <- c(2.5, 4)
 for (xj in xx) {
   j <- which(xj == x)
-  plot(y, CDF.TRUE[j,], type = "l",
+  plot(y, CDF_TRUE[j,], type = "l",
        xlab = expression(italic(y)),
        ylab = expression(italic(f[x](y))),
        lwd = 2)
-  lines(y, CDF.EMP[j,], lty = 2)
-  lines(y, CDF.ST[j,], col = "blue", lwd = 2)
-  lines(y, CDF.LR[j,], col = "red", lwd = 2)
+  lines(y, CDF_EMP[j,], lty = 2)
+  lines(y, CDF_ST[j,], col = 2, lwd = 2)
+  lines(y, CDF_LR[j,], col = 3, lwd = 2)
   legend("topleft", 
          legend = c("True", "EMP", "ST", "LR"),
-         col = c(1,1,4,2), lty = c(1,2,1,1), lwd = c(2,1,2,2))
+         col = c(1,1,2,3), lty = c(1,2,1,1), lwd = c(2,1,2,2))
 }
 ```
 
@@ -202,12 +202,12 @@ Plot differences between the true CDF and LR/ST-estimators for all values of $x$
 ```{r plot_differences_between_truth_and_estimators, fig.show='hide'}
 n.plot <- min(ceiling(sqrt(ell)), 5)
 par(mfrow = c(n.plot, n.plot), mar = c(2,2,1,1))
-unif.ylim <- range(c(CDF.LR - CDF.TRUE, CDF.ST - CDF.TRUE))
+unif.ylim <- range(c(CDF_LR - CDF_TRUE, CDF_ST - CDF_TRUE))
 for (j in 1:ell) {
-  plot(y, CDF.ST[j,] - CDF.TRUE[j,], type = "l", col = "blue", 
+  plot(y, CDF_ST[j,] - CDF_TRUE[j,], type = "l", col = 2, 
        lwd = 1, ylim = unif.ylim)
   abline(h = 0)
-  lines(y, CDF.LR[j,] - CDF.TRUE[j,], col = "red", lwd = 1)
+  lines(y, CDF_LR[j,] - CDF_TRUE[j,], col = 3, lwd = 1)
 }
 ```
 
@@ -223,8 +223,8 @@ X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
 for (i in 1:n) Y[i] <- r.cond.dist(X[i])
 
-res <- dist.reg(X, Y, suggest.delta0 = TRUE, IDR = TRUE)
-dim(res$CDF.LR); dim(res$CDF.ST); dim(res$CDF.EMP)
-res <- dist.reg(X, Y, suggest.delta0 = TRUE, IDR = TRUE, x0 = x0)
-dim(res$CDF.LR); dim(res$CDF.ST); dim(res$CDF.EMP)
+res <- dist.reg(X, Y, suggest.delta0 = TRUE, ST = TRUE)
+dim(res$CDF_LR); dim(res$CDF_ST); dim(res$CDF_EMP)
+res <- dist.reg(X, Y, suggest.delta0 = TRUE, ST = TRUE, x0 = x0)
+dim(res$CDF_LR); dim(res$CDF_ST); dim(res$CDF_EMP)
 ```
