@@ -4,7 +4,7 @@
 \alias{TP2.fit}
 \title{TP2 fit function}
 \usage{
-TP2.fit(par, delta0 = 0.1)
+TP2.fit(par, delta0 = 1e-08)
 }
 \arguments{
 \item{par}{Model parameters}

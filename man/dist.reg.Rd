@@ -11,7 +11,7 @@ dist.reg(
   show.design = FALSE,
   indices = FALSE,
   suggest.delta0 = FALSE,
-  delta0 = 0.01,
+  delta0 = 1e-08,
   x0 = NULL,
   ST = FALSE
 )
