@@ -9,7 +9,7 @@ interpolate(x0, x, CDF)
 \arguments{
 \item{x0}{Set of covariates on which to extend CDF}
 
-\item{x}{Set of covariates of CDF, {X_1, X_2, ..., X_N}}
+\item{x}{Set of covariates of CDF}
 
 \item{CDF}{Step-function matrix, its j-th row contains the cdf for X = x_j}
 }
