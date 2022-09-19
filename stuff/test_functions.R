@@ -19,7 +19,7 @@ cat("x's are the same:", all(res_R$x == res_cpp$x), "\n")
 cat("X's are the same:", all(res_R$X == res_cpp$X), "\n")
 cat("y's are the same:", all(res_R$y == res_cpp$y), "\n")
 cat("Y's are the same:", all(res_R$Y == res_cpp$Y), "\n")
-cat("ell's are the same:", all(res_R$ell == res_cpp$ell), "\n")
+cat("l's are the same:", all(res_R$l == res_cpp$l), "\n")
 cat("m's are the same:", all(res_R$m == res_cpp$m), "\n")
 cat("w's are the same:", all(res_R$w == res_cpp$w), "\n")
 cat("w_jplus's are the same:", all(res_R$w_jplus == res_cpp$w_jplus), "\n")
@@ -30,8 +30,8 @@ cat("lL's are the same:", all(res_R$lL == res_cpp$lL + 1), "\n")
 cat("mM's are the same:", all(res_R$mM == res_cpp$mM + 1), "\n")
 
 # plot(X, Y, pch = 16, cex = 0.2)
-# points(res_R$x[1:res_R$ell], res_R$y[res_R$mM[,1]], col = "red", pch = 1, cex = 0.7)
-# points(res_R$x[1:res_R$ell], res_R$y[res_R$mM[,2]], col = "red", pch = 1, cex = 0.7)
+# points(res_R$x[1:res_R$l], res_R$y[res_R$mM[,1]], col = "red", pch = 1, cex = 0.7)
+# points(res_R$x[1:res_R$l], res_R$y[res_R$mM[,2]], col = "red", pch = 1, cex = 0.7)
 # points(res_R$x[res_R$lL[,1]], res_R$y[1:res_R$m], col = "blue", pch = 16, cex = 0.5)
 # points(res_R$x[res_R$lL[,2]], res_R$y[1:res_R$m], col = "blue", pch = 16, cex = 0.5)
 
@@ -44,36 +44,36 @@ cat("PP's are the same:", all(res_R$PP == res_cpp$PP), "\n")
 ####____________________________________________________________________________
 #### TEST reparametrize                                                     ####
 
-ell <- res_cpp$ell
+l <- res_cpp$l
 m <- res_cpp$m
 
-lambda <- matrix(rnorm(ell * m), nrow = ell, ncol = m)
+lambda <- matrix(rnorm(l * m), nrow = l, ncol = m)
 
 lL <- res_cpp$lL
 mM <- res_cpp$mM
 
 cat("lambda1.to.theta's are the same:",
-    all.equal(lambda1.to.theta(lambda, ell, m, mM + 1),
-              lambda1_to_theta_cpp(lambda, ell, m, mM),
+    all.equal(lambda1.to.theta(lambda, l, m, mM + 1),
+              lambda1_to_theta_cpp(lambda, l, m, mM),
               tolerance = 1e-14), "\n")
 cat("lambda2.to.theta's are the same:",
-    all.equal(lambda2.to.theta(lambda, ell, m, lL + 1),
-              lambda2_to_theta_cpp(lambda, ell, m, lL),
+    all.equal(lambda2.to.theta(lambda, l, m, lL + 1),
+              lambda2_to_theta_cpp(lambda, l, m, lL),
               tolerance = 1e-14), "\n")
 
-# microbenchmark::microbenchmark(lambda1.to.theta(lambda, ell, m, mM + 1),
-#                                lambda1_to_theta_cpp(lambda, ell, m, mM),
+# microbenchmark::microbenchmark(lambda1.to.theta(lambda, l, m, mM + 1),
+#                                lambda1_to_theta_cpp(lambda, l, m, mM),
 #                                times = 1e2)
 
 ####____________________________________________________________________________
 #### TEST likelihood_functions                                              ####
 
-theta <- matrix(rnorm(ell * m), nrow = ell, ncol = m)
+theta <- matrix(rnorm(l * m), nrow = l, ncol = m)
 
 w_ul <- res_cpp$w_ul
 
-tmp_R <- vgamma.tilde1(theta, ell, m, n, mM + 1, w_ul)
-tmp_cpp <- vgamma_tilde1_cpp(theta, ell, m, n, mM, w_ul)
+tmp_R <- vgamma.tilde1(theta, l, m, n, mM + 1, w_ul)
+tmp_cpp <- vgamma_tilde1_cpp(theta, l, m, n, mM, w_ul)
 cat("v1's are the same:",
     all.equal(tmp_R$v, tmp_cpp$v, tolerance = 1e-14), "\n")
 cat("gamma1's are the same:",
@@ -81,8 +81,8 @@ cat("gamma1's are the same:",
 
 w_ol <- res_cpp$w_ol
 
-tmp_R <- vgamma.tilde2(theta, ell, m, n, lL + 1, w_ol)
-tmp_cpp <- vgamma_tilde2_cpp(theta, ell, m, n, lL, w_ol)
+tmp_R <- vgamma.tilde2(theta, l, m, n, lL + 1, w_ol)
+tmp_cpp <- vgamma_tilde2_cpp(theta, l, m, n, lL, w_ol)
 cat("v2's are the same:",
     all.equal(tmp_R$v, tmp_cpp$v, tolerance = 1e-14), "\n")
 cat("gamma2's are the same:",
@@ -93,17 +93,17 @@ PP <- res_R$PP
 
 cat("f.theta's are the same:",
     all.equal(f.theta(theta, n, w, PP),
-              f_theta_cpp(theta, ell, n, mM, w),
+              f_theta_cpp(theta, l, n, mM, w),
               tolerance = 1e-12), "\n")
 
-# microbenchmark::microbenchmark(vgamma.tilde1(theta, ell, m, n, mM + 1, w_ul),
-#                                vgamma_tilde1_cpp(theta, ell, m, n, mM, w_ul),
+# microbenchmark::microbenchmark(vgamma.tilde1(theta, l, m, n, mM + 1, w_ul),
+#                                vgamma_tilde1_cpp(theta, l, m, n, mM, w_ul),
 #                                times = 1e2)
-# microbenchmark::microbenchmark(vgamma.tilde2(theta, ell, m, n, lL + 1, w_ol),
-#                                vgamma_tilde2_cpp(theta, ell, m, n, lL, w_ol),
+# microbenchmark::microbenchmark(vgamma.tilde2(theta, l, m, n, lL + 1, w_ol),
+#                                vgamma_tilde2_cpp(theta, l, m, n, lL, w_ol),
 #                                times = 1e2)
 # microbenchmark::microbenchmark(f.theta(theta, n, w, PP),
-#                                f_theta_cpp(theta, ell, n, mM, w),
+#                                f_theta_cpp(theta, l, n, mM, w),
 #                                times = 1e2)
 
 ####____________________________________________________________________________
@@ -125,7 +125,7 @@ prec <- 1e-12
 
 cat("calibrate's are the same:",
     all.equal(calibrate(theta, n, w, w_jplus, w_plusk, PP, prec),
-              calibrate_cpp(theta, ell, mM, n, w, w_jplus, w_plusk, prec),
+              calibrate_cpp(theta, l, mM, n, w, w_jplus, w_plusk, prec),
               tolerance = 1e-12), "\n")
 
 # microbenchmark::microbenchmark(calibrate1(theta, n, w_jplus),
@@ -135,21 +135,21 @@ cat("calibrate's are the same:",
 #                                calibrate2_cpp(theta, n, w_plusk),
 #                                times = 1e2)
 # microbenchmark::microbenchmark(calibrate(theta, n, w, w_jplus, w_plusk, PP, prec),
-#                                calibrate_cpp(theta, ell, mM, n, w, w_jplus, w_plusk, prec),
+#                                calibrate_cpp(theta, l, mM, n, w, w_jplus, w_plusk, prec),
 #                                times = 1e2)
 
 ####____________________________________________________________________________
 #### TEST local_search_functions                                            ####
 
-res_R <- local.search1(theta, ell, m, n, mM + 1, lL + 1, PP, w, w_ul)
-res_cpp <- local_search1_cpp(theta, ell, m, n, lL, mM, w, w_ul)
+res_R <- local.search1(theta, l, m, n, mM + 1, lL + 1, PP, w, w_ul)
+res_cpp <- local_search1_cpp(theta, l, m, n, lL, mM, w, w_ul)
 cat("Psi1's are the same:",
     all.equal(res_R$Psi, res_cpp$Psi, tolerance = 1e-12), "\n")
 cat("delta1's are the same:",
     all.equal(res_R$delta, res_cpp$delta, tolerance = 1e-12), "\n")
 
-res_R <- local.search2(theta, ell, m, n, mM + 1, lL + 1, PP, w, w_ol)
-res_cpp <- local_search2_cpp(theta, ell, m, n, lL, mM, w, w_ol)
+res_R <- local.search2(theta, l, m, n, mM + 1, lL + 1, PP, w, w_ol)
+res_cpp <- local_search2_cpp(theta, l, m, n, lL, mM, w, w_ol)
 cat("Psi2's are the same:",
     all.equal(res_R$Psi, res_cpp$Psi, tolerance = 1e-12), "\n")
 cat("delta2's are the same:",
@@ -158,19 +158,19 @@ cat("delta2's are the same:",
 Psi <- res_cpp$Psi
 delta <- res_cpp$delta
 
-res_R <- simple.step(theta, Psi, delta, ell, m, n, w, PP)
-res_cpp <- simple_step_cpp(theta, Psi, delta, ell, mM, n, w)
+res_R <- simple.step(theta, Psi, delta, l, m, n, w, PP)
+res_cpp <- simple_step_cpp(theta, Psi, delta, l, mM, n, w)
 cat("simple.step's are the same:",
     all.equal(res_R[PP], res_cpp[PP], tolerance = 1e-12), "\n")
 
-# microbenchmark::microbenchmark(local.search1(theta, ell, m, n, mM + 1, lL + 1, PP, w, w_ul),
-#                                local_search1_cpp(theta, ell, m, n, lL, mM, w, w_ul),
+# microbenchmark::microbenchmark(local.search1(theta, l, m, n, mM + 1, lL + 1, PP, w, w_ul),
+#                                local_search1_cpp(theta, l, m, n, lL, mM, w, w_ul),
 #                                times = 1e2)
-# microbenchmark::microbenchmark(local.search2(theta, ell, m, n, mM + 1, lL + 1, PP, w, w_ol),
-#                                local_search2_cpp(theta, ell, m, n, lL, mM, w, w_ol),
+# microbenchmark::microbenchmark(local.search2(theta, l, m, n, mM + 1, lL + 1, PP, w, w_ol),
+#                                local_search2_cpp(theta, l, m, n, lL, mM, w, w_ol),
 #                                times = 1e2)
-# microbenchmark::microbenchmark(simple.step(theta, Psi, delta, ell, m, n, w, PP),
-#                                simple_step_cpp(theta, Psi, delta, ell, mM, n, w),
+# microbenchmark::microbenchmark(simple.step(theta, Psi, delta, l, m, n, w, PP),
+#                                simple_step_cpp(theta, Psi, delta, l, mM, n, w),
 #                                times = 1e2)
 
 
@@ -212,14 +212,14 @@ cat("CDF0_EMP's are the same:",
 
 ####____________________________________________________________________________
 #### TEST interpolate                                                       ####
-ell <- 1e1
+l <- 1e1
 m <- 1e1
 
-x <- 1:ell
-x0 <- c(runif(1), x + sort(runif(ell)))
-# x0 <- (x + sort(runif(ell)))[-ell]
+x <- 1:l
+x0 <- c(runif(1), x + sort(runif(l)))
+# x0 <- (x + sort(runif(l)))[-l]
 
-CDF <- t(apply(matrix(rnorm(ell * m), nrow = ell, ncol = m), 1, sort))
+CDF <- t(apply(matrix(rnorm(l * m), nrow = l, ncol = m), 1, sort))
 
 res_R <- interpolate(x0, x, CDF)
 res_CPP <- interpolate_cpp(x0, x, CDF)

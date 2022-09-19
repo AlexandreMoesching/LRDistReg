@@ -35,7 +35,7 @@ calibrate2_cpp <- function(theta, n, w_plusk) {
 #' such that f(theta.new) is minimal.
 #'
 #' @param theta Log-parameter
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param mM (m_j,M_j) index pairs
 #' @param n Sample size
 #' @param w Sample weights
@@ -46,8 +46,8 @@ calibrate2_cpp <- function(theta, n, w_plusk) {
 #' @return Approximately calibrated log-parameter
 #'
 #' @export
-calibrate_cpp <- function(theta, ell, mM, n, w, w_jplus, w_plusk, prec) {
-    .Call(`_LRDistReg_calibrate_cpp`, theta, ell, mM, n, w, w_jplus, w_plusk, prec)
+calibrate_cpp <- function(theta, l, mM, n, w, w_jplus, w_plusk, prec) {
+    .Call(`_LRDistReg_calibrate_cpp`, theta, l, mM, n, w, w_jplus, w_plusk, prec)
 }
 
 #' Linear interpolation of the cdf's, C++ version
@@ -66,7 +66,7 @@ interpolate_cpp <- function(x0, x, CDF) {
 #' v-tilde and gamma-tilde functions (row), C++ version
 #'
 #' @param theta Log-parameter
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param mM (m_j,M_j) index pairs
@@ -75,14 +75,14 @@ interpolate_cpp <- function(x0, x, CDF) {
 #' @return v-tilde and gamma-tilde functions
 #'
 #' @export
-vgamma_tilde1_cpp <- function(theta, ell, m, n, mM, w_ul) {
-    .Call(`_LRDistReg_vgamma_tilde1_cpp`, theta, ell, m, n, mM, w_ul)
+vgamma_tilde1_cpp <- function(theta, l, m, n, mM, w_ul) {
+    .Call(`_LRDistReg_vgamma_tilde1_cpp`, theta, l, m, n, mM, w_ul)
 }
 
 #' v-tilde and gamma-tilde functions (column), C++ version
 #'
 #' @param theta Log-parameter
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param lL (l_k,L_k) index pairs
@@ -91,14 +91,14 @@ vgamma_tilde1_cpp <- function(theta, ell, m, n, mM, w_ul) {
 #' @return v-tilde and gamma-tilde functions
 #'
 #' @export
-vgamma_tilde2_cpp <- function(theta, ell, m, n, lL, w_ol) {
-    .Call(`_LRDistReg_vgamma_tilde2_cpp`, theta, ell, m, n, lL, w_ol)
+vgamma_tilde2_cpp <- function(theta, l, m, n, lL, w_ol) {
+    .Call(`_LRDistReg_vgamma_tilde2_cpp`, theta, l, m, n, lL, w_ol)
 }
 
 #' Negative log-likelihood in terms of log-parameter, C++ version
 #'
 #' @param theta Log-parameter
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param n Sample size
 #' @param mM (m_j,M_j) index pairs
 #' @param w Sample weights
@@ -106,8 +106,8 @@ vgamma_tilde2_cpp <- function(theta, ell, m, n, lL, w_ol) {
 #' @return Negative log-likelihood in terms of log-parameter
 #'
 #' @export
-f_theta_cpp <- function(theta, ell, n, mM, w) {
-    .Call(`_LRDistReg_f_theta_cpp`, theta, ell, n, mM, w)
+f_theta_cpp <- function(theta, l, n, mM, w) {
+    .Call(`_LRDistReg_f_theta_cpp`, theta, l, n, mM, w)
 }
 
 #' Function to take a simple step
@@ -115,7 +115,7 @@ f_theta_cpp <- function(theta, ell, n, mM, w) {
 #' @param theta Log-parameter
 #' @param Psi Proposal
 #' @param delta Delta
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param mM (m_j,M_j) index pairs
 #' @param n Sample size
 #' @param w Sample weights
@@ -123,14 +123,14 @@ f_theta_cpp <- function(theta, ell, n, mM, w) {
 #' @return Updated theta parameter
 #'
 #' @export
-simple_step_cpp <- function(theta, Psi, delta, ell, mM, n, w) {
-    .Call(`_LRDistReg_simple_step_cpp`, theta, Psi, delta, ell, mM, n, w)
+simple_step_cpp <- function(theta, Psi, delta, l, mM, n, w) {
+    .Call(`_LRDistReg_simple_step_cpp`, theta, Psi, delta, l, mM, n, w)
 }
 
 #' Local search (row)
 #'
 #' @param theta Log-parameter
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param lL (l_k,L_k) index pairs
@@ -141,14 +141,14 @@ simple_step_cpp <- function(theta, Psi, delta, ell, mM, n, w) {
 #' @return New proposal Psi and step-size delta
 #'
 #' @export
-local_search1_cpp <- function(theta, ell, m, n, lL, mM, w, w_ul) {
-    .Call(`_LRDistReg_local_search1_cpp`, theta, ell, m, n, lL, mM, w, w_ul)
+local_search1_cpp <- function(theta, l, m, n, lL, mM, w, w_ul) {
+    .Call(`_LRDistReg_local_search1_cpp`, theta, l, m, n, lL, mM, w, w_ul)
 }
 
 #' Local search (column)
 #'
 #' @param theta Log-parameter
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param lL (l_k,L_k) index pairs
@@ -159,8 +159,8 @@ local_search1_cpp <- function(theta, ell, m, n, lL, mM, w, w_ul) {
 #' @return New proposal Psi and step-size delta
 #'
 #' @export
-local_search2_cpp <- function(theta, ell, m, n, lL, mM, w, w_ol) {
-    .Call(`_LRDistReg_local_search2_cpp`, theta, ell, m, n, lL, mM, w, w_ol)
+local_search2_cpp <- function(theta, l, m, n, lL, mM, w, w_ol) {
+    .Call(`_LRDistReg_local_search2_cpp`, theta, l, m, n, lL, mM, w, w_ol)
 }
 
 #' Isotonic distributional regression (LR, ST, EMP)
@@ -196,28 +196,28 @@ prepare_data_cpp <- function(X, Y, W) {
 #' Transforms lambda (row) into theta, C++ version
 #'
 #' @param lambda Row-wise differences
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param mM (m_j,M_j) index pairs
 #'
 #' @return Transformed parameter
 #'
 #' @export
-lambda1_to_theta_cpp <- function(lambda, ell, m, mM) {
-    .Call(`_LRDistReg_lambda1_to_theta_cpp`, lambda, ell, m, mM)
+lambda1_to_theta_cpp <- function(lambda, l, m, mM) {
+    .Call(`_LRDistReg_lambda1_to_theta_cpp`, lambda, l, m, mM)
 }
 
 #' Transforms lambda (column) into theta, C++ version
 #'
 #' @param lambda Column-wise differences
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param lL (l_k,L_k) index pairs
 #'
 #' @return Transformed parameter
 #'
 #' @export
-lambda2_to_theta_cpp <- function(lambda, ell, m, lL) {
-    .Call(`_LRDistReg_lambda2_to_theta_cpp`, lambda, ell, m, lL)
+lambda2_to_theta_cpp <- function(lambda, l, m, lL) {
+    .Call(`_LRDistReg_lambda2_to_theta_cpp`, lambda, l, m, lL)
 }
 

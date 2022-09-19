@@ -4,7 +4,7 @@
 \alias{simple.step}
 \title{Function to take a simple step}
 \usage{
-simple.step(theta, Psi, delta, ell, m, n, w, PP)
+simple.step(theta, Psi, delta, l, m, n, w, PP)
 }
 \arguments{
 \item{theta}{Log-parameter}
@@ -13,7 +13,7 @@ simple.step(theta, Psi, delta, ell, m, n, w, PP)
 
 \item{delta}{Delta}
 
-\item{ell}{Number of unique covariates}
+\item{l}{Number of unique covariates}
 
 \item{m}{Number of unique responses}
 

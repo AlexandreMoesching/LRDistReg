@@ -4,7 +4,7 @@
 \alias{simple_step_cpp}
 \title{Function to take a simple step}
 \usage{
-simple_step_cpp(theta, Psi, delta, ell, mM, n, w)
+simple_step_cpp(theta, Psi, delta, l, mM, n, w)
 }
 \arguments{
 \item{theta}{Log-parameter}
@@ -13,7 +13,7 @@ simple_step_cpp(theta, Psi, delta, ell, mM, n, w)
 
 \item{delta}{Delta}
 
-\item{ell}{Number of unique covariates}
+\item{l}{Number of unique covariates}
 
 \item{mM}{(m_j,M_j) index pairs}
 

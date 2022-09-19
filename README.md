@@ -72,8 +72,8 @@ $\ell_o = 10$.
 
 ``` r
 n <- 30
-ell0 <- 10
-x0 <- 1+(1:ell0)/ell0*3
+l0 <- 10
+x0 <- 1+(1:l0)/l0*3
 ```
 
 Generate observation pairs $(X_1,Y_1),(X_2,Y_2),...,(X_n,Y_n)$.
@@ -99,8 +99,8 @@ $(x,y)$ is equal to the number of observations at that location, plus 1.
 In consequence, black points contain no observations, red points contain
 one observation pair, green points contain two observation pairs, etc.
 
-If `indices = TRUE`, then the values $1,2,...,ell$ are used for the plot
-instead of the unique elements $x_1 < x_2 < ... < x_\ell$ of
+If `indices = TRUE`, then the values $1,2,...,\ell$ are used for the
+plot instead of the unique elements $x_1 < x_2 < ... < x_\ell$ of
 $\{X_1,X_2,...,X_n\}$, and the values $1,2,...,m$ are used instead of
 the unique elements $y_1 < y_2 < ... < y_m$ of $\{Y_1,Y_2,...,Y_n\}$.
 This improves readability of the design plot.
@@ -145,8 +145,8 @@ Options:
 
 ``` r
 n <- 1e2
-ell0 <- 10
-x0 <- 1+(1:ell0)/ell0*3
+l0 <- 10
+x0 <- 1+(1:l0)/l0*3
 
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
@@ -166,15 +166,15 @@ res <- dist.reg(X, Y, show.design = TRUE, delta0 = 1e-4)
 
 ``` r
 res$tot.time # Less than a tenth of a second on a 7th generation i7 CPU
-#> Time difference of 0.1159079 secs
+#> Time difference of 0.13888 secs
 ```
 
 ## PART 4: A larger data example, comparison between Likelihood-Ratio ordering, usual STochastic ordering and the EMPirical
 
 ``` r
 n <- 1e3
-ell0 <- 1e2
-x0 <- 1+(1:ell0)/ell0*3
+l0 <- 1e2
+x0 <- 1+(1:l0)/l0*3
 
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
@@ -188,7 +188,7 @@ res <- dist.reg(X, Y, suggest.delta0 = TRUE, ST = TRUE)
 res$delta0
 #> [1] 10
 res$tot.time
-#> Time difference of 8.363443 secs
+#> Time difference of 8.201193 secs
 ```
 
 Retrieve all CDF’s and some useful parameters.
@@ -196,7 +196,7 @@ Retrieve all CDF’s and some useful parameters.
 ``` r
 x <- res$par$x
 y <- res$par$y
-ell <- res$par$ell
+l <- res$par$l
 m <- res$par$m
 
 CDF_LR <- res$CDF_LR
@@ -208,10 +208,10 @@ CDF_TRUE <- outer(x, y, p.cond.dist)
 Evaluate estimation quality.
 
 ``` r
-DIFF_LR <- sum(abs(CDF_LR - CDF_TRUE))/(ell*m)
-DIFF.ST <- sum(abs(CDF_ST - CDF_TRUE))/(ell*m)
-DIFF.EMP <- sum(abs(CDF_EMP - CDF_TRUE))/(ell*m)
-c(DIFF_LR, DIFF.ST, DIFF.EMP)
+DIFF_LR <- sum(abs(CDF_LR - CDF_TRUE))/(l*m)
+DIFF_ST <- sum(abs(CDF_ST - CDF_TRUE))/(l*m)
+DIFF_EMP <- sum(abs(CDF_EMP - CDF_TRUE))/(l*m)
+c(DIFF_LR, DIFF_ST, DIFF_EMP)
 #> [1] 0.01942025 0.02366766 0.05607067
 ```
 
@@ -248,10 +248,10 @@ Plot differences between the true CDF and LR/ST-estimators for all
 values of $x$. N.b.: it yields 4 pages of plots.
 
 ``` r
-n.plot <- min(ceiling(sqrt(ell)), 5)
+n.plot <- min(ceiling(sqrt(l)), 5)
 par(mfrow = c(n.plot, n.plot), mar = c(2,2,1,1))
 unif.ylim <- range(c(CDF_LR - CDF_TRUE, CDF_ST - CDF_TRUE))
-for (j in 1:ell) {
+for (j in 1:l) {
   plot(y, CDF_ST[j,] - CDF_TRUE[j,], type = "l", col = 2, 
        lwd = 1, ylim = unif.ylim)
   abline(h = 0)
@@ -267,8 +267,8 @@ estimated CDFs at these other $x$’s using linear interpolation
 
 ``` r
 n <- 50
-ell0 <- 50
-x0 <- 1+(1:ell0)/ell0*3
+l0 <- 50
+x0 <- 1+(1:l0)/l0*3
 
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)

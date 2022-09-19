@@ -1,7 +1,7 @@
 #' v-tilde and gamma-tilde functions (row)
 #'
 #' @param theta Log-parameter
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param mM (m_j,M_j) index pairs
@@ -9,10 +9,10 @@
 #'
 #' @return v-tilde and gamma-tilde functions
 #' @export
-vgamma.tilde1 <- function(theta, ell, m, n, mM, w_ul) {
-  v <- matrix(0, nrow = ell, ncol = m)
-  gamma <- matrix(0, nrow = ell, ncol = m)
-  for (j in 1:ell) {
+vgamma.tilde1 <- function(theta, l, m, n, mM, w_ul) {
+  v <- matrix(0, nrow = l, ncol = m)
+  gamma <- matrix(0, nrow = l, ncol = m)
+  for (j in 1:l) {
     kk <- mM[j, 1]:mM[j, 2]
     tmp1 <- n * rev(cumsum(rev(exp(theta[j, kk]))))
     tmp2 <- c(theta[j, mM[j, 1]], diff(theta[j, kk])) # theta^*
@@ -25,7 +25,7 @@ vgamma.tilde1 <- function(theta, ell, m, n, mM, w_ul) {
 #' v-tilde and gamma-tilde functions (column)
 #'
 #' @param theta Log-parameter
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param lL (l_k,L_k) index pairs
@@ -33,9 +33,9 @@ vgamma.tilde1 <- function(theta, ell, m, n, mM, w_ul) {
 #'
 #' @return v-tilde and gamma-tilde functions
 #' @export
-vgamma.tilde2 <- function(theta, ell, m, n, lL, w_ol) {
-  v <- matrix(0, nrow = ell, ncol = m)
-  gamma <- matrix(0, nrow = ell, ncol = m)
+vgamma.tilde2 <- function(theta, l, m, n, lL, w_ol) {
+  v <- matrix(0, nrow = l, ncol = m)
+  gamma <- matrix(0, nrow = l, ncol = m)
   for (k in 1:m) {
     jj <- lL[k, 1]:lL[k, 2]
     tmp1 <- n * rev(cumsum(rev(exp(theta[jj, k]))))

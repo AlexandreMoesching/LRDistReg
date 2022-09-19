@@ -69,8 +69,8 @@ contour(xx, yy, outer(xx, yy, FUN = "d.cond.dist"),
 Let us start with a small sample: $n = 30$ observations with covariates in a set $\mathfrak{X}_o := 1 + 3*\{1,2,...,\ell_o\}/\ell_o$, for $\ell_o = 10$.
 ```{r basic_parameters}
 n <- 30
-ell0 <- 10
-x0 <- 1+(1:ell0)/ell0*3
+l0 <- 10
+x0 <- 1+(1:l0)/l0*3
 ```
 
 Generate observation pairs $(X_1,Y_1),(X_2,Y_2),...,(X_n,Y_n)$.
@@ -88,7 +88,7 @@ res <- dist.reg(X, Y, show.design = TRUE)
 
 The design of the experiment should be shown. The color of a pair $(x,y)$ is equal to the number of observations at that location, plus 1. In consequence, black points contain no observations, red points contain one observation pair, green points contain two observation pairs, etc.
 
-If `indices = TRUE`, then the values $1,2,...,ell$ are used for the plot instead of the unique elements $x_1 < x_2 < ... < x_\ell$ of $\{X_1,X_2,...,X_n\}$, and the values $1,2,...,m$ are used instead of the unique elements $y_1 < y_2 < ... < y_m$ of $\{Y_1,Y_2,...,Y_n\}$. This improves readability of the design plot.
+If `indices = TRUE`, then the values $1,2,...,\ell$ are used for the plot instead of the unique elements $x_1 < x_2 < ... < x_\ell$ of $\{X_1,X_2,...,X_n\}$, and the values $1,2,...,m$ are used instead of the unique elements $y_1 < y_2 < ... < y_m$ of $\{Y_1,Y_2,...,Y_n\}$. This improves readability of the design plot.
 ```{r fit_with_indices}
 res <- dist.reg(X, Y, show.design = TRUE, indices = TRUE)
 ```
@@ -120,8 +120,8 @@ res$delta0
 Options:
 ```{r medium_options_and_data}
 n <- 1e2
-ell0 <- 10
-x0 <- 1+(1:ell0)/ell0*3
+l0 <- 10
+x0 <- 1+(1:l0)/l0*3
 
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
@@ -139,8 +139,8 @@ res$tot.time # Less than a tenth of a second on a 7th generation i7 CPU
 
 ```{r options_and_data_large}
 n <- 1e3
-ell0 <- 1e2
-x0 <- 1+(1:ell0)/ell0*3
+l0 <- 1e2
+x0 <- 1+(1:l0)/l0*3
 
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
@@ -158,7 +158,7 @@ Retrieve all CDF's and some useful parameters.
 ```{r retrieve}
 x <- res$par$x
 y <- res$par$y
-ell <- res$par$ell
+l <- res$par$l
 m <- res$par$m
 
 CDF_LR <- res$CDF_LR
@@ -169,10 +169,10 @@ CDF_TRUE <- outer(x, y, p.cond.dist)
 
 Evaluate estimation quality.
 ```{r evaulate_quality}
-DIFF_LR <- sum(abs(CDF_LR - CDF_TRUE))/(ell*m)
-DIFF.ST <- sum(abs(CDF_ST - CDF_TRUE))/(ell*m)
-DIFF.EMP <- sum(abs(CDF_EMP - CDF_TRUE))/(ell*m)
-c(DIFF_LR, DIFF.ST, DIFF.EMP)
+DIFF_LR <- sum(abs(CDF_LR - CDF_TRUE))/(l*m)
+DIFF_ST <- sum(abs(CDF_ST - CDF_TRUE))/(l*m)
+DIFF_EMP <- sum(abs(CDF_EMP - CDF_TRUE))/(l*m)
+c(DIFF_LR, DIFF_ST, DIFF_EMP)
 ```
 
 Plot the true CDF $F_x$ as well as its estimators for two values of $x$, one 
@@ -200,10 +200,10 @@ The LR-estimator is in general smoother than the ST-estimator. In this specific 
 Plot differences between the true CDF and LR/ST-estimators for all values of $x$. N.b.: it yields 4 pages of plots.
 
 ```{r plot_differences_between_truth_and_estimators, fig.show='hide'}
-n.plot <- min(ceiling(sqrt(ell)), 5)
+n.plot <- min(ceiling(sqrt(l)), 5)
 par(mfrow = c(n.plot, n.plot), mar = c(2,2,1,1))
 unif.ylim <- range(c(CDF_LR - CDF_TRUE, CDF_ST - CDF_TRUE))
-for (j in 1:ell) {
+for (j in 1:l) {
   plot(y, CDF_ST[j,] - CDF_TRUE[j,], type = "l", col = 2, 
        lwd = 1, ylim = unif.ylim)
   abline(h = 0)
@@ -216,8 +216,8 @@ for (j in 1:ell) {
 In case the estimators are desired for other values of $x$ than those provided by the set of covariates, it is still possible to obtain the estimated CDFs at these other $x$'s using linear interpolation
 ```{r show_linear_interpolation}
 n <- 50
-ell0 <- 50
-x0 <- 1+(1:ell0)/ell0*3
+l0 <- 50
+x0 <- 1+(1:l0)/l0*3
 
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)

@@ -3,7 +3,7 @@
 #' @param theta Log-parameter
 #' @param Psi Proposal
 #' @param delta Delta
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param w Sample weights
@@ -11,7 +11,7 @@
 #'
 #' @return Updated theta parameter
 #' @export
-simple.step <- function(theta, Psi, delta, ell, m, n, w, PP) {
+simple.step <- function(theta, Psi, delta, l, m, n, w, PP) {
   rho <- delta
   f.old <- f.theta(theta, n, w, PP)
   f.new <- f.theta(Psi, n, w, PP)
@@ -25,7 +25,7 @@ simple.step <- function(theta, Psi, delta, ell, m, n, w, PP) {
     stop("c0 is not positive!")
   }
   t.star <- min(1, rho / (2 * c0))
-  theta.new <- matrix(-Inf, nrow = ell, ncol = m)
+  theta.new <- matrix(-Inf, nrow = l, ncol = m)
   theta.new[PP] <- (1 - t.star) * theta[PP] + t.star * Psi[PP]
   return(theta.new)
 }
@@ -33,7 +33,7 @@ simple.step <- function(theta, Psi, delta, ell, m, n, w, PP) {
 #' Local search (row)
 #'
 #' @param theta Log-parameter
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param mM (m_j,M_j) index pairs
@@ -44,12 +44,12 @@ simple.step <- function(theta, Psi, delta, ell, m, n, w, PP) {
 #'
 #' @return New proposal Psi and step-size delta
 #' @export
-local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_ul) {
-  tmp <- vgamma.tilde1(theta, ell, m, n, mM, w_ul)
+local.search1 <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
+  tmp <- vgamma.tilde1(theta, l, m, n, mM, w_ul)
   v.tilde <- tmp$v
   gamma.tilde <- tmp$gamma
-  lambda.star <- matrix(0, nrow = ell, ncol = m)
-  lambda.star[cbind(1:ell, mM[, 1])] <- gamma.tilde[cbind(1:ell, mM[, 1])]
+  lambda.star <- matrix(0, nrow = l, ncol = m)
+  lambda.star[cbind(1:l, mM[, 1])] <- gamma.tilde[cbind(1:l, mM[, 1])]
   if (m >= 2) {
     for (k in 2:m) {
       jj <- lL[k, 1]:lL[k - 1, 2]
@@ -58,7 +58,7 @@ local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_ul) {
       }
     }
   }
-  Psi <- lambda1.to.theta(lambda.star, ell, m, mM)
+  Psi <- lambda1.to.theta(lambda.star, l, m, mM)
   delta <- sum((-w[PP] + n * exp(theta[PP])) * (theta[PP] - Psi[PP]))
   return(list(Psi = Psi, delta = delta))
 }
@@ -66,7 +66,7 @@ local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_ul) {
 #' Local search (column)
 #'
 #' @param theta Log-parameter
-#' @param ell Number of unique covariates
+#' @param l Number of unique covariates
 #' @param m Number of unique responses
 #' @param n Sample size
 #' @param mM (m_j,M_j) index pairs
@@ -77,22 +77,22 @@ local.search1 <- function(theta, ell, m, n, mM, lL, PP, w, w_ul) {
 #'
 #' @return New proposal Psi and step-size delta
 #' @export
-local.search2 <- function(theta, ell, m, n, mM, lL, PP, w, w_ol) {
-  tmp <- vgamma.tilde2(theta, ell, m, n, lL, w_ol)
+local.search2 <- function(theta, l, m, n, mM, lL, PP, w, w_ol) {
+  tmp <- vgamma.tilde2(theta, l, m, n, lL, w_ol)
   v.tilde <- tmp$v
   gamma.tilde <- tmp$gamma
-  lambda.star <- matrix(0, nrow = ell, ncol = m)
+  lambda.star <- matrix(0, nrow = l, ncol = m)
 
   lambda.star[cbind(lL[, 1], 1:m)] <- gamma.tilde[cbind(lL[, 1], 1:m)]
-  if (ell >= 2) {
-    for (j in 2:ell) {
+  if (l >= 2) {
+    for (j in 2:l) {
       kk <- mM[j, 1]:mM[j - 1, 2]
       if (length(kk) >= 1) {
         lambda.star[j, kk] <- Iso::pava(gamma.tilde[j, kk], v.tilde[j, kk])
       }
     }
   }
-  Psi <- lambda2.to.theta(lambda.star, ell, m, lL)
+  Psi <- lambda2.to.theta(lambda.star, l, m, lL)
   delta <- sum((-w[PP] + n * exp(theta[PP])) * (theta[PP] - Psi[PP]))
   return(list(Psi = Psi, delta = delta))
 }
