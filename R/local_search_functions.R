@@ -59,7 +59,8 @@ local.search1 <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
     }
   }
   Psi <- lambda1.to.theta(lambda.star, l, m, mM)
-  delta <- sum((-w[PP] + n * exp(theta[PP])) * (theta[PP] - Psi[PP]))
+  # We take max(0,-) to avoid numerical instability in case theta ~ Psi
+  delta <- max(0, sum((-w[PP] + n * exp(theta[PP])) * (theta[PP] - Psi[PP])))
   return(list(Psi = Psi, delta = delta))
 }
 
@@ -93,6 +94,7 @@ local.search2 <- function(theta, l, m, n, mM, lL, PP, w, w_ol) {
     }
   }
   Psi <- lambda2.to.theta(lambda.star, l, m, lL)
-  delta <- sum((-w[PP] + n * exp(theta[PP])) * (theta[PP] - Psi[PP]))
+  # We take max(0,-) to avoid numerical instability in case theta ~ Psi
+  delta <- max(0, sum((-w[PP] + n * exp(theta[PP])) * (theta[PP] - Psi[PP])))
   return(list(Psi = Psi, delta = delta))
 }

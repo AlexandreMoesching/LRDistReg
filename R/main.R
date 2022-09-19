@@ -54,7 +54,9 @@ TP2.fit <- function(par, delta0 = 1e-8) {
     delta <- tmp$delta
 
     # Real improvement
-    theta <- simple.step(theta, Psi, delta, l, m, n, w, PP)
+    if (delta > 0) {
+      theta <- simple.step(theta, Psi, delta, l, m, n, w, PP)
+    }
 
     # Change parity
     s <- s + 1

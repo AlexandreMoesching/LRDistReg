@@ -31,7 +31,9 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
     }
 
     // Perform real improvement
-    simple_step_ref_cpp(theta, Psi, delta, par);
+    if (delta > 0) {
+      simple_step_ref_cpp(theta, Psi, delta, par);
+    }
     // std::cout << "delta = " << delta << "\n\n";
 
     // Change parity

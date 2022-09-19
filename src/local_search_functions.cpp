@@ -109,6 +109,10 @@ void local_search1_ref_cpp(arma::mat& theta, arma::mat& Psi,
       )
     );
   }
+  // We take max(0, delta) to avoid numerical instability in case theta ~ Psi
+  if (delta < 0) {
+    delta = 0;
+  }
 }
 
 void local_search2_ref_cpp(arma::mat& theta, arma::mat& Psi,
@@ -189,6 +193,10 @@ void local_search2_ref_cpp(arma::mat& theta, arma::mat& Psi,
             Psi.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1))
       )
     );
+  }
+  // We take max(0, delta) to avoid numerical instability in case theta ~ Psi
+  if (delta < 0) {
+    delta = 0;
   }
 }
 
