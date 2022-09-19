@@ -3,9 +3,9 @@ library(LRDistReg)
 ####____________________________________________________________________________
 #### SETUP                                                                  ####
 
-n <- 1e4; ell0 <- 1e2; m0 <- 1e2
+n <- 1e4; l0 <- 1e2; m0 <- 1e2
 # set.seed(1)
-X <- sample(rnorm(ell0), n, replace = TRUE)
+X <- sample(rnorm(l0), n, replace = TRUE)
 Y <- sample(rnorm(m0), n, replace = TRUE)
 W <- rep(1, n)
 
@@ -183,14 +183,14 @@ res_R <- dist.reg(X, Y, W,
                   delta0 = delta0, x0 = NULL, ST = TRUE)
 res_cpp <- dist_reg_cpp(X, Y, W, delta0, x0 = numeric(), ST = TRUE)
 
-cat("h.TP2's are the same:",
-    all.equal(res_R$h.TP2, res_cpp$h_TP2, tolerance = 1e-10), "\n")
+cat("h_TP2's are the same:",
+    all.equal(res_R$h_TP2, res_cpp$h_TP2, tolerance = 1e-10), "\n")
 cat("CDF_LR's are the same:",
-    all.equal(res_R$CDF.LR, res_cpp$CDF_LR, tolerance = 1e-10), "\n")
+    all.equal(res_R$CDF_LR, res_cpp$CDF_LR, tolerance = 1e-10), "\n")
 cat("CDF_ST's are the same:",
-    all.equal(res_R$CDF.ST, res_cpp$CDF_ST, tolerance = 1e-10), "\n")
+    all.equal(res_R$CDF_ST, res_cpp$CDF_ST, tolerance = 1e-10), "\n")
 cat("CDF_EMP's are the same:",
-    all.equal(res_R$CDF.EMP, res_cpp$CDF_EMP, tolerance = 1e-10), "\n")
+    all.equal(res_R$CDF_EMP, res_cpp$CDF_EMP, tolerance = 1e-10), "\n")
 
 ####____________________________________________________________________________
 #### TEST main with interpolate                                             ####
@@ -203,11 +203,11 @@ res_R <- dist.reg(X, Y, W,
 res_cpp <- dist_reg_cpp(X, Y, W, delta0, x0 = x0, ST = TRUE)
 
 cat("CDF0_LR's are the same:",
-    all.equal(res_R$CDF.LR, res_cpp$CDF_LR, tolerance = 1e-10), "\n")
+    all.equal(res_R$CDF_LR, res_cpp$CDF_LR, tolerance = 1e-10), "\n")
 cat("CDF0_ST's are the same:",
-    all.equal(res_R$CDF.ST, res_cpp$CDF_ST, tolerance = 1e-10), "\n")
+    all.equal(res_R$CDF_ST, res_cpp$CDF_ST, tolerance = 1e-10), "\n")
 cat("CDF0_EMP's are the same:",
-    all.equal(res_R$CDF.EMP, res_cpp$CDF_EMP, tolerance = 1e-10), "\n")
+    all.equal(res_R$CDF_EMP, res_cpp$CDF_EMP, tolerance = 1e-10), "\n")
 
 
 ####____________________________________________________________________________
@@ -230,3 +230,47 @@ cat("Interpolations are the same:",
 # microbenchmark::microbenchmark(interpolate(x0, x, CDF),
 #                                interpolate_cpp(x0, x, CDF),
 #                                times = 1e2)
+
+####____________________________________________________________________________
+#### TEST SS and CRPS                                                       ####
+a <- function(x) 2 + (x+1)^2
+b <- function(x) 1 - exp(-10*x)
+
+r.cond.dist <- function(x)        rgamma(1,     shape = a(x), scale = b(x))
+d.cond.dist <- function(x, alpha) dgamma(alpha, shape = a(x), scale = b(x))
+p.cond.dist <- function(x, alpha) pgamma(alpha, shape = a(x), scale = b(x))
+q.cond.dist <- function(x, alpha) qgamma(alpha, shape = a(x), scale = b(x))
+
+xx <- seq(1, 4, length.out = 2e2)
+yy <- seq(q.cond.dist(1, 0.05), q.cond.dist(4, 0.95), length.out = 2e2)
+
+l0 <- 1e2                 # Number of potential covariates
+x0 <- 1 + 3 * (1:l0) / l0 # Potential covariates
+
+n <- 1e2                  # Sample size
+X <- sort(sample(x0, size = n, replace = TRUE))
+Y <- rep(0, n)
+for (i in 1:n) Y[i] <- r.cond.dist(X[i])
+Y <- round(Y, 1)          # Creates some ties
+W <- rep(1, n)            # Sample weights
+
+delta0 <- 1e-8            # Threshold for estimation precision
+
+res <- dist_reg_cpp(X, Y, W, delta0, x0, TRUE)
+
+SS <- SS(x0, l0, res, a, b)
+plot(x0, SS[,1], type = "l", ylim = range(SS), ylab = "Simple score")
+lines(x0, SS[,2], col = 2)
+lines(x0, SS[,3], col = 3)
+
+CRPS <- CRPS(x0, l0, res, a, b)
+plot(x0, CRPS[,1], type = "l", ylim = range(CRPS), ylab = "CRPS")
+lines(x0, CRPS[,2], col = 2)
+lines(x0, CRPS[,3], col = 3)
+
+# microbenchmark::microbenchmark(
+#   CRPS(x0, l0, res, a, b, 1e-1),
+#   CRPS(x0, l0, res, a, b, 1e-5),
+#   CRPS(x0, l0, res, a, b, 1e-9),
+#   CRPS(x0, l0, res, a, b, 1e-12),
+#   times = 5e1)
