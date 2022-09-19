@@ -1,7 +1,7 @@
 #' Linear interpolation of the cdf's
 #'
 #' @param x0 Set of covariates on which to extend CDF
-#' @param x Set of covariates of CDF, {X_1, X_2, ..., X_N}
+#' @param x Set of covariates of CDF
 #' @param CDF Step-function matrix, its j-th row contains the cdf for X = x_j
 #'
 #' @return Linear interpolation of the cdf's on the new set x0
