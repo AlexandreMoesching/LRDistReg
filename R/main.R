@@ -15,7 +15,7 @@ NULL
 #'
 #' @return h matrix and estimation time
 #' @export
-TP2.fit <- function(par, delta0 = 1e-1) {
+TP2.fit <- function(par, delta0 = 1e-8) {
   # Start timer
   start.time <- Sys.time()
 
@@ -61,19 +61,19 @@ TP2.fit <- function(par, delta0 = 1e-1) {
   }
 
   # Return probability weights
-  h.TP2 <- exp(theta)
+  h_TP2 <- exp(theta)
 
   # End timer
   tot.time <- Sys.time() - start.time
 
   # Compute q
-  q.LR <- h.TP2 / rowSums(h.TP2)
+  q_LR <- h_TP2 / rowSums(h_TP2)
 
   # Compute CDF
-  CDF.LR <- t(apply(q.LR, 1, cumsum))
+  CDF_LR <- t(apply(q_LR, 1, cumsum))
 
   # Return
-  return(list(h.TP2 = h.TP2, q.LR = q.LR, CDF.LR = CDF.LR, tot.time = tot.time))
+  return(list(h_TP2 = h_TP2, q_LR = q_LR, CDF_LR = CDF_LR, tot.time = tot.time))
 }
 
 #' Isotonic distributional regression (LR, ST, EMP)
@@ -96,7 +96,7 @@ TP2.fit <- function(par, delta0 = 1e-1) {
 dist.reg <- function(X, Y, W = rep(1, length(X)),
                      show.design = FALSE, indices = FALSE,
                      suggest.delta0 = FALSE,
-                     delta0 = 1e-2, x0 = NULL, ST = FALSE) {
+                     delta0 = 1e-8, x0 = NULL, ST = FALSE) {
   # Compute model parameters
   par <- prepare.data(X, Y, W)
 
@@ -121,25 +121,25 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
 
   # Interpolate to x0 if x0 != NULL
   if (!is.null(x0)) {
-    res$CDF.LR <- interpolate(x0, par$x, res$CDF.LR)
+    res$CDF_LR <- interpolate(x0, par$x, res$CDF_LR)
   }
 
   # Fit under usual stochastic ordering constraint
   if (ST) {
-    CDF.EMP <- matrix(0, par$ell, par$m)
+    CDF_EMP <- matrix(0, par$ell, par$m)
     for (j in 1:par$ell) {
-      CDF.EMP[j, ] <- cumsum(par$w[j, ]) / par$w_jplus[j]
+      CDF_EMP[j, ] <- cumsum(par$w[j, ]) / par$w_jplus[j]
     }
-    res$CDF.EMP <- CDF.EMP
-    res$CDF.ST <- apply(
-      CDF.EMP, 2,
+    res$CDF_EMP <- CDF_EMP
+    res$CDF_ST <- apply(
+      CDF_EMP, 2,
       function(z) Iso::pava(z, w = par$w_jplus, decreasing = TRUE)
     )
 
     # Interpolate to x0 if x0 != NULL
     if (any(!is.null(x0))) {
-      res$CDF.EMP <- interpolate(x0, par$x, res$CDF.EMP)
-      res$CDF.ST  <- interpolate(x0, par$x, res$CDF.ST)
+      res$CDF_EMP <- interpolate(x0, par$x, res$CDF_EMP)
+      res$CDF_ST  <- interpolate(x0, par$x, res$CDF_ST)
     }
   }
 
