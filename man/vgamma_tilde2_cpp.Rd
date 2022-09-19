@@ -4,12 +4,12 @@
 \alias{vgamma_tilde2_cpp}
 \title{v-tilde and gamma-tilde functions (column), C++ version}
 \usage{
-vgamma_tilde2_cpp(theta, ell, m, n, lL, w_ol)
+vgamma_tilde2_cpp(theta, l, m, n, lL, w_ol)
 }
 \arguments{
 \item{theta}{Log-parameter}
 
-\item{ell}{Number of unique covariates}
+\item{l}{Number of unique covariates}
 
 \item{m}{Number of unique responses}
 

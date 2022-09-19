@@ -82,7 +82,7 @@ arma::mat calibrate2_cpp(arma::mat& theta, int n, arma::vec& w_plusk) {
 //' such that f(theta.new) is minimal.
 //'
 //' @param theta Log-parameter
-//' @param ell Number of unique covariates
+//' @param l Number of unique covariates
 //' @param mM (m_j,M_j) index pairs
 //' @param n Sample size
 //' @param w Sample weights
@@ -95,12 +95,12 @@ arma::mat calibrate2_cpp(arma::mat& theta, int n, arma::vec& w_plusk) {
 //' @export
 // [[Rcpp::export]]
 arma::mat calibrate_cpp(arma::mat& theta,
-                        int ell, arma::imat& mM, int n,
+                        int l, arma::imat& mM, int n,
                         arma::mat& w, arma::vec& w_jplus, arma::vec& w_plusk,
                         double prec) {
   // Declare variables
   par par;
-  par.ell = ell;
+  par.l = l;
   par.mM = mM;
   par.n = n;
   par.w = w;

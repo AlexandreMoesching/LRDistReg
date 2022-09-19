@@ -23,7 +23,7 @@ void simple_step_ref_cpp(arma::mat& theta, arma::mat& Psi,
   }
 
   // Move theta towards Psi by an amount of t_star
-  for (int j = 0; j < par.ell; j++) {
+  for (int j = 0; j < par.l; j++) {
     theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) =
       (1.0 - t_star) * theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) +
              t_star  *   Psi.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1));
@@ -42,7 +42,7 @@ void local_search1_ref_cpp(arma::mat& theta, arma::mat& Psi,
 
   // Compute lambda_star
   // (i) Baseline
-  for (int j = 0; j < par.ell; j++) {
+  for (int j = 0; j < par.l; j++) {
     lambda_star.at(j, par.mM.at(j, 0)) = gamma.at(j, par.mM.at(j, 0));
   }
   // (ii) Isotonic regression
@@ -98,7 +98,7 @@ void local_search1_ref_cpp(arma::mat& theta, arma::mat& Psi,
 
   // Update delta
   delta = 0;
-  for (int j = 0; j < par.ell; j++) {
+  for (int j = 0; j < par.l; j++) {
     delta += sum(
       (
                       - par.w.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) +
@@ -127,8 +127,8 @@ void local_search2_ref_cpp(arma::mat& theta, arma::mat& Psi,
     lambda_star.at(par.lL.at(k, 0), k) = gamma.at(par.lL.at(k, 0), k);
   }
   // (ii) Isotonic regression
-  if (par.ell > 1) {
-    for (int j = 1; j < par.ell; j++) {
+  if (par.l > 1) {
+    for (int j = 1; j < par.l; j++) {
       mj1 = par.mM.at(j, 0);
       Mj0 = par.mM.at(j - 1, 1);
       if (mj1 <= Mj0) {
@@ -179,7 +179,7 @@ void local_search2_ref_cpp(arma::mat& theta, arma::mat& Psi,
 
   // Update delta
   delta = 0;
-  for (int j = 0; j < par.ell; j++) {
+  for (int j = 0; j < par.l; j++) {
     delta += sum(
       (
           - par.w.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) +
@@ -197,7 +197,7 @@ void local_search2_ref_cpp(arma::mat& theta, arma::mat& Psi,
 //' @param theta Log-parameter
 //' @param Psi Proposal
 //' @param delta Delta
-//' @param ell Number of unique covariates
+//' @param l Number of unique covariates
 //' @param mM (m_j,M_j) index pairs
 //' @param n Sample size
 //' @param w Sample weights
@@ -207,10 +207,10 @@ void local_search2_ref_cpp(arma::mat& theta, arma::mat& Psi,
 //' @export
 //[[Rcpp::export]]
 arma::mat simple_step_cpp(arma::mat& theta, arma::mat& Psi, double delta,
-                          int ell, arma::imat& mM, int n, arma::mat& w) {
+                          int l, arma::imat& mM, int n, arma::mat& w) {
   // Declare variables
   par par;
-  par.ell = ell;
+  par.l = l;
   par.mM = mM;
   par.n = n;
   par.w = w;
@@ -225,7 +225,7 @@ arma::mat simple_step_cpp(arma::mat& theta, arma::mat& Psi, double delta,
 //' Local search (row)
 //'
 //' @param theta Log-parameter
-//' @param ell Number of unique covariates
+//' @param l Number of unique covariates
 //' @param m Number of unique responses
 //' @param n Sample size
 //' @param lL (l_k,L_k) index pairs
@@ -237,18 +237,18 @@ arma::mat simple_step_cpp(arma::mat& theta, arma::mat& Psi, double delta,
 //'
 //' @export
 //[[Rcpp::export]]
-List local_search1_cpp(arma::mat& theta, int ell, int m, int n,
+List local_search1_cpp(arma::mat& theta, int l, int m, int n,
                        arma::imat& lL, arma::imat& mM,
                        arma::mat& w, arma::mat& w_ul) {
   // Declare variables
-  arma::mat Psi(ell, m, arma::fill::value(R_NegInf));
-  arma::mat v(ell, m), gamma(ell, m), lambda_star(ell, m);
-  arma::ivec PP1(ell + 1);
-  arma::vec MM1(ell + 1);
-  arma::vec WW1(ell + 1);
+  arma::mat Psi(l, m, arma::fill::value(R_NegInf));
+  arma::mat v(l, m), gamma(l, m), lambda_star(l, m);
+  arma::ivec PP1(l + 1);
+  arma::vec MM1(l + 1);
+  arma::vec WW1(l + 1);
   pava_par par1 = {PP1, MM1, WW1};
   par par;
-  par.ell = ell;
+  par.l = l;
   par.lL = lL;
   par.m = m;
   par.mM = mM;
@@ -268,7 +268,7 @@ List local_search1_cpp(arma::mat& theta, int ell, int m, int n,
 //' Local search (column)
 //'
 //' @param theta Log-parameter
-//' @param ell Number of unique covariates
+//' @param l Number of unique covariates
 //' @param m Number of unique responses
 //' @param n Sample size
 //' @param lL (l_k,L_k) index pairs
@@ -280,18 +280,18 @@ List local_search1_cpp(arma::mat& theta, int ell, int m, int n,
 //'
 //' @export
 //[[Rcpp::export]]
-List local_search2_cpp(arma::mat& theta, int ell, int m, int n,
+List local_search2_cpp(arma::mat& theta, int l, int m, int n,
                        arma::imat& lL, arma::imat& mM,
                        arma::mat& w, arma::mat& w_ol) {
   // Declare variables
-  arma::mat Psi(ell, m, arma::fill::value(R_NegInf));
-  arma::mat v(ell, m), gamma(ell, m), lambda_star(ell, m);
+  arma::mat Psi(l, m, arma::fill::value(R_NegInf));
+  arma::mat v(l, m), gamma(l, m), lambda_star(l, m);
   arma::ivec PP2(m + 1);
   arma::vec MM2(m + 1);
   arma::vec WW2(m + 1);
   pava_par par2 = {PP2, MM2, WW2};
   par par;
-  par.ell = ell;
+  par.l = l;
   par.lL = lL;
   par.m = m;
   par.mM = mM;

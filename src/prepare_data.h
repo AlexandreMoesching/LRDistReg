@@ -8,7 +8,7 @@ struct par {
   arma::vec X;
   arma::vec y;
   arma::vec Y;
-  int ell;
+  int l;
   arma::imat lL;
   int m;
   arma::imat mM;

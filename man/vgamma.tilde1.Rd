@@ -4,12 +4,12 @@
 \alias{vgamma.tilde1}
 \title{v-tilde and gamma-tilde functions (row)}
 \usage{
-vgamma.tilde1(theta, ell, m, n, mM, w_ul)
+vgamma.tilde1(theta, l, m, n, mM, w_ul)
 }
 \arguments{
 \item{theta}{Log-parameter}
 
-\item{ell}{Number of unique covariates}
+\item{l}{Number of unique covariates}
 
 \item{m}{Number of unique responses}
 

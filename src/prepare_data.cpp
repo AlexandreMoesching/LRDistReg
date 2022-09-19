@@ -19,7 +19,7 @@ par prepare_data_par_cpp(arma::vec& X, arma::vec& Y, arma::vec& W) {
     Ys[i] = Y[ordY[i]];
   }
 
-  int ell = 0;
+  int l = 0;
   int m   = 0;
 
   // Xj_tmp[i] gives the index j of x such that x[j] = Xs[i]
@@ -31,11 +31,11 @@ par prepare_data_par_cpp(arma::vec& X, arma::vec& Y, arma::vec& W) {
   arma::vec y_tmp(par.n, arma::fill::value(Ys[0])); // Unique sorted Y's
 
   for (int i = 1; i < par.n; i++) {
-    if (Xs[i] > x_tmp[ell]) {
-      ell++;
-      x_tmp[ell] = Xs[i];
+    if (Xs[i] > x_tmp[l]) {
+      l++;
+      x_tmp[l] = Xs[i];
     }
-    Xj_tmp[i] = ell;
+    Xj_tmp[i] = l;
     if (Ys[i] > y_tmp[m]) {
       m++;
       y_tmp[m] = Ys[i];
@@ -43,10 +43,10 @@ par prepare_data_par_cpp(arma::vec& X, arma::vec& Y, arma::vec& W) {
     Yk_tmp[i] = m;
   }
 
-  par.x = x_tmp.subvec(0, ell); // Sorted unique covariates
-  par.y = y_tmp.subvec(0, m);   // Sorted unique responses
+  par.x = x_tmp.subvec(0, l); // Sorted unique covariates
+  par.y = y_tmp.subvec(0, m); // Sorted unique responses
 
-  par.ell = ell + 1; // Number of unique covariates
+  par.l = l + 1; // Number of unique covariates
   par.m   = m   + 1; // Number of unique responses
 
   // Xj[i] gives the index j of x such that x[j] = X[i]
@@ -59,7 +59,7 @@ par prepare_data_par_cpp(arma::vec& X, arma::vec& Y, arma::vec& W) {
   }
 
   // Weight matrix
-  arma::mat w(par.ell, par.m, arma::fill::zeros);
+  arma::mat w(par.l, par.m, arma::fill::zeros);
   for (int i = 0; i < par.n; i++) {
     w.at(Xj[i], Yk[i]) += W[i];
   }
@@ -75,7 +75,7 @@ par prepare_data_par_cpp(arma::vec& X, arma::vec& Y, arma::vec& W) {
 
   // lL
   arma::imat lL(par.m, 2, arma::fill::zeros);
-  int tmp, lk = par.ell - 1, Lk = 0;
+  int tmp, lk = par.l - 1, Lk = 0;
   for (int k = 0; k < par.m; k++) {
     tmp = min(find(w.col(par.m - 1 - k) > 0));
     if (tmp < lk) {
@@ -92,14 +92,14 @@ par prepare_data_par_cpp(arma::vec& X, arma::vec& Y, arma::vec& W) {
   par.lL = lL;
 
   // mM
-  arma::imat mM(par.ell, 2, arma::fill::zeros);
+  arma::imat mM(par.l, 2, arma::fill::zeros);
   int mj = par.m - 1, Mj = 0;
-  for (int j = 0; j < par.ell; j++) {
-    tmp = min(find(w.row(par.ell - 1 - j) > 0));
+  for (int j = 0; j < par.l; j++) {
+    tmp = min(find(w.row(par.l - 1 - j) > 0));
     if (tmp < mj) {
       mj = tmp;
     }
-    mM.at(par.ell - 1 - j, 0) = mj;
+    mM.at(par.l - 1 - j, 0) = mj;
 
     tmp = max(find(w.row(j) > 0));
     if (tmp > Mj) {
@@ -110,8 +110,8 @@ par prepare_data_par_cpp(arma::vec& X, arma::vec& Y, arma::vec& W) {
   par.mM = mM;
 
   // PP
-  arma::imat PP(par.ell, par.m, arma::fill::zeros);
-  for (int j = 0; j < par.ell; j++) {
+  arma::imat PP(par.l, par.m, arma::fill::zeros);
+  for (int j = 0; j < par.l; j++) {
     PP.row(j).subvec(mM.at(j, 0), mM.at(j, 1)).fill(1);
   }
   par.PP = PP;
@@ -135,7 +135,7 @@ List prepare_data_cpp(arma::vec& X, arma::vec& Y, arma::vec& W) {
   par par = prepare_data_par_cpp(X, Y, W);
 
   // Return
-  return List::create(Named("ell") = par.ell,
+  return List::create(Named("l") = par.l,
                       Named("lL") = par.lL,
                       Named("m") = par.m,
                       Named("mM") = par.mM,
