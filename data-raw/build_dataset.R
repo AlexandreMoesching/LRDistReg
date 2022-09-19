@@ -29,7 +29,7 @@ names(growthdata)
 # Swap some columns
 seq <- c(8, 6:7, 9, 16, 20, 10:11, 13:14, 21, 17, 19, 18, 15, 1:5, 12)
 names(growthdata)[seq]
-growthdata <- growthdata[,seq]
+growthdata <- growthdata[, seq]
 names(growthdata)
 
 # Create dataset in the "data/" folder

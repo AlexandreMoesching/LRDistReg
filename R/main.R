@@ -20,7 +20,7 @@ TP2.fit <- function(par, delta0 = 1e-8) {
   start.time <- Sys.time()
 
   # Extract parameters
-  ell <- par$ell
+  l <- par$l
   lL <- par$lL
   m <- par$m
   mM <- par$mM
@@ -33,7 +33,7 @@ TP2.fit <- function(par, delta0 = 1e-8) {
   PP <- par$PP
 
   # Initialize
-  theta <- matrix(-Inf, nrow = ell, ncol = m)
+  theta <- matrix(-Inf, nrow = l, ncol = m)
   theta[PP] <- -log(sum(PP))
   delta <- Inf
 
@@ -45,16 +45,16 @@ TP2.fit <- function(par, delta0 = 1e-8) {
 
     # New candidate
     if (s %% 2 == 0) {
-      tmp <- local.search1(theta, ell, m, n, mM, lL, PP, w, w_ul)
+      tmp <- local.search1(theta, l, m, n, mM, lL, PP, w, w_ul)
     } else {
-      tmp <- local.search2(theta, ell, m, n, mM, lL, PP, w, w_ol)
+      tmp <- local.search2(theta, l, m, n, mM, lL, PP, w, w_ol)
     }
 
     Psi <- tmp$Psi
     delta <- tmp$delta
 
     # Real improvement
-    theta <- simple.step(theta, Psi, delta, ell, m, n, w, PP)
+    theta <- simple.step(theta, Psi, delta, l, m, n, w, PP)
 
     # Change parity
     s <- s + 1
@@ -107,7 +107,7 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
 
   # Suggest delta0
   if (suggest.delta0 == TRUE) {
-    theta <- matrix(-Inf, nrow = par$ell, ncol = par$m)
+    theta <- matrix(-Inf, nrow = par$l, ncol = par$m)
     theta[par$PP] <- -log(sum(par$PP))
     calibrate(
       theta, par$n, par$w, par$w_jplus, par$w_plusk, par$PP
@@ -126,8 +126,8 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
 
   # Fit under usual stochastic ordering constraint
   if (ST) {
-    CDF_EMP <- matrix(0, par$ell, par$m)
-    for (j in 1:par$ell) {
+    CDF_EMP <- matrix(0, par$l, par$m)
+    for (j in 1:par$l) {
       CDF_EMP[j, ] <- cumsum(par$w[j, ]) / par$w_jplus[j]
     }
     res$CDF_EMP <- CDF_EMP
@@ -139,7 +139,7 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
     # Interpolate to x0 if x0 != NULL
     if (any(!is.null(x0))) {
       res$CDF_EMP <- interpolate(x0, par$x, res$CDF_EMP)
-      res$CDF_ST  <- interpolate(x0, par$x, res$CDF_ST)
+      res$CDF_ST <- interpolate(x0, par$x, res$CDF_ST)
     }
   }
 

@@ -22,7 +22,7 @@ SS <- function(x0, l0, res, a, b, rel.tol = 1e-9) {
     # Integral on (-\infty,y_1)
     fun <- function(z) {
       stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j])) *
-      stats::dgamma(z, shape = a(x0[j]), scale = b(x0[j]))
+        stats::dgamma(z, shape = a(x0[j]), scale = b(x0[j]))
     }
     SS[j, ] <-
       stats::integrate(fun, -Inf, res$par$y[1], rel.tol = rel.tol)$value
