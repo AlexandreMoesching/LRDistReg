@@ -2,8 +2,6 @@
 
 void simple_step_ref_cpp(arma::mat& theta, arma::mat& Psi,
                          double& delta, const par& par) {
-  // CHECK IF WE NEED THETA_NEW LIKE IN THE R CODE!
-
   // Declare variables
   double rho = delta, t_star;
   double f_old = f_theta_ref_cpp(theta, par);

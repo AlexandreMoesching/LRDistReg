@@ -6,22 +6,35 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
                      pava_par& par1, pava_par& par2,
                      double& delta, double delta0, par& par) {
   // Declare variables
-  double tmp_dbl = -log(accu(par.PP)); // SHOULD WE ALSO REPLACE SUM BY ACCU ELSEWHERE ??
-  // ALSO CAN WE NOT AVOID USING PP ??
   double prec = 1e-10;
   int s = 0;
 
-  // Initialize delta and theta
-  delta = R_PosInf;
+  // Initialize theta
+  double tmp_dbl = -log(accu(par.PP));
+  // >>>>>>>>>>>>>>>>> SHOULD WE ALSO REPLACE SUM BY ACCU ELSEWHERE ??
+  // >>>>>>>>>>>>>>>>> ALSO CAN WE NOT AVOID USING PP ??
   for (int j = 0; j < par.l; j++) {
-    theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)).fill(tmp_dbl);
+    theta.row(j).subvec(
+        par.mM.at(j, 0), par.mM.at(j, 1)
+    ).fill(
+        tmp_dbl
+    );
   }
+
+  // Calibrate theta
+  calibrate_ref_cpp(theta, par, prec);
+
+  // Find a new proposal
+  local_search1_ref_cpp(theta, Psi, v, gamma, lambda_star, par1, delta, par);
+  s++;
 
   // Main while-loop
   while (delta > delta0) {
+    // Perform real improvement
+    simple_step_ref_cpp(theta, Psi, delta, par);
+
     // Calibrate theta
     calibrate_ref_cpp(theta, par, prec);
-    // std::cout << "Iteration = " << s << "\n";
 
     // Find a new proposal
     if (s % 2 == 0) {
@@ -30,17 +43,9 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
       local_search2_ref_cpp(theta, Psi, v, gamma, lambda_star, par2, delta, par);
     }
 
-    // Perform real improvement
-    if (delta > 0) {
-      simple_step_ref_cpp(theta, Psi, delta, par);
-    }
-    // std::cout << "delta = " << delta << "\n\n";
-
     // Change parity
     s++;
   }
-
-  // std::cout << "delta is smaller than delta0 = " << delta0 << "\n";
 
   // Compute probability weights
   h_TP2 = exp(theta);

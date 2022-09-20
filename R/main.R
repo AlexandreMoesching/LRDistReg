@@ -33,13 +33,22 @@ TP2.fit <- function(par, delta0 = 1e-8) {
   PP <- par$PP
 
   # Initialize
+  s <- 0
   theta <- matrix(-Inf, nrow = l, ncol = m)
   theta[PP] <- -log(sum(PP))
-  delta <- Inf
+
+  # Calibrate
+  theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-10)
+
+  # New candidate
+  tmp <- local.search1(theta, l, m, n, mM, lL, PP, w, w_ul)
+  s <- s + 1
 
   # Main while-loop
-  s <- 0
-  while (delta > delta0) {
+  while (tmp$delta > delta0) {
+    # Real improvement
+    theta <- simple.step(theta, tmp$Psi, tmp$delta, l, m, n, w, PP)
+
     # Calibrate
     theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-10)
 
@@ -48,14 +57,6 @@ TP2.fit <- function(par, delta0 = 1e-8) {
       tmp <- local.search1(theta, l, m, n, mM, lL, PP, w, w_ul)
     } else {
       tmp <- local.search2(theta, l, m, n, mM, lL, PP, w, w_ol)
-    }
-
-    Psi <- tmp$Psi
-    delta <- tmp$delta
-
-    # Real improvement
-    if (delta > 0) {
-      theta <- simple.step(theta, Psi, delta, l, m, n, w, PP)
     }
 
     # Change parity
