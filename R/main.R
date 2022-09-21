@@ -38,7 +38,7 @@ TP2.fit <- function(par, delta0 = 1e-8) {
   theta[PP] <- -log(sum(PP))
 
   # Calibrate
-  theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-10)
+  theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = delta0)
 
   # New candidate
   tmp <- local.search1(theta, l, m, n, mM, lL, PP, w, w_ul)
@@ -50,7 +50,7 @@ TP2.fit <- function(par, delta0 = 1e-8) {
     theta <- simple.step(theta, tmp$Psi, tmp$delta, l, m, n, w, PP)
 
     # Calibrate
-    theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-10)
+    theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = delta0)
 
     # New candidate
     if (s %% 2 == 0) {

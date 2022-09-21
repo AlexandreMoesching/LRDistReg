@@ -269,8 +269,25 @@ lines(x0, SS_CRPS$CRPS[,2], col = 2)
 lines(x0, SS_CRPS$CRPS[,3], col = 3)
 
 # microbenchmark::microbenchmark(
-#   CRPS(x0, l0, res, a, b, 1e-1),
-#   CRPS(x0, l0, res, a, b, 1e-5),
-#   CRPS(x0, l0, res, a, b, 1e-9),
-#   CRPS(x0, l0, res, a, b, 1e-12),
-#   times = 5e1)
+#   dist_reg_cpp(X, Y, W, 1e1, x0, TRUE),
+#   dist_reg_cpp(X, Y, W, 1e0, x0, TRUE),
+#   dist_reg_cpp(X, Y, W, 1e-1, x0, TRUE),
+#   times = 10
+# )
+
+# res1 <- dist_reg_cpp(X, Y, W, 10, x0, TRUE)
+# res2 <- dist_reg_cpp(X, Y, W, 1, x0, TRUE)
+# res3 <- dist_reg_cpp(X, Y, W, 0.1, x0, TRUE)
+#
+# SS_CRPS1 <- SS_CRPS_gamma(x0, l0, res1, a, b)
+# SS_CRPS2 <- SS_CRPS_gamma(x0, l0, res2, a, b)
+# SS_CRPS3 <- SS_CRPS_gamma(x0, l0, res3, a, b)
+#
+# all.equal(SS_CRPS1$SS, SS_CRPS2$SS)
+# all.equal(SS_CRPS1$SS, SS_CRPS3$SS)
+# all.equal(SS_CRPS2$SS, SS_CRPS3$SS)
+#
+# all.equal(SS_CRPS1$CRPS, SS_CRPS2$CRPS)
+# all.equal(SS_CRPS1$CRPS, SS_CRPS3$CRPS)
+# all.equal(SS_CRPS2$CRPS, SS_CRPS3$CRPS)
+

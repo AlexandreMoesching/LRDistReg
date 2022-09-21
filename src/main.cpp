@@ -6,7 +6,7 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
                      pava_par& par1, pava_par& par2,
                      double& delta, double delta0, par& par) {
   // Declare variables
-  double prec = 1e-10;
+  double prec = delta0;
   int s = 0;
 
   // Initialize theta
