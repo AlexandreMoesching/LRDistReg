@@ -244,29 +244,29 @@ q.cond.dist <- function(x, alpha) qgamma(alpha, shape = a(x), scale = b(x))
 xx <- seq(1, 4, length.out = 2e2)
 yy <- seq(q.cond.dist(1, 0.05), q.cond.dist(4, 0.95), length.out = 2e2)
 
-l0 <- 1e2                 # Number of potential covariates
+l0 <- 1e3                 # Number of potential covariates
 x0 <- 1 + 3 * (1:l0) / l0 # Potential covariates
 
-n <- 1e2                  # Sample size
+n <- 1e3                  # Sample size
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
 for (i in 1:n) Y[i] <- r.cond.dist(X[i])
-Y <- round(Y, 1)          # Creates some ties
+Y <- round(Y, 2)          # Creates some ties
 W <- rep(1, n)            # Sample weights
 
-delta0 <- 1e-8            # Threshold for estimation precision
+delta0 <- 1e-1            # Threshold for estimation precision
 
 res <- dist_reg_cpp(X, Y, W, delta0, x0, TRUE)
 
-SS <- SS(x0, l0, res, a, b)
-plot(x0, SS[,1], type = "l", ylim = range(SS), ylab = "Simple score")
-lines(x0, SS[,2], col = 2)
-lines(x0, SS[,3], col = 3)
+SS_CRPS <- SS_CRPS_gamma(x0, l0, res, a, b)
 
-CRPS <- CRPS(x0, l0, res, a, b)
-plot(x0, CRPS[,1], type = "l", ylim = range(CRPS), ylab = "CRPS")
-lines(x0, CRPS[,2], col = 2)
-lines(x0, CRPS[,3], col = 3)
+plot(x0, SS_CRPS$SS[,1], type = "l", ylim = range(SS_CRPS$SS), ylab = "Simple score")
+lines(x0, SS_CRPS$SS[,2], col = 2)
+lines(x0, SS_CRPS$SS[,3], col = 3)
+
+plot(x0, SS_CRPS$CRPS[,1], type = "l", ylim = range(SS_CRPS$CRPS), ylab = "CRPS")
+lines(x0, SS_CRPS$CRPS[,2], col = 2)
+lines(x0, SS_CRPS$CRPS[,3], col = 3)
 
 # microbenchmark::microbenchmark(
 #   CRPS(x0, l0, res, a, b, 1e-1),

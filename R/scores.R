@@ -1,66 +1,12 @@
-#' Computes the 'simple score'
+#' Special transformation
 #'
-#' @param x0 Extended set of covariates
-#' @param l0 Cardinality of extended set of covariates `x0`
-#' @param res A list containing `CDF_LR`, `CDF_ST`, `CDF_EMP` and `par`. I.e.,
-#' the estimated conditional cumulative distribution functions under
-#' likelihood-ratio order and usual stochastic order, the conditional empirical
-#' distribution functions, all of which having `x0` for covariates, and a list
-#' of parameters, of which the unique observations `y` and their number `m` are
-#' relevant
-#' @param a,b Shape and scale functions of the true Gamma conditional
-#' distribution functions
-#' @param rel.tol Relative tolerance for numerical integration
-#'
-#' @return A l0-by-3 matrix of conditional simple scores
-#' @export
-SS <- function(x0, l0, res, a, b, rel.tol = 1e-9) {
-  y.ext <- c(res$par$y, Inf)
-  SS <- matrix(0, nrow = l0, ncol = 3)
-  colnames(SS) <- c("LR", "ST", "EMP")
-  for (j in 1:l0) {
-    # Integral on (-\infty,y_1)
-    fun <- function(z) {
-      stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j])) *
-        stats::dgamma(z, shape = a(x0[j]), scale = b(x0[j]))
-    }
-    SS[j, ] <-
-      stats::integrate(fun, -Inf, res$par$y[1], rel.tol = rel.tol)$value
-
-    # Integral on [y_k,y_k+1)
-    for (k in 1:res$par$m) {
-      # LR
-      fun <- function(z) {
-        abs(res$CDF_LR[j, k] -
-          stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j]))) *
-          stats::dgamma(z, shape = a(x0[j]), scale = b(x0[j]))
-      }
-      SS[j, 1] <- SS[j, 1] +
-        stats::integrate(fun, y.ext[k], y.ext[k + 1], rel.tol = rel.tol)$value
-
-      # ST
-      fun <- function(z) {
-        abs(res$CDF_ST[j, k] -
-          stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j]))) *
-          stats::dgamma(z, shape = a(x0[j]), scale = b(x0[j]))
-      }
-      SS[j, 2] <- SS[j, 2] +
-        stats::integrate(fun, y.ext[k], y.ext[k + 1], rel.tol = rel.tol)$value
-
-      # EMP
-      fun <- function(z) {
-        abs(res$CDF_EMP[j, k] -
-          stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j]))) *
-          stats::dgamma(z, shape = a(x0[j]), scale = b(x0[j]))
-      }
-      SS[j, 3] <- SS[j, 3] +
-        stats::integrate(fun, y.ext[k], y.ext[k + 1], rel.tol = rel.tol)$value
-    }
-  }
-  return(SS)
+#' @param d,z  Scalars
+#' @noRd
+TT <- function(d, z) {
+  d * z - z^2 / 2
 }
 
-#' Computes the 'CRPS'
+#' Computes the 'simple score' and 'CRPS' for the gamma model
 #'
 #' @param x0 Extended set of covariates
 #' @param l0 Cardinality of extended set of covariates `x0`
@@ -74,46 +20,106 @@ SS <- function(x0, l0, res, a, b, rel.tol = 1e-9) {
 #' distribution functions
 #' @param rel.tol Relative tolerance for numerical integration
 #'
-#' @return A l0-by-3 matrix of conditional CRPS
+#' @return A list of two l0-by-3 matrix of conditional simple scores and CRPS's
 #' @export
-CRPS <- function(x0, l0, res, a, b, rel.tol = 1e-9) {
-  y.ext <- c(res$par$y, Inf)
+SS_CRPS_gamma <- function(x0, l0, res, a, b, rel.tol = 1e-9) {
+  y <- c(res$par$y)
+  m <- res$par$m
+
+  # The three columns of SS are identical in the beginning. They correspond to
+  # the sum of:
+  # - The integral of      G_xj  g_xj on (0,   y_1)
+  # - The integral of (1 - G_xj) g_xj on (y_m, Inf)
+  SS <- matrix(
+    (
+      (1/2) * (     stats::pgamma(res$par$y[1], shape = a(x0), scale = b(x0)))^2 +
+        1/2 - TT(1, stats::pgamma(res$par$y[m], shape = a(x0), scale = b(x0)))
+    ), nrow = l0, ncol = 3)
+  colnames(SS) <- c("LR", "ST", "EMP")
+
+  # The three columns of CRPS are identical in the beginning. They correspond to
+  # the last term in the expression of the CRPS involving the Beta function
   CRPS <- matrix(b(x0) / beta(1 / 2, a(x0)), nrow = l0, ncol = 3)
   colnames(CRPS) <- c("LR", "ST", "EMP")
-  for (j in 1:l0) {
-    # Integral on (-\infty,y_1)
-    fun <- function(z) {
-      (stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j])))^2
-    }
-    CRPS[j, ] <- CRPS[j, ] +
-      stats::integrate(fun, -Inf, res$par$y[1], rel.tol = rel.tol)$value
 
-    # Integral on [y_k,y_k+1)
-    for (k in 1:res$par$m) {
-      # LR
-      fun <- function(z) {
-        (res$CDF_LR[j, k] -
-          stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j])))^2
-      }
-      CRPS[j, 1] <- CRPS[j, 1] +
-        stats::integrate(fun, y.ext[k], y.ext[k + 1], rel.tol = rel.tol)$value
+  # Pre-compute matrix of Gamma CDF's
+  G_xj_yk_a0 <- outer(x0, y,
+                      function(xj, yk) stats::pgamma(yk,
+                                                     shape = a(xj),
+                                                     scale = b(xj)))
+  G_xj_yk_a1 <- outer(x0, y,
+                      function(xj, yk) stats::pgamma(yk,
+                                                     shape = a(xj) + 1,
+                                                     scale = b(xj)))
 
-      # ST
-      fun <- function(z) {
-        (res$CDF_ST[j, k] -
-          stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j])))^2
-      }
-      CRPS[j, 2] <- CRPS[j, 2] +
-        stats::integrate(fun, y.ext[k], y.ext[k + 1], rel.tol = rel.tol)$value
+  if (m > 1) {
+    # For each x_j in x0
+    for (j in 1:l0) {
+      # First term corresponds to the sum of:
+      # - The integral of      G_xj ^2 on (0,   y_m)
+      tmp1 <- stats::integrate(f = function(z)
+        ( stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j])) )^2,
+        lower = 0,
+        upper = y[m],
+        subdivisions = 1e4,
+        rel.tol = rel.tol
+      )$value
+      # - The integral of (1 - G_xj)^2 on (y_m, Inf)
+      tmp2 <- stats::integrate(f = function(z)
+        ( 1 - stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j])) )^2,
+        lower = y[m],
+        upper = Inf,
+        subdivisions = 1e4,
+        rel.tol = rel.tol
+      )$value
 
-      # EMP
-      fun <- function(z) {
-        (res$CDF_EMP[j, k] -
-          stats::pgamma(z, shape = a(x0[j]), scale = b(x0[j])))^2
+      # Add the results to the current CRPS matrix
+      CRPS[j, ] <- CRPS[j, ] + tmp1 + tmp2
+
+      # Predefine some constants
+      c_xj <- b(x0[j]) * gamma(a(x0[j]) + 1) / gamma(a(x0[j]))
+
+      # Compute remaining terms
+      for (k in 1:(m - 1)) { # (y_k, y_k+1)
+        # Pre compute som constants
+        G_xj_yk0_a0 <- G_xj_yk_a0[j, k]
+        G_xj_yk1_a0 <- G_xj_yk_a0[j, k + 1]
+        G_xj_yk0_a1 <- G_xj_yk_a1[j, k]
+        G_xj_yk1_a1 <- G_xj_yk_a1[j, k + 1]
+
+        # For each orders
+        for (ord in 1:3) {
+          # Define appropriate G_jk
+          if (ord == 1) {
+            G_jk <- res$CDF_LR[j, k]
+          } else if (ord == 2) {
+            G_jk <- res$CDF_ST[j, k]
+          } else {
+            G_jk <- res$CDF_EMP[j, k]
+          }
+
+          # Computations related to SS
+          if (G_jk >= G_xj_yk1_a0) {
+            SS[j, ord] <- SS[j, ord] +
+              TT(G_jk, G_xj_yk1_a0) - TT(G_jk, G_xj_yk0_a0)
+          } else if (G_jk <= G_xj_yk0_a0) {
+            SS[j, ord] <- SS[j, ord] +
+              TT(G_jk, G_xj_yk0_a0) - TT(G_jk, G_xj_yk1_a0)
+          } else {
+            SS[j, ord] <- SS[j, ord] +
+              2 * TT(G_jk, G_jk) - TT(G_jk, G_xj_yk0_a0) - TT(G_jk, G_xj_yk1_a0)
+          }
+
+          # Computations related to CRPS
+          CRPS[j, ord] <- CRPS[j, ord] +
+            G_jk^2 * (y[k + 1] - y[k]) - 2 * G_jk * (
+              y[k+1] * G_xj_yk1_a0 -
+                y[k] * G_xj_yk0_a0 -
+                c_xj * (G_xj_yk1_a1 - G_xj_yk0_a1)
+            )
+        }
       }
-      CRPS[j, 3] <- CRPS[j, 3] +
-        stats::integrate(fun, y.ext[k], y.ext[k + 1], rel.tol = rel.tol)$value
     }
   }
-  return(CRPS)
+  return(list(SS = SS, CRPS = CRPS))
 }
