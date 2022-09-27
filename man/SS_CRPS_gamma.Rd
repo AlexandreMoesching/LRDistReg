@@ -4,7 +4,7 @@
 \alias{SS_CRPS_gamma}
 \title{Computes the 'simple score' and 'CRPS' for the gamma model}
 \usage{
-SS_CRPS_gamma(x0, l0, res, a, b, rel.tol = 1e-09)
+SS_CRPS_gamma(x0, l0, res, a, b, rel_tol = 1e-09)
 }
 \arguments{
 \item{x0}{Extended set of covariates}
@@ -21,7 +21,7 @@ relevant}
 \item{a, b}{Shape and scale functions of the true Gamma conditional
 distribution functions}
 
-\item{rel.tol}{Relative tolerance for numerical integration}
+\item{rel_tol}{Relative tolerance for numerical integration}
 }
 \value{
 A list of two l0-by-3 matrix of conditional simple scores and CRPS's

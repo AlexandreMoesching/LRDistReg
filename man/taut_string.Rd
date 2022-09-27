@@ -4,29 +4,29 @@
 \alias{taut_string}
 \title{Taut string}
 \usage{
-taut_string(Y.low, Y.upp, x = 1:length(Y.low))
+taut_string(Y_low, Y_upp, x = 1:length(Y_low))
 }
 \arguments{
-\item{Y.low}{Lower vector}
+\item{Y_low}{Lower vector}
 
-\item{Y.upp}{Upper vector}
+\item{Y_upp}{Upper vector}
 
 \item{x}{Vector of support points}
 }
 \value{
-Taut string between Y.low and Y.upp
+Taut string between Y_low and Y_upp
 }
 \description{
-The three vectors Y.low, Y.upp and x of length n > 2 are such
+The three vectors Y_low, Y_upp and x of length n > 2 are such
 that
-Y.low.i <= Y.upp.i  for all i
+Y_low_i <= Y_upp_i  for all i
 with equality for i in {1,n}, and
 x1 < x2 < ... < xn.
 The function outputs the corresponding taut string Y. That means, Y is a
 vector of length n such that
-Y.low.i <= Y.i <= Y.upp.i  for all i,
+Y_low_i <= Y_i <= Y_upp_i  for all i,
 for 1 < i < n,
-Y.i = Y.low.i  if  dY.i-1/dx.i-1 > dY.i/dx.i ,
-Y.i = Y.upp.i  if  dY.i-1/dx.i-1 < dY.i/dx.i ,
-where dz.j := z.j+1 - z.j for any vector z and 1 <= j < length(z).
+Y_i = Y_low_i  if  dY_i-1/dx_i-1 > dY_i/dx_i ,
+Y_i = Y_upp_i  if  dY_i-1/dx_i-1 < dY_i/dx_i ,
+where dz_j := z_j+1 - z_j for any vector z and 1 <= j < length(z).
 }

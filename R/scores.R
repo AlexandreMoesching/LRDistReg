@@ -18,11 +18,11 @@ TT <- function(d, z) {
 #' relevant
 #' @param a,b Shape and scale functions of the true Gamma conditional
 #' distribution functions
-#' @param rel.tol Relative tolerance for numerical integration
+#' @param rel_tol Relative tolerance for numerical integration
 #'
 #' @return A list of two l0-by-3 matrix of conditional simple scores and CRPS's
 #' @export
-SS_CRPS_gamma <- function(x0, l0, res, a, b, rel.tol = 1e-9) {
+SS_CRPS_gamma <- function(x0, l0, res, a, b, rel_tol = 1e-9) {
   y <- c(res$par$y)
   m <- res$par$m
 
@@ -62,7 +62,7 @@ SS_CRPS_gamma <- function(x0, l0, res, a, b, rel.tol = 1e-9) {
         lower = 0,
         upper = y[m],
         subdivisions = 1e4,
-        rel.tol = rel.tol
+        rel_tol = rel_tol
       )$value
       # - The integral of (1 - G_xj)^2 on (y_m, Inf)
       tmp2 <- stats::integrate(f = function(z)
@@ -70,7 +70,7 @@ SS_CRPS_gamma <- function(x0, l0, res, a, b, rel.tol = 1e-9) {
         lower = y[m],
         upper = Inf,
         subdivisions = 1e4,
-        rel.tol = rel.tol
+        rel_tol = rel_tol
       )$value
 
       # Add the results to the current CRPS matrix

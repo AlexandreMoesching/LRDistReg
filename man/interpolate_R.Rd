@@ -2,7 +2,7 @@
 % Please edit documentation in R/interpolate.R
 \name{interpolate_R}
 \alias{interpolate_R}
-\title{Linear interpolation of the CDF's, R version}
+\title{Linear interpolation of CDF's, R version}
 \usage{
 interpolate_R(x0, x, CDF)
 }
@@ -14,8 +14,8 @@ interpolate_R(x0, x, CDF)
 \item{CDF}{Step-function matrix, its j-th row contains the CDF for X = x_j}
 }
 \value{
-Linear interpolation of the CDF's on the new set x0
+Linear interpolation of CDF's on the new set x0
 }
 \description{
-Linear interpolation of the CDF's, R version
+Linear interpolation of CDF's, R version
 }

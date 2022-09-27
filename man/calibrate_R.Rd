@@ -22,11 +22,11 @@ calibrate_R(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-10)
 \item{prec}{Precision for the approximate calibration}
 }
 \value{
-Approximately calibrate_Rd log-parameter
+Approximately calibrated log-parameter
 }
 \description{
 Computes an optimal additive adjustment of theta, i.e. a matrix
-theta.new with values
-theta.new_jk = theta_jk + x_j + y_k
-such that f(theta.new) is minimal.
+theta_new with values
+theta_new_jk = theta_jk + x_j + y_k
+such that f(theta_new) is minimal.
 }
