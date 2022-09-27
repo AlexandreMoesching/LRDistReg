@@ -138,7 +138,7 @@ The LR-estimator is in general smoother than the ST-estimator. In this specific 
 
 ## PART 4: Growth data and interpolation feature
 
-The package also includes the weight for age dataset which was publicly released as part of the National Health and Nutrition Examination Survey conducted in the US between 1963 and 1991 (data available from [www.cdc.gov](www.cdc.gov)). We take a sample of $n=2000$ girls between $2$ and $16$ years old, estimate CDF's (this time using the C++ function) for all ages and month between $2$ and $16$ (using the interpolation feature `x0`) and produce $\beta$-quantile curves (taut strings between each pair of lower and upper $\beta$-quantile curves).
+The package also includes the weight for age dataset which was publicly released as part of the National Health and Nutrition Examination Survey conducted in the US between 1963 and 1991 (data available from [www.cdc.gov](www.cdc.gov)). We take a sample of $n=2000$ girls between $2$ and $16$ years old, estimate CDF's (this time using the C++ function) for all years and months between $2$ and $16$ (using the interpolation feature `x0`) and produce $\beta$-quantile curves (taut strings between each pair of lower and upper $\beta$-quantile curves).
 
 ```{r growth_data}
 data <- growthdata[(growthdata$sex == 2) &

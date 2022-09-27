@@ -146,7 +146,7 @@ released as part of the National Health and Nutrition Examination Survey
 conducted in the US between 1963 and 1991 (data available from
 [www.cdc.gov](www.cdc.gov)). We take a sample of $n=2000$ girls between
 $2$ and $16$ years old, estimate CDF’s (this time using the C++
-function) for all ages and month between $2$ and $16$ (using the
+function) for all years and months between $2$ and $16$ (using the
 interpolation feature `x0`) and produce $\beta$-quantile curves (taut
 strings between each pair of lower and upper $\beta$-quantile curves).
 
