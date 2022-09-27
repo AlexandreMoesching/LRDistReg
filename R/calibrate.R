@@ -32,6 +32,10 @@ calibrate_R <- function(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-10) {
     f_new <- ftheta_R(theta, n, w, PP)
     delta <- f_old - f_new
     f_old <- f_new
+
+    # NOTE: It could be that delta < prec but theta.old - theta.new > prec
+    # This implies that the R and C++ calibrate functions may return slightly
+    # different outputs.
   }
 
   # Return parameter

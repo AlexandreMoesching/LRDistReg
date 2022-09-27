@@ -59,19 +59,19 @@ void vg2_ref(arma::mat& theta, arma::mat& v, arma::mat& g, const par& par) {
   }
 }
 
-double ftheta_ref(arma::mat& theta, const par& par) {
+long double ftheta_ref(arma::mat& theta, const par& par) {
   // Declare variable
-  double ftheta = 0.0;
+  long double ftheta = 0.0;
 
   // Update ftheta
   for (int j = 0; j < par.l; j++) {
-    ftheta += sum(
+    ftheta += accu(
       - (
           par.w.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) %
           theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1))
       ) + (
           par.n * exp(
-              theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1))
+          theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1))
           )
       )
     );
@@ -94,7 +94,7 @@ double ftheta_ref(arma::mat& theta, const par& par) {
 //'
 //' @export
 //[[Rcpp::export]]
-List vg1_C(arma::mat& theta, int l, int m, int n, arma::imat& mM, arma::mat& w_ul) {
+List vg1_C(arma::mat theta, int l, int m, int n, arma::imat& mM, arma::mat& w_ul) {
   // Declare variables
   par par;
   par.l = l;
@@ -124,7 +124,7 @@ List vg1_C(arma::mat& theta, int l, int m, int n, arma::imat& mM, arma::mat& w_u
 //'
 //' @export
 //[[Rcpp::export]]
-List vg2_C(arma::mat& theta, int l, int m, int n, arma::imat& lL, arma::mat& w_ol) {
+List vg2_C(arma::mat theta, int l, int m, int n, arma::imat& lL, arma::mat& w_ol) {
   // Declare variables
   par par;
   par.l = l;
@@ -154,7 +154,7 @@ List vg2_C(arma::mat& theta, int l, int m, int n, arma::imat& lL, arma::mat& w_o
 //'
 //' @export
 //[[Rcpp::export]]
-double ftheta_C(arma::mat& theta, int l, int n, arma::imat& mM, arma::mat& w) {
+long double ftheta_C(arma::mat theta, int l, int n, arma::imat& mM, arma::mat& w) {
   // Declare variables
   par par;
   par.l = l;

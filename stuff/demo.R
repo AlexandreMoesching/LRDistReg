@@ -52,8 +52,8 @@ res_R <- dist_reg_R(X, Y, W, delta0, NULL, TRUE)
 res_C <- dist_reg_C(X, Y, W, delta0, numeric(), TRUE)
 
 # Compare results
-sum(abs(res_R$h.TP2 - res_C$h_TP2))
-sum(abs(res_R$q.LR - res_C$q_LR))
+sum(abs(res_R$h_TP2 - res_C$h_TP2))
+sum(abs(res_R$q_LR - res_C$q_LR))
 sum(abs(res_R$CDF_LR - res_C$CDF_LR))
 sum(abs(res_R$CDF_ST - res_C$CDF_ST))
 sum(abs(res_R$CDF_EMP - res_C$CDF_EMP))

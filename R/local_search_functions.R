@@ -41,15 +41,13 @@ simple_step_R <- function(theta, Psi, delta, l, m, n, w, PP) {
 #' @export
 local_search1_R <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
   tmp <- vg1_R(theta, l, m, n, mM, w_ul)
-  v_tilde <- tmp$v
-  g_tilde <- tmp$g
   lambda_star <- matrix(0, nrow = l, ncol = m)
-  lambda_star[cbind(1:l, mM[, 1])] <- g_tilde[cbind(1:l, mM[, 1])]
+  lambda_star[cbind(1:l, mM[, 1])] <- tmp$g[cbind(1:l, mM[, 1])]
   if (m >= 2) {
     for (k in 2:m) {
       jj <- lL[k, 1]:lL[k - 1, 2]
       if (length(jj) >= 1) {
-        lambda_star[jj, k] <- Iso::pava(g_tilde[jj, k], v_tilde[jj, k])
+        lambda_star[jj, k] <- Iso::pava(tmp$g[jj, k], tmp$v[jj, k])
       }
     }
   }
@@ -75,15 +73,13 @@ local_search1_R <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
 #' @export
 local_search2_R <- function(theta, l, m, n, mM, lL, PP, w, w_ol) {
   tmp <- vg2_R(theta, l, m, n, lL, w_ol)
-  v_tilde <- tmp$v
-  g_tilde <- tmp$g
   lambda_star <- matrix(0, nrow = l, ncol = m)
-  lambda_star[cbind(lL[, 1], 1:m)] <- g_tilde[cbind(lL[, 1], 1:m)]
+  lambda_star[cbind(lL[, 1], 1:m)] <- tmp$g[cbind(lL[, 1], 1:m)]
   if (l >= 2) {
     for (j in 2:l) {
       kk <- mM[j, 1]:mM[j - 1, 2]
       if (length(kk) >= 1) {
-        lambda_star[j, kk] <- Iso::pava(g_tilde[j, kk], v_tilde[j, kk])
+        lambda_star[j, kk] <- Iso::pava(tmp$g[j, kk], tmp$v[j, kk])
       }
     }
   }

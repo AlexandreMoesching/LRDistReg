@@ -4,15 +4,14 @@ void TP2_fit_ref(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
                  arma::mat& theta, arma::mat& Psi,
                  arma::mat& v, arma::mat& g, arma::mat& lambda_star,
                  pava_par& par1, pava_par& par2,
-                 double& delta, double delta0, par& par) {
+                 long double& delta, long double delta0, par& par) {
   // Declare variables
-  double prec = delta0;
+  long double prec = delta0;
   int s = 0;
 
   // Initialize theta
-  double tmp_dbl = -log(accu(par.PP));
-  // >>>>>>>>>>>>>>>>> SHOULD WE ALSO REPLACE SUM BY ACCU ELSEWHERE ??
-  // >>>>>>>>>>>>>>>>> ALSO CAN WE NOT AVOID USING PP ??
+  long double tmp_dbl = -log(accu(par.PP));
+  // >>>>>>>>>>>>>>>>> CAN WE NOT AVOID USING PP ??
   for (int j = 0; j < par.l; j++) {
     theta.row(j).subvec(
         par.mM.at(j, 0), par.mM.at(j, 1)
@@ -52,7 +51,7 @@ void TP2_fit_ref(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
 
   // Compute q_LR
   for (int j = 0; j < par.l; j++) {
-    q_LR.row(j) = h_TP2.row(j) / sum(h_TP2.row(j));
+    q_LR.row(j) = h_TP2.row(j) / accu(h_TP2.row(j));
   }
 
   // Compute CDF_LR
@@ -134,7 +133,7 @@ void ST_fit_ref(arma::mat& CDF_EMP, arma::mat& CDF_ST,
 //' @export
 // [[Rcpp::export]]
 List dist_reg_C(arma::vec& X, arma::vec& Y, arma::vec& W,
-                double delta0, arma::vec x0, bool ST = false) {
+                long double delta0, arma::vec x0, bool ST = false) {
   // Compute parameters
   par par = prepare_data_par(X, Y, W);
 
@@ -177,7 +176,7 @@ List dist_reg_C(arma::vec& X, arma::vec& Y, arma::vec& W,
   arma::vec  WW2(par.m + 1);
   pava_par par2 = {PP2, MM2, WW2};
 
-  double delta;
+  long double delta;
 
   // Estimate TP2 distribution & LR-ordered family of distributions
   TP2_fit_ref(h_TP2, q_LR, CDF_LR,

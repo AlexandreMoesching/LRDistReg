@@ -1,10 +1,10 @@
 #include "local_search_functions.h"
 
-void simple_step_ref(arma::mat& theta, arma::mat& Psi, double& delta, const par& par) {
+void simple_step_ref(arma::mat& theta, arma::mat& Psi, long double& delta, const par& par) {
   // Declare variables
-  double rho = delta, t_star;
-  double f_old = ftheta_ref(theta, par);
-  double f_new = ftheta_ref(Psi, par);
+  long double rho = delta, t_star;
+  long double f_old = ftheta_ref(theta, par);
+  long double f_new = ftheta_ref(Psi, par);
 
   // While-loop
   while (f_new > f_old) {
@@ -23,13 +23,13 @@ void simple_step_ref(arma::mat& theta, arma::mat& Psi, double& delta, const par&
   for (int j = 0; j < par.l; j++) {
     theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) =
       (1.0 - t_star) * theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) +
-             t_star  *   Psi.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1));
+      t_star  *   Psi.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1));
   }
 }
 
 void local_search1_ref(arma::mat& theta, arma::mat& Psi,
                        arma::mat& v, arma::mat& g, arma::mat& lambda_star,
-                       pava_par& par1, double& delta, const par& par) {
+                       pava_par& par1, long double& delta, const par& par) {
   // Declare variables
   int lk1, Lk0, d;
 
@@ -95,7 +95,7 @@ void local_search1_ref(arma::mat& theta, arma::mat& Psi,
   // Update delta
   delta = 0;
   for (int j = 0; j < par.l; j++) {
-    delta += sum(
+    delta += accu(
       (
           - par.w.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) +
             par.n * exp(theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)))
@@ -113,7 +113,7 @@ void local_search1_ref(arma::mat& theta, arma::mat& Psi,
 
 void local_search2_ref(arma::mat& theta, arma::mat& Psi,
                        arma::mat& v, arma::mat& g, arma::mat& lambda_star,
-                       pava_par& par2, double& delta, const par& par) {
+                       pava_par& par2, long double& delta, const par& par) {
   // Declare variables
   int mj1, Mj0, d;
 
@@ -179,7 +179,7 @@ void local_search2_ref(arma::mat& theta, arma::mat& Psi,
   // Update delta
   delta = 0;
   for (int j = 0; j < par.l; j++) {
-    delta += sum(
+    delta += accu(
       (
           - par.w.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) +
             par.n * exp(theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)))
@@ -209,7 +209,7 @@ void local_search2_ref(arma::mat& theta, arma::mat& Psi,
 //'
 //' @export
 //[[Rcpp::export]]
-arma::mat simple_step_C(arma::mat& theta, arma::mat& Psi, double delta,
+arma::mat simple_step_C(arma::mat theta, arma::mat Psi, long double delta,
                         int l, arma::imat& mM, int n, arma::mat& w) {
   // Declare variables
   par par;
@@ -240,7 +240,7 @@ arma::mat simple_step_C(arma::mat& theta, arma::mat& Psi, double delta,
 //'
 //' @export
 //[[Rcpp::export]]
-List local_search1_C(arma::mat& theta, int l, int m, int n,
+List local_search1_C(arma::mat theta, int l, int m, int n,
                      arma::imat& lL, arma::imat& mM,
                      arma::mat& w, arma::mat& w_ul) {
   // Declare variables
@@ -258,7 +258,7 @@ List local_search1_C(arma::mat& theta, int l, int m, int n,
   par.n = n;
   par.w = w;
   par.w_ul = w_ul;
-  double delta;
+  long double delta;
 
   // Compute Psi and delta
   local_search1_ref(theta, Psi, v, g, lambda_star, par1, delta, par);
@@ -282,7 +282,7 @@ List local_search1_C(arma::mat& theta, int l, int m, int n,
 //'
 //' @export
 //[[Rcpp::export]]
-List local_search2_C(arma::mat& theta, int l, int m, int n,
+List local_search2_C(arma::mat theta, int l, int m, int n,
                      arma::imat& lL, arma::imat& mM,
                      arma::mat& w, arma::mat& w_ol) {
   // Declare variables
@@ -300,7 +300,7 @@ List local_search2_C(arma::mat& theta, int l, int m, int n,
   par.n = n;
   par.w = w;
   par.w_ol = w_ol;
-  double delta;
+  long double delta;
 
   // Compute Psi and delta
   local_search2_ref(theta, Psi, v, g, lambda_star, par2, delta, par);

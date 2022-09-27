@@ -1,9 +1,9 @@
 #include "calibrate.h"
 
-void calibrate_ref(arma::mat& theta, const par& par, double& prec) {
+void calibrate_ref(arma::mat& theta, const par& par, long double& prec) {
   // Declare variable
-  double f_new, f_old = ftheta_ref(theta, par);
-  double delta = R_PosInf;
+  long double f_new, f_old = ftheta_ref(theta, par);
+  long double delta = R_PosInf;
 
   // While loop
   while (delta > prec) {
@@ -40,10 +40,10 @@ void calibrate_ref(arma::mat& theta, const par& par, double& prec) {
 //'
 //' @export
 // [[Rcpp::export]]
-arma::mat calibrate_C(arma::mat& theta,
+arma::mat calibrate_C(arma::mat theta,
                       int l, arma::imat& mM, int n,
                       arma::mat& w, arma::vec& w_jplus, arma::vec& w_plusk,
-                      double prec) {
+                      long double prec) {
   // Declare variables
   par par;
   par.l = l;

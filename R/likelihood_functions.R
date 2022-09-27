@@ -33,7 +33,7 @@ vg1_R <- function(theta, l, m, n, mM, w_ul) {
 #' @return v-tilde and gamma-tilde functions
 #' @export
 vg2_R <- function(theta, l, m, n, lL, w_ol) {
-  v <-  g <- matrix(0, nrow = l, ncol = m)
+  v <- g <- matrix(0, nrow = l, ncol = m)
   for (k in 1:m) {
     jj <- lL[k, 1]:lL[k, 2]
     tmp1 <- n * rev(cumsum(rev(exp(theta[jj, k]))))

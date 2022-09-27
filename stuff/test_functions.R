@@ -1,10 +1,10 @@
 library(LRDistReg)
-my_equal <- function(z1, z2) all.equal(z1, z2, tolerance = 1e-13)
+my_equal <- function(z1, z2) all.equal(z1, z2, tolerance = 1e-12)
 
 ####____________________________________________________________________________
 #### SETUP                                                                  ####
 
-n <- 1e4; l0 <- 1e2; m0 <- 1e2
+n <- 1e4; l0 <- 1e1; m0 <- 1e1
 # set.seed(1)
 X <- sample(rnorm(l0), n, replace = TRUE)
 Y <- sample(rnorm(m0), n, replace = TRUE)
@@ -100,7 +100,7 @@ cat("f_theta's are the same:", my_equal(ftheta_R(theta, n, w, PP),
 w_jplus <- c(res_C$w_jplus)
 w_plusk <- c(res_C$w_plusk)
 
-prec <- 1e-12
+prec <- 1e-14
 
 cat("calibrate's are the same:",
     my_equal(calibrate_R(theta,        n, w, w_jplus, w_plusk, PP, prec),
