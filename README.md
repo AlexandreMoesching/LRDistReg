@@ -31,9 +31,10 @@ devtools::install_github("AlexandreMoesching/LRDistReg")
 ## PART 1: True model (parametric)
 
 The present demo uses a gamma family of distributions
-$(Q_x)_{x\in \mathfrak{X}}$. More precisely $$
-Q_x := \mathrm{Gamma}\bigl(a(x), b(x)\bigr),\quad \text{for all}\ x \in \mathfrak{X} := [1,4],
-$$ with some shape $a: \mathfrak{X} \to (0,\infty)$ and scale
+$(Q_x)_{x\in \mathfrak{X}}$. More precisely
+$Q_x := \mathrm{Gamma}\bigl(a(x), b(x)\bigr)$ for all
+$x \in \mathfrak{X} := [1,4]$, with some shape
+$a: \mathfrak{X} \to (0,\infty)$ and scale
 $b: \mathfrak{X} \to (0,\infty)$.
 
 ``` r
