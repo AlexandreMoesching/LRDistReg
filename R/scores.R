@@ -2,7 +2,7 @@
 #'
 #' @param d,z  Scalars
 #' @noRd
-TT <- function(d, z) {
+rho <- function(d, z) {
   d * z - z^2 / 2
 }
 
@@ -26,31 +26,34 @@ SS_CRPS_gamma <- function(x0, l0, res, a, b, rel_tol = 1e-9) {
   y <- c(res$par$y)
   m <- res$par$m
 
+  # Pre-compute matrix of Gamma CDF's
+  G0_jk <- outer(x0, y,
+                      function(xj, yk) stats::pgamma(yk,
+                                                     shape = a(xj),
+                                                     scale = b(xj)))
+  G1_jk <- outer(x0, y,
+                      function(xj, yk) stats::pgamma(yk,
+                                                     shape = a(xj) + 1,
+                                                     scale = b(xj)))
+
+  # Pre-compute some constants
+  # Predefine some constants
+  cc <- b(x0) * gamma(a(x0) + 1) / gamma(a(x0))
+
   # The three columns of SS are identical in the beginning. They correspond to
   # the sum of:
   # - The integral of      G_xj  g_xj on (0,   y_1)
   # - The integral of (1 - G_xj) g_xj on (y_m, Inf)
   SS <- matrix(
-    (
-      (1/2) * (     stats::pgamma(res$par$y[1], shape = a(x0), scale = b(x0)))^2 +
-        1/2 - TT(1, stats::pgamma(res$par$y[m], shape = a(x0), scale = b(x0)))
-    ), nrow = l0, ncol = 3)
+    (1/2) * (1 + G0_jk[, 1]^2 + G0_jk[, m]^2) - G0_jk[, m],
+    nrow = l0, ncol = 3
+  )
   colnames(SS) <- c("LR", "ST", "EMP")
 
   # The three columns of CRPS are identical in the beginning. They correspond to
   # the last term in the expression of the CRPS involving the Beta function
   CRPS <- matrix(b(x0) / beta(1 / 2, a(x0)), nrow = l0, ncol = 3)
   colnames(CRPS) <- c("LR", "ST", "EMP")
-
-  # Pre-compute matrix of Gamma CDF's
-  G_xj_yk_a0 <- outer(x0, y,
-                      function(xj, yk) stats::pgamma(yk,
-                                                     shape = a(xj),
-                                                     scale = b(xj)))
-  G_xj_yk_a1 <- outer(x0, y,
-                      function(xj, yk) stats::pgamma(yk,
-                                                     shape = a(xj) + 1,
-                                                     scale = b(xj)))
 
   if (m > 1) {
     # For each x_j in x0
@@ -76,46 +79,37 @@ SS_CRPS_gamma <- function(x0, l0, res, a, b, rel_tol = 1e-9) {
       # Add the results to the current CRPS matrix
       CRPS[j, ] <- CRPS[j, ] + tmp1 + tmp2
 
-      # Predefine some constants
-      c_xj <- b(x0[j]) * gamma(a(x0[j]) + 1) / gamma(a(x0[j]))
-
       # Compute remaining terms
       for (k in 1:(m - 1)) { # (y_k, y_k+1)
-        # Pre compute som constants
-        G_xj_yk0_a0 <- G_xj_yk_a0[j, k]
-        G_xj_yk1_a0 <- G_xj_yk_a0[j, k + 1]
-        G_xj_yk0_a1 <- G_xj_yk_a1[j, k]
-        G_xj_yk1_a1 <- G_xj_yk_a1[j, k + 1]
-
         # For each orders
         for (ord in 1:3) {
-          # Define appropriate G_jk
+          # Define appropriate \tilde{G}_jk
           if (ord == 1) {
-            G_jk <- res$CDF_LR[j, k]
+            tG_jk <- res$CDF_LR[j, k]
           } else if (ord == 2) {
-            G_jk <- res$CDF_ST[j, k]
+            tG_jk <- res$CDF_ST[j, k]
           } else {
-            G_jk <- res$CDF_EMP[j, k]
+            tG_jk <- res$CDF_EMP[j, k]
           }
 
           # Computations related to SS
-          if (G_jk >= G_xj_yk1_a0) {
+          if (tG_jk >= G0_jk[j, k + 1]) {
             SS[j, ord] <- SS[j, ord] +
-              TT(G_jk, G_xj_yk1_a0) - TT(G_jk, G_xj_yk0_a0)
-          } else if (G_jk <= G_xj_yk0_a0) {
+              rho(tG_jk, G0_jk[j, k + 1]) - rho(tG_jk, G0_jk[j, k])
+          } else if (tG_jk <= G0_jk[j, k]) {
             SS[j, ord] <- SS[j, ord] +
-              TT(G_jk, G_xj_yk0_a0) - TT(G_jk, G_xj_yk1_a0)
+              rho(tG_jk, G0_jk[j, k]) - rho(tG_jk, G0_jk[j, k + 1])
           } else {
             SS[j, ord] <- SS[j, ord] +
-              2 * TT(G_jk, G_jk) - TT(G_jk, G_xj_yk0_a0) - TT(G_jk, G_xj_yk1_a0)
+              tG_jk^2 - rho(tG_jk, G0_jk[j, k]) - rho(tG_jk, G0_jk[j, k + 1])
           }
 
           # Computations related to CRPS
           CRPS[j, ord] <- CRPS[j, ord] +
-            G_jk^2 * (y[k + 1] - y[k]) - 2 * G_jk * (
-              y[k+1] * G_xj_yk1_a0 -
-                y[k] * G_xj_yk0_a0 -
-                c_xj * (G_xj_yk1_a1 - G_xj_yk0_a1)
+            tG_jk^2 * (y[k + 1] - y[k]) - 2 * tG_jk * (
+              y[k + 1] * G0_jk[j, k + 1] -
+                  y[k] * G0_jk[j, k] -
+                cc[j] * (G1_jk[j, k + 1] - G1_jk[j, k])
             )
         }
       }

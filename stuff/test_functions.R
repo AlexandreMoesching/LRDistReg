@@ -71,24 +71,24 @@ w_ol <- res_C$w_ol
 w <- res_C$w
 PP <- res_R$PP
 
-tmp_R <- vg_tilde1_R(theta, l, m, n, mM + 1, w_ul)
-tmp_C <- vg_tilde1_C(theta, l, m, n, mM,     w_ul)
-cat("v1's are the same:", my_equal(tmp_R$v, tmp_C$v), "\n")
-cat("g1's are the same:", my_equal(tmp_R$g, tmp_C$g), "\n")
+tmp_R <- vg1_R(theta, l, m, n, mM + 1, w_ul)
+tmp_C <- vg1_C(theta, l, m, n, mM,     w_ul)
+cat("v_tilde1's are the same:", my_equal(tmp_R$v, tmp_C$v), "\n")
+cat("g_tilde1's are the same:", my_equal(tmp_R$g, tmp_C$g), "\n")
 
-tmp_R <- vg_tilde2_R(theta, l, m, n, lL + 1, w_ol)
-tmp_C <- vg_tilde2_C(theta, l, m, n, lL,     w_ol)
-cat("v2's are the same:", my_equal(tmp_R$v, tmp_C$v), "\n")
-cat("g2's are the same:", my_equal(tmp_R$g, tmp_C$g), "\n")
+tmp_R <- vg2_R(theta, l, m, n, lL + 1, w_ol)
+tmp_C <- vg2_C(theta, l, m, n, lL,     w_ol)
+cat("v_tilde2's are the same:", my_equal(tmp_R$v, tmp_C$v), "\n")
+cat("g_tilde2's are the same:", my_equal(tmp_R$g, tmp_C$g), "\n")
 
-cat("f.theta's are the same:", my_equal(ftheta_R(theta, n, w, PP),
+cat("f_theta's are the same:", my_equal(ftheta_R(theta, n, w, PP),
                                         ftheta_C(theta, l, n, mM, w)), "\n")
 
-# microbenchmark::microbenchmark(vg_tilde1_R(theta, l, m, n, mM + 1, w_ul),
-#                                vg_tilde1_C(theta, l, m, n, mM, w_ul),
+# microbenchmark::microbenchmark(vg1_R(theta, l, m, n, mM + 1, w_ul),
+#                                vg1_C(theta, l, m, n, mM, w_ul),
 #                                times = 1e2)
-# microbenchmark::microbenchmark(vg_tilde2_R(theta, l, m, n, lL + 1, w_ol),
-#                                vg_tilde2_C(theta, l, m, n, lL, w_ol),
+# microbenchmark::microbenchmark(vg2_R(theta, l, m, n, lL + 1, w_ol),
+#                                vg2_C(theta, l, m, n, lL, w_ol),
 #                                times = 1e2)
 # microbenchmark::microbenchmark(ftheta_R(theta, n, w, PP),
 #                                ftheta_C(theta, l, n, mM, w),
@@ -128,7 +128,7 @@ delta <- res_C$delta
 
 res_R <- simple_step_R(theta, Psi, delta, l, m, n, w, PP)
 res_C <- simple_step_C(theta, Psi, delta, l, mM, n, w)
-cat("simple.step's are the same:", my_equal(res_R[PP], res_C[PP]), "\n")
+cat("simple_step's are the same:", my_equal(res_R[PP], res_C[PP]), "\n")
 
 # microbenchmark::microbenchmark(local_search1_R(theta, l, m, n, mM + 1, lL + 1, PP, w, w_ul),
 #                                local_search1_C(theta, l, m, n, lL, mM, w, w_ul),
@@ -148,6 +148,7 @@ delta0 <- 1e-9
 res_R <- dist_reg_R(X, Y, W, delta0, NULL, TRUE)
 res_C <- dist_reg_C(X, Y, W, delta0, numeric(), TRUE)
 
+cat("theta's are the same:",   my_equal(res_R$theta,   res_C$theta),   "\n")
 cat("h_TP2's are the same:",   my_equal(res_R$h_TP2,   res_C$h_TP2),   "\n")
 cat("q_LR's are the same:",    my_equal(res_R$q_LR,    res_C$q_LR),    "\n")
 cat("CDF_LR's are the same:",  my_equal(res_R$CDF_LR,  res_C$CDF_LR),  "\n")
@@ -210,16 +211,16 @@ for (i in 1:n) Y[i] <- r.cond.dist(X[i])
 Y <- round(Y, 2)          # Creates some ties
 W <- rep(1, n)            # Sample weights
 
-delta0 <- 1e1            # Threshold for estimation precision
+delta0 <- 1e1             # Threshold for estimation precision
 
 res <- dist_reg_C(X, Y, W, delta0, x0, TRUE)
 
 SS_CRPS <- SS_CRPS_gamma(x0, l0, res, a, b)
 
-# plot(x0, SS_CRPS$SS[,1], type = "l", ylim = range(SS_CRPS$SS), ylab = "Simple score")
-# lines(x0, SS_CRPS$SS[,2], col = 2)
-# lines(x0, SS_CRPS$SS[,3], col = 3)
-#
-# plot(x0, SS_CRPS$CRPS[,1], type = "l", ylim = range(SS_CRPS$CRPS), ylab = "CRPS")
-# lines(x0, SS_CRPS$CRPS[,2], col = 2)
-# lines(x0, SS_CRPS$CRPS[,3], col = 3)
+plot(x0, SS_CRPS$SS[,1], type = "l", ylim = range(SS_CRPS$SS), ylab = "Simple score")
+lines(x0, SS_CRPS$SS[,2], col = 2)
+lines(x0, SS_CRPS$SS[,3], col = 3)
+
+plot(x0, SS_CRPS$CRPS[,1], type = "l", ylim = range(SS_CRPS$CRPS), ylab = "CRPS")
+lines(x0, SS_CRPS$CRPS[,2], col = 2)
+lines(x0, SS_CRPS$CRPS[,3], col = 3)

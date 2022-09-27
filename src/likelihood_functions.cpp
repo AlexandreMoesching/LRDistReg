@@ -1,6 +1,6 @@
 #include "likelihood_functions.h"
 
-void vg_tilde1_ref(arma::mat& theta, arma::mat& v, arma::mat& g, const par& par) {
+void vg1_ref(arma::mat& theta, arma::mat& v, arma::mat& g, const par& par) {
   for (int j = 0; j < par.l; j++) {
     // Compute v
     v.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) =
@@ -29,7 +29,7 @@ void vg_tilde1_ref(arma::mat& theta, arma::mat& v, arma::mat& g, const par& par)
   }
 }
 
-void vg_tilde2_ref(arma::mat& theta, arma::mat& v, arma::mat& g, const par& par) {
+void vg2_ref(arma::mat& theta, arma::mat& v, arma::mat& g, const par& par) {
   // Compute v and gamma
   for (int k = 0; k < par.m; k++) {
     // Compute v
@@ -94,7 +94,7 @@ double ftheta_ref(arma::mat& theta, const par& par) {
 //'
 //' @export
 //[[Rcpp::export]]
-List vg_tilde1_C(arma::mat& theta, int l, int m, int n, arma::imat& mM, arma::mat& w_ul) {
+List vg1_C(arma::mat& theta, int l, int m, int n, arma::imat& mM, arma::mat& w_ul) {
   // Declare variables
   par par;
   par.l = l;
@@ -105,7 +105,7 @@ List vg_tilde1_C(arma::mat& theta, int l, int m, int n, arma::imat& mM, arma::ma
   arma::mat v(l, m, arma::fill::zeros), g(l, m, arma::fill::zeros);
 
   // Compute v and gamma
-  vg_tilde1_ref(theta, v, g, par);
+  vg1_ref(theta, v, g, par);
 
   // Return
   return List::create(Named("v") = v, Named("g") = g);
@@ -124,7 +124,7 @@ List vg_tilde1_C(arma::mat& theta, int l, int m, int n, arma::imat& mM, arma::ma
 //'
 //' @export
 //[[Rcpp::export]]
-List vg_tilde2_C(arma::mat& theta, int l, int m, int n, arma::imat& lL, arma::mat& w_ol) {
+List vg2_C(arma::mat& theta, int l, int m, int n, arma::imat& lL, arma::mat& w_ol) {
   // Declare variables
   par par;
   par.l = l;
@@ -136,7 +136,7 @@ List vg_tilde2_C(arma::mat& theta, int l, int m, int n, arma::imat& lL, arma::ma
   arma::mat g(l, m, arma::fill::zeros);
 
   // Compute v and gamma
-  vg_tilde2_ref(theta, v, g, par);
+  vg2_ref(theta, v, g, par);
 
   // Return
   return List::create(Named("v") = v, Named("g") = g);

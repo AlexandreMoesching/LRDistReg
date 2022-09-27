@@ -9,7 +9,7 @@
 #'
 #' @return v-tilde and gamma-tilde functions
 #' @export
-vg_tilde1_R <- function(theta, l, m, n, mM, w_ul) {
+vg1_R <- function(theta, l, m, n, mM, w_ul) {
   v <- g <- matrix(0, nrow = l, ncol = m)
   for (j in 1:l) {
     kk <- mM[j, 1]:mM[j, 2]
@@ -32,7 +32,7 @@ vg_tilde1_R <- function(theta, l, m, n, mM, w_ul) {
 #'
 #' @return v-tilde and gamma-tilde functions
 #' @export
-vg_tilde2_R <- function(theta, l, m, n, lL, w_ol) {
+vg2_R <- function(theta, l, m, n, lL, w_ol) {
   v <-  g <- matrix(0, nrow = l, ncol = m)
   for (k in 1:m) {
     jj <- lL[k, 1]:lL[k, 2]

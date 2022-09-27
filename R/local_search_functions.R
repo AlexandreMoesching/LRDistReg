@@ -21,9 +21,8 @@ simple_step_R <- function(theta, Psi, delta, l, m, n, w, PP) {
     f_new <- ftheta_R(Psi, n, w, PP)
   }
   t_star <- min(1, rho / (2 * (rho - f_old + f_new)))
-  theta_new <- matrix(-Inf, nrow = l, ncol = m)
-  theta_new[PP] <- (1 - t_star) * theta[PP] + t_star * Psi[PP]
-  return(theta_new)
+  theta[PP] <- (1 - t_star) * theta[PP] + t_star * Psi[PP]
+  return(theta)
 }
 
 #' Local search (row), R version
@@ -41,7 +40,7 @@ simple_step_R <- function(theta, Psi, delta, l, m, n, w, PP) {
 #' @return New proposal Psi and step-size delta
 #' @export
 local_search1_R <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
-  tmp <- vg_tilde1_R(theta, l, m, n, mM, w_ul)
+  tmp <- vg1_R(theta, l, m, n, mM, w_ul)
   v_tilde <- tmp$v
   g_tilde <- tmp$g
   lambda_star <- matrix(0, nrow = l, ncol = m)
@@ -75,11 +74,10 @@ local_search1_R <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
 #' @return New proposal Psi and step-size delta
 #' @export
 local_search2_R <- function(theta, l, m, n, mM, lL, PP, w, w_ol) {
-  tmp <- vg_tilde2_R(theta, l, m, n, lL, w_ol)
+  tmp <- vg2_R(theta, l, m, n, lL, w_ol)
   v_tilde <- tmp$v
   g_tilde <- tmp$g
   lambda_star <- matrix(0, nrow = l, ncol = m)
-
   lambda_star[cbind(lL[, 1], 1:m)] <- g_tilde[cbind(lL[, 1], 1:m)]
   if (l >= 2) {
     for (j in 2:l) {

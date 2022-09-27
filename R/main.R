@@ -70,7 +70,8 @@ TP2_fit_R <- function(par, delta0 = 1e-8) {
   CDF_LR <- t(apply(q_LR, 1, cumsum))
 
   # Return
-  return(list(h_TP2 = h_TP2,
+  return(list(theta = theta,
+              h_TP2 = h_TP2,
               q_LR = q_LR,
               CDF_LR = CDF_LR,
               delta = tmp$delta))

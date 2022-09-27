@@ -185,7 +185,8 @@ List dist_reg_C(arma::vec& X, arma::vec& Y, arma::vec& W,
               par1, par2, delta, delta0, par);
 
   // Create list to return
-  List ResList = List::create(Named("h_TP2") = h_TP2,
+  List ResList = List::create(Named("theta") = theta,
+                              Named("h_TP2") = h_TP2,
                               Named("q_LR") = q_LR,
                               Named("CDF_LR") = CDF_LR,
                               Named("delta") = delta,

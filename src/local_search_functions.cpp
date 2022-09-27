@@ -34,7 +34,7 @@ void local_search1_ref(arma::mat& theta, arma::mat& Psi,
   int lk1, Lk0, d;
 
   // Compute v-tilde and gamma-tilde
-  vg_tilde1_ref(theta, v, g, par);
+  vg1_ref(theta, v, g, par);
 
   // Compute lambda_star
   // (i) Baseline
@@ -118,7 +118,7 @@ void local_search2_ref(arma::mat& theta, arma::mat& Psi,
   int mj1, Mj0, d;
 
   // Compute v-tilde and gamma-tilde
-  vg_tilde2_ref(theta, v, g, par);
+  vg2_ref(theta, v, g, par);
 
   // Compute lambda_star
   // (i) Baseline
