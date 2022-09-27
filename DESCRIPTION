@@ -1,12 +1,21 @@
 Package: LRDistReg
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Date: 2022-07-20
+Title: Estimates a Family of Distributions under Likelihood Ratio Order Constraint
+Version: 1.0
+Date: 2022-09-27
 Authors@R: 
-    person("Alexandre", "Moesching", , "alexandre.moesching@uni-goettingen.de", 
-    role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-8270-3724"))
-Description: What the package does (one paragraph).
+    c(person("Alexandre", "Moesching", 
+        email = "alexandre.moesching@uni-goettingen.de", 
+        role = c("aut", "cre"), 
+        comment = c(ORCID = "0000-0002-8270-3724")),
+      person("Lutz", "Duembgen", 
+        email = "duembgen@stat.unibe.ch", 
+        role = c("aut"), 
+        comment = c(ORCID = "0000-0003-0172-9285")))
+Description: Given pairs of observations (X_1, Y_1), ..., (X_n, Y_n) with
+    unknown conditional distributions Q_x of Y, given that X = x, this package
+    estimates the unknown family of distributions (Q_x) under the sole 
+    assumption that Q_x is isotonic in x with respect to likelihood ratio order.
+URL: https://github.com/AlexandreMoesching/LRDistReg
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

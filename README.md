@@ -6,7 +6,17 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of LRDistReg is to …
+Consider bivariate observations
+$(X_1, Y_1), \ldots , (X_n, Y_n) \in \mathbb{R}\times\mathbb{R}$ with
+unknown conditional distributions $Q_x$ of $Y$, given that $X = x$. The
+goal is to estimate these distributions under the sole assumption that
+$Q_x$ is isotonic in $x$ with respect to likelihood ratio order. The
+main algorithm of this package estimates the unknown family of
+distributions $(Q_x)_x$ via empirical likelihood, see [Moesching and
+Duembgen](https://arxiv.org/abs/2007.11521).
+
+Most functions are implemented both in R and C++ in order to have an
+easy to read implementation and a fast one.
 
 ## Installation
 
@@ -38,7 +48,7 @@ q.cond.dist <- function(x, alpha) qgamma(alpha, shape = a(x), scale = b(x))
 ```
 
 Visual output of the true family of distributions. For each $(x,y)$ in a
-certain rectangle, the value of $(\mathrm{d}P_x/\mathrm{d}y)(y)$ is
+certain rectangle, the value of $(\mathrm{d}Q_x/\mathrm{d}y)(y)$ is
 given by the color scale.
 
 ``` r
@@ -54,17 +64,7 @@ lattice::levelplot(outer(xx, yy, FUN = "d.cond.dist"),
 
 <img src="man/figures/README-visual_output-1.png" width="100%" />
 
-``` r
-
-contour(xx, yy, outer(xx, yy, FUN = "d.cond.dist"),
-        nlevels = 20,
-        xlab = expression(italic(x)), ylab = expression(italic(y)),
-        xlim = range(xx), ylim = range(yy))
-```
-
-<img src="man/figures/README-visual_output-2.png" width="100%" />
-
-## PART 2: Small data example, first (nonparametric) fit
+## PART 2: Small data example, first nonparametric fit
 
 Let us start with a small sample: $n = 30$ observations with covariates
 in a set $\mathfrak{X}_o := 1 + 3*\{1,2,...,\ell_o\}/\ell_o$, for
@@ -100,18 +100,6 @@ $(x,y)$ is equal to the number of observations at that location, plus 1.
 In consequence, black points contain no observations, red points contain
 one observation pair, green points contain two observation pairs, etc.
 
-If `indices = TRUE`, then the values $1,2,...,\ell$ are used for the
-plot instead of the unique elements $x_1 < x_2 < ... < x_\ell$ of
-$\{X_1,X_2,...,X_n\}$, and the values $1,2,...,m$ are used instead of
-the unique elements $y_1 < y_2 < ... < y_m$ of $\{Y_1,Y_2,...,Y_n\}$.
-This improves readability of the design plot.
-
-``` r
-plotD(res$par, indices = TRUE)
-```
-
-<img src="man/figures/README-fit_with_indices-1.png" width="100%" />
-
 The family of distributions is estimated at each points of this grid.
 The estimated conditional distribution functions are given by
 `res$CDF_LR`, an $\ell$-by-$m$ matrix.
@@ -133,7 +121,7 @@ colSums(res$h_TP2); res$par$w_plus.k/res$par$n
 
 ## PART 3: Medium data example, specification of precision parameter
 
-Options:
+The new setup is specified as follows:
 
 ``` r
 n <- 1e2
@@ -191,18 +179,16 @@ c(DIFF_LR, DIFF_ST, DIFF_EMP)
 #> [1] 0.02111121 0.02366766 0.05607067
 ```
 
-Plot the true CDF $F_x$ as well as its estimators for two values of $x$,
-one middle covariate ($x = 2.5$) and one boundary covariate ($x = 4$).
+Plot the true CDF as well as its estimators for two values of $x$, one
+middle covariate ($x = 2.5$) and one boundary covariate ($x = 4$).
 
 ``` r
-par(mfrow = c(2,1), mar = c(4.1,4.1,0.2,0.2))
-xx <- c(2.5, 4)
-for (xj in xx) {
+plot(0, type = "n",
+     xlab = expression(italic(y)), ylab = expression(italic(G[x](y))),
+     xlim = range(y), ylim = c(0,1), lwd = 2)
+for (xj in c(2.5, 4)) {
   j <- which(xj == x)
-  plot(y, CDF_TRUE[j,], type = "l",
-       xlab = expression(italic(y)),
-       ylab = expression(italic(f[x](y))),
-       lwd = 2)
+  lines(y, CDF_TRUE[j,],lwd = 2)
   lines(y, CDF_EMP[j,], lty = 2)
   lines(y, CDF_ST[j,], col = 2, lwd = 2)
   lines(y, CDF_LR[j,], col = 3, lwd = 2)
