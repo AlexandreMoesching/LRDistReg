@@ -16,7 +16,8 @@ distributions $(Q_x)_x$ via empirical likelihood, see [Moesching and
 Duembgen (2022)](https://arxiv.org/abs/2007.11521).
 
 Most functions are implemented both in R and C++ in order to have an
-easy to read implementation and a fast one.
+easy to read implementation and a fast one. The package also includes a
+growth dataset.
 
 ## Installation
 
