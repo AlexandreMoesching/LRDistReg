@@ -80,17 +80,18 @@ Y <- rep(0, n)
 for (i in 1:n) Y[i] <- r.cond.dist(X[i])
 ```
 
-We now estimate the family of distribution. We use the function `dist.reg()` with default options, except one plotting option.
+We now estimate the family of distribution. We use the function `dist_reg_R()` with default options.
 ```{r fit}
 library(LRDistReg)
-res <- dist.reg(X, Y, show.design = TRUE)
+res <- dist_reg_R(X, Y)
+plotD(res$par, indices = FALSE)
 ```
 
 The design of the experiment should be shown. The color of a pair $(x,y)$ is equal to the number of observations at that location, plus 1. In consequence, black points contain no observations, red points contain one observation pair, green points contain two observation pairs, etc.
 
 If `indices = TRUE`, then the values $1,2,...,\ell$ are used for the plot instead of the unique elements $x_1 < x_2 < ... < x_\ell$ of $\{X_1,X_2,...,X_n\}$, and the values $1,2,...,m$ are used instead of the unique elements $y_1 < y_2 < ... < y_m$ of $\{Y_1,Y_2,...,Y_n\}$. This improves readability of the design plot.
 ```{r fit_with_indices}
-res <- dist.reg(X, Y, show.design = TRUE, indices = TRUE)
+plotD(res$par, indices = TRUE)
 ```
 
 The family of distributions is estimated at each points of this grid. The estimated conditional distribution functions are given by `res$CDF_LR`, an $\ell$-by-$m$ matrix.
@@ -108,13 +109,6 @@ rowSums(res$h_TP2); res$par$w_j.plus/res$par$n
 colSums(res$h_TP2); res$par$w_plus.k/res$par$n
 ```
 
-To see how the stopping criteria is reached along with the corresponding values of the negative log-likelihood, the echo option can be activated.
-
-```{r fit_with_echo}
-res <- dist.reg(X, Y)
-res$delta0
-```
-
 ## PART 3: Medium data example, specification of precision parameter
 
 Options:
@@ -129,10 +123,9 @@ for (i in 1:n) Y[i] <- r.cond.dist(X[i])
 Y <- round(Y, 1) # Should create some ties
 ```
 
-This time we obtain the fit using a self-specified value of the precision parameter epsilon. It is normally automatically specified via some kind of rule of thumb.
+This time we obtain the fit using a self-specified value of the precision parameter $\delta_o$.
 ```{r fit_medium}
-res <- dist.reg(X, Y, show.design = TRUE, delta0 = 1e-4)
-res$tot.time # Less than a tenth of a second on a 7th generation i7 CPU
+res <- dist_reg_R(X, Y, delta0 = 1e-4)
 ```
 
 ## PART 4: A larger data example, comparison between Likelihood-Ratio ordering, usual STochastic ordering and the EMPirical
@@ -145,13 +138,8 @@ x0 <- 1+(1:l0)/l0*3
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
 for (i in 1:n) Y[i] <- r.cond.dist(X[i])
-```
 
-We let the program advise us a "reasonable" value for epsilon.
-```{r fit_large}
-res <- dist.reg(X, Y, suggest.delta0 = TRUE, ST = TRUE)
-res$delta0
-res$tot.time
+res <- dist_reg_R(X, Y, delta0 = 1e-2, ST = TRUE)
 ```
 
 Retrieve all CDF's and some useful parameters.
@@ -195,21 +183,7 @@ for (xj in xx) {
 }
 ```
 
-The LR-estimator is in general smoother than the ST-estimator. In this specific example, the LR-estimator is also closer to the true distribution than the ST-estimator. This was confirmed already earlier when looking at average absolute differences. Try deactivating the set.seed to see other outputs.
-
-Plot differences between the true CDF and LR/ST-estimators for all values of $x$. N.b.: it yields 4 pages of plots.
-
-```{r plot_differences_between_truth_and_estimators, fig.show='hide'}
-n.plot <- min(ceiling(sqrt(l)), 5)
-par(mfrow = c(n.plot, n.plot), mar = c(2,2,1,1))
-unif.ylim <- range(c(CDF_LR - CDF_TRUE, CDF_ST - CDF_TRUE))
-for (j in 1:l) {
-  plot(y, CDF_ST[j,] - CDF_TRUE[j,], type = "l", col = 2, 
-       lwd = 1, ylim = unif.ylim)
-  abline(h = 0)
-  lines(y, CDF_LR[j,] - CDF_TRUE[j,], col = 3, lwd = 1)
-}
-```
+The LR-estimator is in general smoother than the ST-estimator. In this specific example, the LR-estimator is also closer to the true distribution than the ST-estimator. This was confirmed already earlier when looking at average absolute differences. 
 
 ## PART 5: Interpolation feature
 
@@ -223,8 +197,8 @@ X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
 for (i in 1:n) Y[i] <- r.cond.dist(X[i])
 
-res <- dist.reg(X, Y, suggest.delta0 = TRUE, ST = TRUE)
+res <- dist_reg_R(X, Y, ST = TRUE)
 dim(res$CDF_LR); dim(res$CDF_ST); dim(res$CDF_EMP)
-res <- dist.reg(X, Y, suggest.delta0 = TRUE, ST = TRUE, x0 = x0)
+res <- dist_reg_R(X, Y, x0 = x0, ST = TRUE)
 dim(res$CDF_LR); dim(res$CDF_ST); dim(res$CDF_EMP)
 ```

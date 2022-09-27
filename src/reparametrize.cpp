@@ -1,17 +1,17 @@
 #include "reparametrize.h"
 
-void lambda1_to_theta_ref_cpp(arma::mat& lambda, arma::mat& theta, const par& par) {
+void lambda1_to_theta_ref(arma::mat& lambda, arma::mat& theta, const par& par) {
   // Reparametrize
   for (int j = 0; j < par.l; j++) {
-              theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) =
+    theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) =
       cumsum(lambda.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)));
   }
 }
 
-void lambda2_to_theta_ref_cpp(arma::mat& lambda, arma::mat& theta, const par& par) {
+void lambda2_to_theta_ref(arma::mat& lambda, arma::mat& theta, const par& par) {
   // Reparametrize
   for (int k = 0; k < par.m; k++) {
-              theta.col(k).subvec(par.lL.at(k, 0), par.lL.at(k, 1)) =
+    theta.col(k).subvec(par.lL.at(k, 0), par.lL.at(k, 1)) =
       cumsum(lambda.col(k).subvec(par.lL.at(k, 0), par.lL.at(k, 1)));
   }
 }
@@ -27,8 +27,8 @@ void lambda2_to_theta_ref_cpp(arma::mat& lambda, arma::mat& theta, const par& pa
 //'
 //' @export
 // [[Rcpp::export]]
-arma::mat lambda1_to_theta_cpp(arma::mat& lambda,
-                               int l, int m, arma::imat& mM) {
+arma::mat lambda1_to_theta_C(arma::mat& lambda,
+                             int l, int m, arma::imat& mM) {
   // Declare variables
   par par;
   par.l = l;
@@ -37,7 +37,7 @@ arma::mat lambda1_to_theta_cpp(arma::mat& lambda,
   arma::mat theta(l, m, arma::fill::value(R_NegInf));
 
   // Transform parameter
-  lambda1_to_theta_ref_cpp(lambda, theta, par);
+  lambda1_to_theta_ref(lambda, theta, par);
 
   // Return
   return theta;
@@ -54,8 +54,8 @@ arma::mat lambda1_to_theta_cpp(arma::mat& lambda,
 //'
 //' @export
 // [[Rcpp::export]]
-arma::mat lambda2_to_theta_cpp(arma::mat& lambda,
-                               int l, int m, arma::imat& lL) {
+arma::mat lambda2_to_theta_C(arma::mat& lambda,
+                             int l, int m, arma::imat& lL) {
   // Declare variables
   par par;
   par.l = l;
@@ -64,7 +64,7 @@ arma::mat lambda2_to_theta_cpp(arma::mat& lambda,
   arma::mat theta(l, m, arma::fill::value(R_NegInf));
 
   // Transform parameter
-  lambda2_to_theta_ref_cpp(lambda, theta, par);
+  lambda2_to_theta_ref(lambda, theta, par);
 
   // Return
   return theta;

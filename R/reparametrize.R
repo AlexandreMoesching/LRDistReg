@@ -7,7 +7,7 @@
 #'
 #' @return Transformed parameter
 #' @export
-lambda1.to.theta <- function(lambda, l, m, mM) {
+lambda1_to_theta_R <- function(lambda, l, m, mM) {
   theta <- matrix(-Inf, nrow = l, ncol = m)
   for (j in 1:l) {
     kk <- mM[j, 1]:mM[j, 2]
@@ -25,7 +25,7 @@ lambda1.to.theta <- function(lambda, l, m, mM) {
 #'
 #' @return Transformed parameter
 #' @export
-lambda2.to.theta <- function(lambda, l, m, lL) {
+lambda2_to_theta_R <- function(lambda, l, m, lL) {
   theta <- matrix(-Inf, nrow = l, ncol = m)
   for (k in 1:m) {
     jj <- lL[k, 1]:lL[k, 2]

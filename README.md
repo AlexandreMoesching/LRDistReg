@@ -85,11 +85,12 @@ for (i in 1:n) Y[i] <- r.cond.dist(X[i])
 ```
 
 We now estimate the family of distribution. We use the function
-`dist.reg()` with default options, except one plotting option.
+`dist_reg_R()` with default options.
 
 ``` r
 library(LRDistReg)
-res <- dist.reg(X, Y, show.design = TRUE)
+res <- dist_reg_R(X, Y)
+plotD(res$par, indices = FALSE)
 ```
 
 <img src="man/figures/README-fit-1.png" width="100%" />
@@ -106,7 +107,7 @@ the unique elements $y_1 < y_2 < ... < y_m$ of $\{Y_1,Y_2,...,Y_n\}$.
 This improves readability of the design plot.
 
 ``` r
-res <- dist.reg(X, Y, show.design = TRUE, indices = TRUE)
+plotD(res$par, indices = TRUE)
 ```
 
 <img src="man/figures/README-fit_with_indices-1.png" width="100%" />
@@ -130,15 +131,6 @@ rowSums(res$h_TP2); res$par$w_j.plus/res$par$n
 colSums(res$h_TP2); res$par$w_plus.k/res$par$n
 ```
 
-To see how the stopping criteria is reached along with the corresponding
-values of the negative log-likelihood, the echo option can be activated.
-
-``` r
-res <- dist.reg(X, Y)
-res$delta0
-#> [1] 1e-08
-```
-
 ## PART 3: Medium data example, specification of precision parameter
 
 Options:
@@ -155,18 +147,10 @@ Y <- round(Y, 1) # Should create some ties
 ```
 
 This time we obtain the fit using a self-specified value of the
-precision parameter epsilon. It is normally automatically specified via
-some kind of rule of thumb.
+precision parameter $\delta_o$.
 
 ``` r
-res <- dist.reg(X, Y, show.design = TRUE, delta0 = 1e-4)
-```
-
-<img src="man/figures/README-fit_medium-1.png" width="100%" />
-
-``` r
-res$tot.time # Less than a tenth of a second on a 7th generation i7 CPU
-#> Time difference of 0.13888 secs
+res <- dist_reg_R(X, Y, delta0 = 1e-4)
 ```
 
 ## PART 4: A larger data example, comparison between Likelihood-Ratio ordering, usual STochastic ordering and the EMPirical
@@ -179,16 +163,8 @@ x0 <- 1+(1:l0)/l0*3
 X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
 for (i in 1:n) Y[i] <- r.cond.dist(X[i])
-```
 
-We let the program advise us a “reasonable” value for epsilon.
-
-``` r
-res <- dist.reg(X, Y, suggest.delta0 = TRUE, ST = TRUE)
-res$delta0
-#> [1] 10
-res$tot.time
-#> Time difference of 8.201193 secs
+res <- dist_reg_R(X, Y, delta0 = 1e-2, ST = TRUE)
 ```
 
 Retrieve all CDF’s and some useful parameters.
@@ -212,7 +188,7 @@ DIFF_LR <- sum(abs(CDF_LR - CDF_TRUE))/(l*m)
 DIFF_ST <- sum(abs(CDF_ST - CDF_TRUE))/(l*m)
 DIFF_EMP <- sum(abs(CDF_EMP - CDF_TRUE))/(l*m)
 c(DIFF_LR, DIFF_ST, DIFF_EMP)
-#> [1] 0.01942025 0.02366766 0.05607067
+#> [1] 0.02111121 0.02366766 0.05607067
 ```
 
 Plot the true CDF $F_x$ as well as its estimators for two values of $x$,
@@ -241,23 +217,7 @@ for (xj in xx) {
 The LR-estimator is in general smoother than the ST-estimator. In this
 specific example, the LR-estimator is also closer to the true
 distribution than the ST-estimator. This was confirmed already earlier
-when looking at average absolute differences. Try deactivating the
-set.seed to see other outputs.
-
-Plot differences between the true CDF and LR/ST-estimators for all
-values of $x$. N.b.: it yields 4 pages of plots.
-
-``` r
-n.plot <- min(ceiling(sqrt(l)), 5)
-par(mfrow = c(n.plot, n.plot), mar = c(2,2,1,1))
-unif.ylim <- range(c(CDF_LR - CDF_TRUE, CDF_ST - CDF_TRUE))
-for (j in 1:l) {
-  plot(y, CDF_ST[j,] - CDF_TRUE[j,], type = "l", col = 2, 
-       lwd = 1, ylim = unif.ylim)
-  abline(h = 0)
-  lines(y, CDF_LR[j,] - CDF_TRUE[j,], col = 3, lwd = 1)
-}
-```
+when looking at average absolute differences.
 
 ## PART 5: Interpolation feature
 
@@ -274,12 +234,12 @@ X <- sort(sample(x0, size = n, replace = TRUE))
 Y <- rep(0, n)
 for (i in 1:n) Y[i] <- r.cond.dist(X[i])
 
-res <- dist.reg(X, Y, suggest.delta0 = TRUE, ST = TRUE)
+res <- dist_reg_R(X, Y, ST = TRUE)
 dim(res$CDF_LR); dim(res$CDF_ST); dim(res$CDF_EMP)
 #> [1] 28 50
 #> [1] 28 50
 #> [1] 28 50
-res <- dist.reg(X, Y, suggest.delta0 = TRUE, ST = TRUE, x0 = x0)
+res <- dist_reg_R(X, Y, x0 = x0, ST = TRUE)
 dim(res$CDF_LR); dim(res$CDF_ST); dim(res$CDF_EMP)
 #> [1] 50 50
 #> [1] 50 50

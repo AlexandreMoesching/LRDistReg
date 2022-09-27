@@ -1,9 +1,9 @@
 #include "likelihood_functions.h"
 
-void vgamma_tilde1_ref_cpp(arma::mat& theta,
-                           arma::mat& v,
-                           arma::mat& gamma,
-                           const par& par) {
+void vgamma_tilde1_ref(arma::mat& theta,
+                       arma::mat& v,
+                       arma::mat& gamma,
+                       const par& par) {
   for (int j = 0; j < par.l; j++) {
     // Compute v
     v.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) =
@@ -34,10 +34,10 @@ void vgamma_tilde1_ref_cpp(arma::mat& theta,
   }
 }
 
-void vgamma_tilde2_ref_cpp(arma::mat& theta,
-                           arma::mat& v,
-                           arma::mat& gamma,
-                           const par& par) {
+void vgamma_tilde2_ref(arma::mat& theta,
+                       arma::mat& v,
+                       arma::mat& gamma,
+                       const par& par) {
   // Compute v and gamma
   for (int k = 0; k < par.m; k++) {
     // Compute v
@@ -69,7 +69,7 @@ void vgamma_tilde2_ref_cpp(arma::mat& theta,
   }
 }
 
-double f_theta_ref_cpp(arma::mat& theta, const par& par) {
+double f_theta_ref(arma::mat& theta, const par& par) {
   // Declare variable
   double f_theta = 0.0;
 
@@ -104,9 +104,9 @@ double f_theta_ref_cpp(arma::mat& theta, const par& par) {
 //'
 //' @export
 //[[Rcpp::export]]
-List vgamma_tilde1_cpp(arma::mat& theta,
-                       int l, int m, int n,
-                       arma::imat& mM, arma::mat& w_ul) {
+List vgamma_tilde1_C(arma::mat& theta,
+                     int l, int m, int n,
+                     arma::imat& mM, arma::mat& w_ul) {
   // Declare variables
   par par;
   par.l = l;
@@ -118,7 +118,7 @@ List vgamma_tilde1_cpp(arma::mat& theta,
   arma::mat gamma(l, m, arma::fill::zeros);
 
   // Compute v and gamma
-  vgamma_tilde1_ref_cpp(theta, v, gamma, par);
+  vgamma_tilde1_ref(theta, v, gamma, par);
 
   // Return
   return List::create(Named("v") = v,
@@ -138,9 +138,9 @@ List vgamma_tilde1_cpp(arma::mat& theta,
 //'
 //' @export
 //[[Rcpp::export]]
-List vgamma_tilde2_cpp(arma::mat& theta,
-                       int l, int m, int n,
-                       arma::imat& lL, arma::mat& w_ol) {
+List vgamma_tilde2_C(arma::mat& theta,
+                     int l, int m, int n,
+                     arma::imat& lL, arma::mat& w_ol) {
   // Declare variables
   par par;
   par.l = l;
@@ -152,7 +152,7 @@ List vgamma_tilde2_cpp(arma::mat& theta,
   arma::mat gamma(l, m, arma::fill::zeros);
 
   // Compute v and gamma
-  vgamma_tilde2_ref_cpp(theta, v, gamma, par);
+  vgamma_tilde2_ref(theta, v, gamma, par);
 
   // Return
   return List::create(Named("v") = v,
@@ -171,8 +171,7 @@ List vgamma_tilde2_cpp(arma::mat& theta,
 //'
 //' @export
 //[[Rcpp::export]]
-double f_theta_cpp(arma::mat& theta, int l, int n,
-                   arma::imat& mM, arma::mat& w) {
+double f_theta_C(arma::mat& theta, int l, int n, arma::imat& mM, arma::mat& w) {
   // Declare variables
   par par;
   par.l = l;
@@ -181,5 +180,5 @@ double f_theta_cpp(arma::mat& theta, int l, int n,
   par.w = w;
 
   // Return f_theta
-  return f_theta_ref_cpp(theta, par);
+  return f_theta_ref(theta, par);
 }

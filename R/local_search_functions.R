@@ -1,4 +1,4 @@
-#' Function to take a simple step
+#' Function to take a simple step, R version
 #'
 #' @param theta Log-parameter
 #' @param Psi Proposal
@@ -11,26 +11,22 @@
 #'
 #' @return Updated theta parameter
 #' @export
-simple.step <- function(theta, Psi, delta, l, m, n, w, PP) {
+simple_step_R <- function(theta, Psi, delta, l, m, n, w, PP) {
   rho <- delta
-  f.old <- f.theta(theta, n, w, PP)
-  f.new <- f.theta(Psi, n, w, PP)
+  f.old <- f_theta_R(theta, n, w, PP)
+  f.new <- f_theta_R(Psi, n, w, PP)
   while (f.new > f.old) {
     Psi <- (theta + Psi) / 2
     rho <- rho / 2
-    f.new <- f.theta(Psi, n, w, PP)
+    f.new <- f_theta_R(Psi, n, w, PP)
   }
-  c0 <- rho - f.old + f.new
-  if (c0 < 0) { # It may happen that c0 = 0, in which case theta = Psi
-    stop("c0 is not positive!")
-  }
-  t.star <- min(1, rho / (2 * c0))
+  t.star <- min(1, rho / (2 * (rho - f.old + f.new)))
   theta.new <- matrix(-Inf, nrow = l, ncol = m)
   theta.new[PP] <- (1 - t.star) * theta[PP] + t.star * Psi[PP]
   return(theta.new)
 }
 
-#' Local search (row)
+#' Local search (row), R version
 #'
 #' @param theta Log-parameter
 #' @param l Number of unique covariates
@@ -44,8 +40,8 @@ simple.step <- function(theta, Psi, delta, l, m, n, w, PP) {
 #'
 #' @return New proposal Psi and step-size delta
 #' @export
-local.search1 <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
-  tmp <- vgamma.tilde1(theta, l, m, n, mM, w_ul)
+local_search1_R <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
+  tmp <- vgamma_tilde1_R(theta, l, m, n, mM, w_ul)
   v.tilde <- tmp$v
   gamma.tilde <- tmp$gamma
   lambda.star <- matrix(0, nrow = l, ncol = m)
@@ -58,13 +54,13 @@ local.search1 <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
       }
     }
   }
-  Psi <- lambda1.to.theta(lambda.star, l, m, mM)
+  Psi <- lambda1_to_theta_R(lambda.star, l, m, mM)
   # We take max(0,-) to avoid numerical instability in case theta ~ Psi
   delta <- max(0, sum((-w[PP] + n * exp(theta[PP])) * (theta[PP] - Psi[PP])))
   return(list(Psi = Psi, delta = delta))
 }
 
-#' Local search (column)
+#' Local search (column), R version
 #'
 #' @param theta Log-parameter
 #' @param l Number of unique covariates
@@ -78,8 +74,8 @@ local.search1 <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
 #'
 #' @return New proposal Psi and step-size delta
 #' @export
-local.search2 <- function(theta, l, m, n, mM, lL, PP, w, w_ol) {
-  tmp <- vgamma.tilde2(theta, l, m, n, lL, w_ol)
+local_search2_R <- function(theta, l, m, n, mM, lL, PP, w, w_ol) {
+  tmp <- vgamma_tilde2_R(theta, l, m, n, lL, w_ol)
   v.tilde <- tmp$v
   gamma.tilde <- tmp$gamma
   lambda.star <- matrix(0, nrow = l, ncol = m)
@@ -93,7 +89,7 @@ local.search2 <- function(theta, l, m, n, mM, lL, PP, w, w_ol) {
       }
     }
   }
-  Psi <- lambda2.to.theta(lambda.star, l, m, lL)
+  Psi <- lambda2_to_theta_R(lambda.star, l, m, lL)
   # We take max(0,-) to avoid numerical instability in case theta ~ Psi
   delta <- max(0, sum((-w[PP] + n * exp(theta[PP])) * (theta[PP] - Psi[PP])))
   return(list(Psi = Psi, delta = delta))

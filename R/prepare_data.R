@@ -7,7 +7,7 @@
 #' @return A list of pre-computed parameters necessary for the estimation
 #'
 #' @export
-prepare.data <- function(X, Y, W = rep(1, length(X))) {
+prepare_data_R <- function(X, Y, W = rep(1, length(X))) {
   # Number of observation pairs
   n <- length(X)
 
@@ -83,6 +83,7 @@ prepare.data <- function(X, Y, W = rep(1, length(X))) {
     PP[j, mM[j, 1]:mM[j, 2]] <- TRUE
   }
 
+  # Return list of parameters
   return(list(
     l = l,
     lL = lL,

@@ -8,17 +8,14 @@ NULL
 ## usethis namespace: end
 NULL
 
-#' TP2 fit function
+#' TP2 fit function, R version
 #'
 #' @param par Model parameters
 #' @param delta0 Threshold
 #'
 #' @return h matrix and estimation time
 #' @export
-TP2.fit <- function(par, delta0 = 1e-8) {
-  # Start timer
-  start.time <- Sys.time()
-
+TP2_fit_R <- function(par, delta0 = 1e-8) {
   # Extract parameters
   l <- par$l
   lL <- par$lL
@@ -38,25 +35,25 @@ TP2.fit <- function(par, delta0 = 1e-8) {
   theta[PP] <- -log(sum(PP))
 
   # Calibrate
-  theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = delta0)
+  theta <- calibrate_R(theta, n, w, w_jplus, w_plusk, PP, prec = delta0)
 
   # New candidate
-  tmp <- local.search1(theta, l, m, n, mM, lL, PP, w, w_ul)
+  tmp <- local_search1_R(theta, l, m, n, mM, lL, PP, w, w_ul)
   s <- s + 1
 
   # Main while-loop
   while (tmp$delta > delta0) {
     # Real improvement
-    theta <- simple.step(theta, tmp$Psi, tmp$delta, l, m, n, w, PP)
+    theta <- simple_step_R(theta, tmp$Psi, tmp$delta, l, m, n, w, PP)
 
     # Calibrate
-    theta <- calibrate(theta, n, w, w_jplus, w_plusk, PP, prec = delta0)
+    theta <- calibrate_R(theta, n, w, w_jplus, w_plusk, PP, prec = delta0)
 
     # New candidate
     if (s %% 2 == 0) {
-      tmp <- local.search1(theta, l, m, n, mM, lL, PP, w, w_ul)
+      tmp <- local_search1_R(theta, l, m, n, mM, lL, PP, w, w_ul)
     } else {
-      tmp <- local.search2(theta, l, m, n, mM, lL, PP, w, w_ol)
+      tmp <- local_search2_R(theta, l, m, n, mM, lL, PP, w, w_ol)
     }
 
     # Change parity
@@ -66,9 +63,6 @@ TP2.fit <- function(par, delta0 = 1e-8) {
   # Return probability weights
   h_TP2 <- exp(theta)
 
-  # End timer
-  tot.time <- Sys.time() - start.time
-
   # Compute q
   q_LR <- h_TP2 / rowSums(h_TP2)
 
@@ -76,17 +70,17 @@ TP2.fit <- function(par, delta0 = 1e-8) {
   CDF_LR <- t(apply(q_LR, 1, cumsum))
 
   # Return
-  return(list(h_TP2 = h_TP2, q_LR = q_LR, CDF_LR = CDF_LR, tot.time = tot.time))
+  return(list(h_TP2 = h_TP2,
+              q_LR = q_LR,
+              CDF_LR = CDF_LR,
+              delta = tmp$delta))
 }
 
-#' Isotonic distributional regression (LR, ST, EMP)
+#' Isotonic distributional regression (LR, ST, EMP), R version
 #'
 #' @param X Covariates
 #' @param Y Responses
 #' @param W User-specified sample weights
-#' @param show.design Whether or not to plot the design
-#' @param indices Whether or not to plot indices instead of true values
-#' @param suggest.delta0 Whether or not to suggest the threshold delta0
 #' @param delta0 Threshold
 #' @param x0 Set of covariates on which to estimate the distributions
 #' @param ST Boolean indicating whether or not the classical isotonic
@@ -96,36 +90,20 @@ TP2.fit <- function(par, delta0 = 1e-8) {
 #' @export
 #'
 #' @examples # To be done
-dist.reg <- function(X, Y, W = rep(1, length(X)),
-                     show.design = FALSE, indices = FALSE,
-                     suggest.delta0 = FALSE,
+dist_reg_R <- function(X, Y, W = rep(1, length(X)),
                      delta0 = 1e-8, x0 = NULL, ST = FALSE) {
   # Compute model parameters
-  par <- prepare.data(X, Y, W)
-
-  # Plot design
-  if (show.design == TRUE) {
-    plotD(par, indices = indices)
-  }
-
-  # Suggest delta0
-  if (suggest.delta0 == TRUE) {
-    theta <- matrix(-Inf, nrow = par$l, ncol = par$m)
-    theta[par$PP] <- -log(sum(par$PP))
-    calibrate(
-      theta, par$n, par$w, par$w_jplus, par$w_plusk, par$PP
-    )
-    f.tmp <- f.theta(theta, par$n, par$w, par$PP)
-    delta0 <- 10^floor(log10(f.tmp) * 1.1 - 3)
-  }
+  par <- prepare_data_R(X, Y, W)
 
   # Fit under LR constraint
-  res <- TP2.fit(par, delta0)
+  res <- TP2_fit_R(par, delta0)
+  res$par <- par
 
   # Interpolate to x0 if x0 != NULL
   if (!is.null(x0)) {
-    res$CDF_LR <- interpolate(x0, par$x, res$CDF_LR)
+    res$CDF_LR <- interpolate_R(x0, par$x, res$CDF_LR)
   }
+  res$x0 <- x0
 
   # Fit under usual stochastic ordering constraint
   if (ST) {
@@ -133,23 +111,19 @@ dist.reg <- function(X, Y, W = rep(1, length(X)),
     for (j in 1:par$l) {
       CDF_EMP[j, ] <- cumsum(par$w[j, ]) / par$w_jplus[j]
     }
-    res$CDF_EMP <- CDF_EMP
     res$CDF_ST <- apply(
       CDF_EMP, 2,
       function(z) Iso::pava(z, w = par$w_jplus, decreasing = TRUE)
     )
+    res$CDF_EMP <- CDF_EMP
 
     # Interpolate to x0 if x0 != NULL
     if (any(!is.null(x0))) {
-      res$CDF_EMP <- interpolate(x0, par$x, res$CDF_EMP)
-      res$CDF_ST <- interpolate(x0, par$x, res$CDF_ST)
+      res$CDF_ST <- interpolate_R(x0, par$x, res$CDF_ST)
+      res$CDF_EMP <- interpolate_R(x0, par$x, res$CDF_EMP)
     }
   }
 
   # Return results
-  res$par <- par
-  res$delta0 <- delta0
-  res$x0 <- x0
-
   return(res)
 }

@@ -1,10 +1,10 @@
 #include "main.h"
 
-void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
-                     arma::mat& theta, arma::mat& Psi,
-                     arma::mat& v, arma::mat& gamma, arma::mat& lambda_star,
-                     pava_par& par1, pava_par& par2,
-                     double& delta, double delta0, par& par) {
+void TP2_fit_ref(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
+                 arma::mat& theta, arma::mat& Psi,
+                 arma::mat& v, arma::mat& gamma, arma::mat& lambda_star,
+                 pava_par& par1, pava_par& par2,
+                 double& delta, double delta0, par& par) {
   // Declare variables
   double prec = delta0;
   int s = 0;
@@ -22,25 +22,25 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
   }
 
   // Calibrate theta
-  calibrate_ref_cpp(theta, par, prec);
+  calibrate_ref(theta, par, prec);
 
   // Find a new proposal
-  local_search1_ref_cpp(theta, Psi, v, gamma, lambda_star, par1, delta, par);
+  local_search1_ref(theta, Psi, v, gamma, lambda_star, par1, delta, par);
   s++;
 
   // Main while-loop
   while (delta > delta0) {
     // Perform real improvement
-    simple_step_ref_cpp(theta, Psi, delta, par);
+    simple_step_ref(theta, Psi, delta, par);
 
     // Calibrate theta
-    calibrate_ref_cpp(theta, par, prec);
+    calibrate_ref(theta, par, prec);
 
     // Find a new proposal
     if (s % 2 == 0) {
-      local_search1_ref_cpp(theta, Psi, v, gamma, lambda_star, par1, delta, par);
+      local_search1_ref(theta, Psi, v, gamma, lambda_star, par1, delta, par);
     } else {
-      local_search2_ref_cpp(theta, Psi, v, gamma, lambda_star, par2, delta, par);
+      local_search2_ref(theta, Psi, v, gamma, lambda_star, par2, delta, par);
     }
 
     // Change parity
@@ -59,8 +59,8 @@ void TP2_fit_ref_cpp(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
   CDF_LR = cumsum(q_LR, 1);
 }
 
-void ST_fit_ref_cpp(arma::mat& CDF_EMP, arma::mat& CDF_ST,
-                    pava_par& par3, par& par) {
+void ST_fit_ref(arma::mat& CDF_EMP, arma::mat& CDF_ST,
+                pava_par& par3, par& par) {
   // Compute empirical distribution function
   CDF_EMP = cumsum(par.w, 1);
   CDF_EMP.each_col() %= 1.0 / par.w_jplus;
@@ -119,7 +119,7 @@ void ST_fit_ref_cpp(arma::mat& CDF_EMP, arma::mat& CDF_ST,
   }
 }
 
-//' Isotonic distributional regression (LR, ST, EMP)
+//' Isotonic distributional regression (LR, ST, EMP), C++ version
 //'
 //' @param X Covariates
 //' @param Y Responses
@@ -133,10 +133,10 @@ void ST_fit_ref_cpp(arma::mat& CDF_EMP, arma::mat& CDF_ST,
 //'
 //' @export
 // [[Rcpp::export]]
-List dist_reg_cpp(arma::vec& X, arma::vec& Y, arma::vec& W,
-                  double delta0, arma::vec x0, bool ST = false) {
+List dist_reg_C(arma::vec& X, arma::vec& Y, arma::vec& W,
+                double delta0, arma::vec x0, bool ST = false) {
   // Compute parameters
-  par par = prepare_data_par_cpp(X, Y, W);
+  par par = prepare_data_par(X, Y, W);
 
   // Prepare parameter list to return
   List par_list = List::create(Named("l") = par.l,
@@ -180,20 +180,21 @@ List dist_reg_cpp(arma::vec& X, arma::vec& Y, arma::vec& W,
   double delta;
 
   // Estimate TP2 distribution & LR-ordered family of distributions
-  TP2_fit_ref_cpp(h_TP2, q_LR, CDF_LR,
-                  theta, Psi, v, gamma, lambda_star,
-                  par1, par2, delta, delta0, par);
+  TP2_fit_ref(h_TP2, q_LR, CDF_LR,
+              theta, Psi, v, gamma, lambda_star,
+              par1, par2, delta, delta0, par);
 
   // Create list to return
   List ResList = List::create(Named("h_TP2") = h_TP2,
                               Named("q_LR") = q_LR,
                               Named("CDF_LR") = CDF_LR,
                               Named("delta") = delta,
-                              Named("par") = par_list);
+                              Named("par") = par_list,
+                              Named("x0") = x0);
 
   // Interpolate
   if (x0.n_elem > 0) {
-    ResList["CDF_LR"] = interpolate_cpp(x0, par.x, CDF_LR);
+    ResList["CDF_LR"] = interpolate_C(x0, par.x, CDF_LR);
   }
 
   // If isotonic dsitributional regression has to be computed or not
@@ -208,15 +209,14 @@ List dist_reg_cpp(arma::vec& X, arma::vec& Y, arma::vec& W,
     pava_par par3 = {PP3, MM3, WW3};
 
     // Estimate ST-ordered family of distributions
-    ST_fit_ref_cpp(CDF_EMP, CDF_ST, par3, par);
+    ST_fit_ref(CDF_EMP, CDF_ST, par3, par);
     ResList.push_back(CDF_ST,  "CDF_ST");
     ResList.push_back(CDF_EMP, "CDF_EMP");
 
     // Interpolate
     if (x0.n_elem > 0) {
-      ResList["CDF_LR"]  = interpolate_cpp(x0, par.x, CDF_LR);
-      ResList["CDF_ST"]  = interpolate_cpp(x0, par.x, CDF_ST);
-      ResList["CDF_EMP"] = interpolate_cpp(x0, par.x, CDF_EMP);
+      ResList["CDF_ST"]  = interpolate_C(x0, par.x, CDF_ST);
+      ResList["CDF_EMP"] = interpolate_C(x0, par.x, CDF_EMP);
     }
   }
 

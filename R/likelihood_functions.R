@@ -1,4 +1,4 @@
-#' v-tilde and gamma-tilde functions (row)
+#' v-tilde and gamma-tilde functions (row), R version
 #'
 #' @param theta Log-parameter
 #' @param l Number of unique covariates
@@ -9,7 +9,7 @@
 #'
 #' @return v-tilde and gamma-tilde functions
 #' @export
-vgamma.tilde1 <- function(theta, l, m, n, mM, w_ul) {
+vgamma_tilde1_R <- function(theta, l, m, n, mM, w_ul) {
   v <- matrix(0, nrow = l, ncol = m)
   gamma <- matrix(0, nrow = l, ncol = m)
   for (j in 1:l) {
@@ -22,7 +22,7 @@ vgamma.tilde1 <- function(theta, l, m, n, mM, w_ul) {
   return(list(v = v, gamma = gamma))
 }
 
-#' v-tilde and gamma-tilde functions (column)
+#' v-tilde and gamma-tilde functions (column), R version
 #'
 #' @param theta Log-parameter
 #' @param l Number of unique covariates
@@ -33,7 +33,7 @@ vgamma.tilde1 <- function(theta, l, m, n, mM, w_ul) {
 #'
 #' @return v-tilde and gamma-tilde functions
 #' @export
-vgamma.tilde2 <- function(theta, l, m, n, lL, w_ol) {
+vgamma_tilde2_R <- function(theta, l, m, n, lL, w_ol) {
   v <- matrix(0, nrow = l, ncol = m)
   gamma <- matrix(0, nrow = l, ncol = m)
   for (k in 1:m) {
@@ -46,7 +46,7 @@ vgamma.tilde2 <- function(theta, l, m, n, lL, w_ol) {
   return(list(v = v, gamma = gamma))
 }
 
-#' Negative log-likelihood in terms of log-parameter
+#' Negative log-likelihood in terms of log-parameter, R version
 #'
 #' @param theta Log-parameter
 #' @param n Sample size
@@ -55,6 +55,6 @@ vgamma.tilde2 <- function(theta, l, m, n, lL, w_ol) {
 #'
 #' @return Negative log-likelihood in terms of log-parameter
 #' @export
-f.theta <- function(theta, n, w, PP) {
+f_theta_R <- function(theta, n, w, PP) {
   return(sum(-w[PP] * theta[PP] + n * exp(theta[PP])))
 }

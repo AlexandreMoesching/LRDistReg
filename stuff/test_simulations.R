@@ -36,7 +36,7 @@ for (it in 1:n.sim) {
 
   # Estimate CDF's
   cat("Start estimating\n", sep = "")
-  res <- dist_reg_cpp(X, Y, W, delta0, x0, TRUE)
+  res <- dist_reg_C(X, Y, W, delta0, x0, TRUE)
   cat("Done\n", sep = "")
   cat("delta = ", res$delta, "\n", sep = "")
   # cat("CDF_LR = ", res$CDF_LR, "\n", sep = "")

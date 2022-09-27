@@ -10,7 +10,7 @@
 //'
 //' @export
 //[[Rcpp::export]]
-arma::mat interpolate_cpp(arma::vec& x0, arma::vec& x, arma::mat& CDF) {
+arma::mat interpolate_C(arma::vec& x0, arma::vec& x, arma::mat& CDF) {
   // Declare variables
   int l0 = x0.n_elem, l = x.n_elem, m = CDF.n_cols;
   arma::mat CDF0(l0, m);

@@ -19,7 +19,7 @@
 #'
 #' @return Taut string between Y.low and Y.upp
 #' @export
-taut.string <- function(Y.low, Y.upp, x = 1:length(Y.low)) {
+taut_string <- function(Y.low, Y.upp, x = 1:length(Y.low)) {
   n <- length(Y.low)
   a <- 1
   # Largest index up to which lower and upper string coincide.
