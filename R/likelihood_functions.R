@@ -53,6 +53,6 @@ vg_tilde2_R <- function(theta, l, m, n, lL, w_ol) {
 #'
 #' @return Negative log-likelihood in terms of log-parameter
 #' @export
-f_theta_R <- function(theta, n, w, PP) {
+ftheta_R <- function(theta, n, w, PP) {
   return(sum(-w[PP] * theta[PP] + n * exp(theta[PP])))
 }

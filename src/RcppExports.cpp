@@ -42,9 +42,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// vgamma_tilde1_C
-List vgamma_tilde1_C(arma::mat& theta, int l, int m, int n, arma::imat& mM, arma::mat& w_ul);
-RcppExport SEXP _LRDistReg_vgamma_tilde1_C(SEXP thetaSEXP, SEXP lSEXP, SEXP mSEXP, SEXP nSEXP, SEXP mMSEXP, SEXP w_ulSEXP) {
+// vg_tilde1_C
+List vg_tilde1_C(arma::mat& theta, int l, int m, int n, arma::imat& mM, arma::mat& w_ul);
+RcppExport SEXP _LRDistReg_vg_tilde1_C(SEXP thetaSEXP, SEXP lSEXP, SEXP mSEXP, SEXP nSEXP, SEXP mMSEXP, SEXP w_ulSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -54,13 +54,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< arma::imat& >::type mM(mMSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type w_ul(w_ulSEXP);
-    rcpp_result_gen = Rcpp::wrap(vgamma_tilde1_C(theta, l, m, n, mM, w_ul));
+    rcpp_result_gen = Rcpp::wrap(vg_tilde1_C(theta, l, m, n, mM, w_ul));
     return rcpp_result_gen;
 END_RCPP
 }
-// vgamma_tilde2_C
-List vgamma_tilde2_C(arma::mat& theta, int l, int m, int n, arma::imat& lL, arma::mat& w_ol);
-RcppExport SEXP _LRDistReg_vgamma_tilde2_C(SEXP thetaSEXP, SEXP lSEXP, SEXP mSEXP, SEXP nSEXP, SEXP lLSEXP, SEXP w_olSEXP) {
+// vg_tilde2_C
+List vg_tilde2_C(arma::mat& theta, int l, int m, int n, arma::imat& lL, arma::mat& w_ol);
+RcppExport SEXP _LRDistReg_vg_tilde2_C(SEXP thetaSEXP, SEXP lSEXP, SEXP mSEXP, SEXP nSEXP, SEXP lLSEXP, SEXP w_olSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -70,13 +70,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< arma::imat& >::type lL(lLSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type w_ol(w_olSEXP);
-    rcpp_result_gen = Rcpp::wrap(vgamma_tilde2_C(theta, l, m, n, lL, w_ol));
+    rcpp_result_gen = Rcpp::wrap(vg_tilde2_C(theta, l, m, n, lL, w_ol));
     return rcpp_result_gen;
 END_RCPP
 }
-// f_theta_C
-double f_theta_C(arma::mat& theta, int l, int n, arma::imat& mM, arma::mat& w);
-RcppExport SEXP _LRDistReg_f_theta_C(SEXP thetaSEXP, SEXP lSEXP, SEXP nSEXP, SEXP mMSEXP, SEXP wSEXP) {
+// ftheta_C
+double ftheta_C(arma::mat& theta, int l, int n, arma::imat& mM, arma::mat& w);
+RcppExport SEXP _LRDistReg_ftheta_C(SEXP thetaSEXP, SEXP lSEXP, SEXP nSEXP, SEXP mMSEXP, SEXP wSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -85,7 +85,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< arma::imat& >::type mM(mMSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type w(wSEXP);
-    rcpp_result_gen = Rcpp::wrap(f_theta_C(theta, l, n, mM, w));
+    rcpp_result_gen = Rcpp::wrap(ftheta_C(theta, l, n, mM, w));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -203,9 +203,9 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_LRDistReg_calibrate_C", (DL_FUNC) &_LRDistReg_calibrate_C, 8},
     {"_LRDistReg_interpolate_C", (DL_FUNC) &_LRDistReg_interpolate_C, 3},
-    {"_LRDistReg_vgamma_tilde1_C", (DL_FUNC) &_LRDistReg_vgamma_tilde1_C, 6},
-    {"_LRDistReg_vgamma_tilde2_C", (DL_FUNC) &_LRDistReg_vgamma_tilde2_C, 6},
-    {"_LRDistReg_f_theta_C", (DL_FUNC) &_LRDistReg_f_theta_C, 5},
+    {"_LRDistReg_vg_tilde1_C", (DL_FUNC) &_LRDistReg_vg_tilde1_C, 6},
+    {"_LRDistReg_vg_tilde2_C", (DL_FUNC) &_LRDistReg_vg_tilde2_C, 6},
+    {"_LRDistReg_ftheta_C", (DL_FUNC) &_LRDistReg_ftheta_C, 5},
     {"_LRDistReg_simple_step_C", (DL_FUNC) &_LRDistReg_simple_step_C, 7},
     {"_LRDistReg_local_search1_C", (DL_FUNC) &_LRDistReg_local_search1_C, 8},
     {"_LRDistReg_local_search2_C", (DL_FUNC) &_LRDistReg_local_search2_C, 8},

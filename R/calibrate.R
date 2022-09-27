@@ -17,7 +17,7 @@
 #' @export
 calibrate_R <- function(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-10) {
   # Initialize f(theta) and delta
-  ftheta_old <- f_theta_R(theta, n, w, PP)
+  f_old <- ftheta_R(theta, n, w, PP)
   delta <- Inf
 
   # Loop until improvement is too small
@@ -29,9 +29,9 @@ calibrate_R <- function(theta, n, w, w_jplus, w_plusk, PP, prec = 1e-10) {
     theta <- t(t(theta) - log(colSums(exp(theta))) + log(w_plusk / n))
 
     # Update f(theta) and delta
-    ftheta <- f_theta_R(theta, n, w, PP)
-    delta <- ftheta_old - ftheta
-    ftheta_old <- ftheta
+    f_new <- ftheta_R(theta, n, w, PP)
+    delta <- f_old - f_new
+    f_old <- f_new
   }
 
   # Return parameter

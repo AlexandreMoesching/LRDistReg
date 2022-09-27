@@ -2,7 +2,7 @@
 
 void TP2_fit_ref(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
                  arma::mat& theta, arma::mat& Psi,
-                 arma::mat& v, arma::mat& gamma, arma::mat& lambda_star,
+                 arma::mat& v, arma::mat& g, arma::mat& lambda_star,
                  pava_par& par1, pava_par& par2,
                  double& delta, double delta0, par& par) {
   // Declare variables
@@ -25,7 +25,7 @@ void TP2_fit_ref(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
   calibrate_ref(theta, par, prec);
 
   // Find a new proposal
-  local_search1_ref(theta, Psi, v, gamma, lambda_star, par1, delta, par);
+  local_search1_ref(theta, Psi, v, g, lambda_star, par1, delta, par);
   s++;
 
   // Main while-loop
@@ -38,9 +38,9 @@ void TP2_fit_ref(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
 
     // Find a new proposal
     if (s % 2 == 0) {
-      local_search1_ref(theta, Psi, v, gamma, lambda_star, par1, delta, par);
+      local_search1_ref(theta, Psi, v, g, lambda_star, par1, delta, par);
     } else {
-      local_search2_ref(theta, Psi, v, gamma, lambda_star, par2, delta, par);
+      local_search2_ref(theta, Psi, v, g, lambda_star, par2, delta, par);
     }
 
     // Change parity
@@ -164,7 +164,7 @@ List dist_reg_C(arma::vec& X, arma::vec& Y, arma::vec& W,
   arma::mat       theta(par.l, par.m, arma::fill::value(R_NegInf));
   arma::mat         Psi(par.l, par.m);
   arma::mat           v(par.l, par.m);
-  arma::mat       gamma(par.l, par.m);
+  arma::mat           g(par.l, par.m);
   arma::mat lambda_star(par.l, par.m);
 
   arma::ivec PP1(par.l + 1);
@@ -181,7 +181,7 @@ List dist_reg_C(arma::vec& X, arma::vec& Y, arma::vec& W,
 
   // Estimate TP2 distribution & LR-ordered family of distributions
   TP2_fit_ref(h_TP2, q_LR, CDF_LR,
-              theta, Psi, v, gamma, lambda_star,
+              theta, Psi, v, g, lambda_star,
               par1, par2, delta, delta0, par);
 
   // Create list to return

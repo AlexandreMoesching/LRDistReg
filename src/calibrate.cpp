@@ -2,7 +2,7 @@
 
 void calibrate_ref(arma::mat& theta, const par& par, double& prec) {
   // Declare variable
-  double f_theta, f_theta_old = f_theta_ref(theta, par);
+  double f_new, f_old = ftheta_ref(theta, par);
   double delta = R_PosInf;
 
   // While loop
@@ -13,10 +13,10 @@ void calibrate_ref(arma::mat& theta, const par& par, double& prec) {
     // Column-wise calibration
     theta.each_row() += - log(sum(exp(theta), 0)) + log(par.w_plusk.t() / par.n);
 
-    // Update f_theta and delta
-    f_theta = f_theta_ref(theta, par);
-    delta = f_theta_old - f_theta;
-    f_theta_old = f_theta;
+    // Update ftheta and delta
+    f_new = ftheta_ref(theta, par);
+    delta = f_old - f_new;
+    f_old = f_new;
   }
 }
 

@@ -62,7 +62,7 @@ SS_CRPS_gamma <- function(x0, l0, res, a, b, rel_tol = 1e-9) {
         lower = 0,
         upper = y[m],
         subdivisions = 1e4,
-        rel_tol = rel_tol
+        rel.tol = rel_tol
       )$value
       # - The integral of (1 - G_xj)^2 on (y_m, Inf)
       tmp2 <- stats::integrate(f = function(z)
@@ -70,7 +70,7 @@ SS_CRPS_gamma <- function(x0, l0, res, a, b, rel_tol = 1e-9) {
         lower = y[m],
         upper = Inf,
         subdivisions = 1e4,
-        rel_tol = rel_tol
+        rel.tol = rel_tol
       )$value
 
       # Add the results to the current CRPS matrix

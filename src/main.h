@@ -3,7 +3,7 @@
 
 void TP2_fit_ref(arma::mat& h_TP2, arma::mat& q_LR, arma::mat& CDF_LR,
                  arma::mat& theta, arma::mat& Psi,
-                 arma::mat& v, arma::mat& gamma, arma::mat& lambda_star,
+                 arma::mat& v, arma::mat& g, arma::mat& lambda_star,
                  pava_par& par1, pava_par& par2,
                  double& delta, double delta0, par& par);
 

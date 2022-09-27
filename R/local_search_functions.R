@@ -13,12 +13,12 @@
 #' @export
 simple_step_R <- function(theta, Psi, delta, l, m, n, w, PP) {
   rho <- delta
-  f_old <- f_theta_R(theta, n, w, PP)
-  f_new <- f_theta_R(Psi, n, w, PP)
+  f_old <- ftheta_R(theta, n, w, PP)
+  f_new <- ftheta_R(Psi, n, w, PP)
   while (f_new > f_old) {
     Psi <- (theta + Psi) / 2
     rho <- rho / 2
-    f_new <- f_theta_R(Psi, n, w, PP)
+    f_new <- ftheta_R(Psi, n, w, PP)
   }
   t_star <- min(1, rho / (2 * (rho - f_old + f_new)))
   theta_new <- matrix(-Inf, nrow = l, ncol = m)

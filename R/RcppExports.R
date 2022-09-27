@@ -49,8 +49,8 @@ interpolate_C <- function(x0, x, CDF) {
 #' @return v-tilde and gamma-tilde functions
 #'
 #' @export
-vgamma_tilde1_C <- function(theta, l, m, n, mM, w_ul) {
-    .Call(`_LRDistReg_vgamma_tilde1_C`, theta, l, m, n, mM, w_ul)
+vg_tilde1_C <- function(theta, l, m, n, mM, w_ul) {
+    .Call(`_LRDistReg_vg_tilde1_C`, theta, l, m, n, mM, w_ul)
 }
 
 #' v-tilde and gamma-tilde functions (column), C++ version
@@ -65,8 +65,8 @@ vgamma_tilde1_C <- function(theta, l, m, n, mM, w_ul) {
 #' @return v-tilde and gamma-tilde functions
 #'
 #' @export
-vgamma_tilde2_C <- function(theta, l, m, n, lL, w_ol) {
-    .Call(`_LRDistReg_vgamma_tilde2_C`, theta, l, m, n, lL, w_ol)
+vg_tilde2_C <- function(theta, l, m, n, lL, w_ol) {
+    .Call(`_LRDistReg_vg_tilde2_C`, theta, l, m, n, lL, w_ol)
 }
 
 #' Negative log-likelihood in terms of log-parameter, C++ version
@@ -80,8 +80,8 @@ vgamma_tilde2_C <- function(theta, l, m, n, lL, w_ol) {
 #' @return Negative log-likelihood in terms of log-parameter
 #'
 #' @export
-f_theta_C <- function(theta, l, n, mM, w) {
-    .Call(`_LRDistReg_f_theta_C`, theta, l, n, mM, w)
+ftheta_C <- function(theta, l, n, mM, w) {
+    .Call(`_LRDistReg_ftheta_C`, theta, l, n, mM, w)
 }
 
 #' Function to take a simple step, C++ version

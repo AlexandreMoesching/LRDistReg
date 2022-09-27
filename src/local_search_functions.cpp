@@ -1,17 +1,16 @@
 #include "local_search_functions.h"
 
-void simple_step_ref(arma::mat& theta, arma::mat& Psi,
-                     double& delta, const par& par) {
+void simple_step_ref(arma::mat& theta, arma::mat& Psi, double& delta, const par& par) {
   // Declare variables
   double rho = delta, t_star;
-  double f_old = f_theta_ref(theta, par);
-  double f_new = f_theta_ref(Psi, par);
+  double f_old = ftheta_ref(theta, par);
+  double f_new = ftheta_ref(Psi, par);
 
   // While-loop
   while (f_new > f_old) {
     Psi = (theta + Psi) / 2.0;
     rho = rho / 2.0;
-    f_new = f_theta_ref(Psi, par);
+    f_new = ftheta_ref(Psi, par);
   }
 
   // Compute t_star
@@ -24,24 +23,23 @@ void simple_step_ref(arma::mat& theta, arma::mat& Psi,
   for (int j = 0; j < par.l; j++) {
     theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) =
       (1.0 - t_star) * theta.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1)) +
-      t_star  *   Psi.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1));
+             t_star  *   Psi.row(j).subvec(par.mM.at(j, 0), par.mM.at(j, 1));
   }
 }
 
 void local_search1_ref(arma::mat& theta, arma::mat& Psi,
-                       arma::mat& v, arma::mat& gamma,
-                       arma::mat& lambda_star, pava_par& par1,
-                       double& delta, const par& par) {
+                       arma::mat& v, arma::mat& g, arma::mat& lambda_star,
+                       pava_par& par1, double& delta, const par& par) {
   // Declare variables
   int lk1, Lk0, d;
 
   // Compute v-tilde and gamma-tilde
-  vgamma_tilde1_ref(theta, v, gamma, par);
+  vg_tilde1_ref(theta, v, g, par);
 
   // Compute lambda_star
   // (i) Baseline
   for (int j = 0; j < par.l; j++) {
-    lambda_star.at(j, par.mM.at(j, 0)) = gamma.at(j, par.mM.at(j, 0));
+    lambda_star.at(j, par.mM.at(j, 0)) = g.at(j, par.mM.at(j, 0));
   }
   // (ii) Isotonic regression
   if (par.m > 1) {
@@ -55,7 +53,7 @@ void local_search1_ref(arma::mat& theta, arma::mat& Psi,
         par1.PP[lk1 + d] = lk1;
         par1.WW[lk1 + d] = v.at(lk1, k);
         par1.MM[lk1 + d - 1] = R_NegInf;
-        par1.MM[lk1 + d] = gamma.at(lk1, k);
+        par1.MM[lk1 + d] = g.at(lk1, k);
 
         // PAVA
         for (int j = lk1 + 1; j < Lk0 + 1; j++) {
@@ -63,7 +61,7 @@ void local_search1_ref(arma::mat& theta, arma::mat& Psi,
           d++;
           par1.PP[lk1 + d] = j;
           par1.WW[lk1 + d] = v.at(j, k);
-          par1.MM[lk1 + d] = gamma.at(j, k);
+          par1.MM[lk1 + d] = g.at(j, k);
 
           // Pool adjacent violators
           while (par1.MM[lk1 + d - 1] >= par1.MM[lk1 + d]) {
@@ -114,19 +112,18 @@ void local_search1_ref(arma::mat& theta, arma::mat& Psi,
 }
 
 void local_search2_ref(arma::mat& theta, arma::mat& Psi,
-                       arma::mat& v, arma::mat& gamma,
-                       arma::mat& lambda_star, pava_par& par2,
-                       double& delta, const par& par) {
+                       arma::mat& v, arma::mat& g, arma::mat& lambda_star,
+                       pava_par& par2, double& delta, const par& par) {
   // Declare variables
   int mj1, Mj0, d;
 
   // Compute v-tilde and gamma-tilde
-  vgamma_tilde2_ref(theta, v, gamma, par);
+  vg_tilde2_ref(theta, v, g, par);
 
   // Compute lambda_star
   // (i) Baseline
   for (int k = 0; k < par.m; k++) {
-    lambda_star.at(par.lL.at(k, 0), k) = gamma.at(par.lL.at(k, 0), k);
+    lambda_star.at(par.lL.at(k, 0), k) = g.at(par.lL.at(k, 0), k);
   }
   // (ii) Isotonic regression
   if (par.l > 1) {
@@ -140,7 +137,7 @@ void local_search2_ref(arma::mat& theta, arma::mat& Psi,
         par2.PP[mj1 + d] = mj1;
         par2.WW[mj1 + d] = v.at(j, mj1);
         par2.MM[mj1 + d - 1] = R_NegInf;
-        par2.MM[mj1 + d] = gamma.at(j, mj1);
+        par2.MM[mj1 + d] = g.at(j, mj1);
 
         // PAVA
         for (int k = mj1 + 1; k < Mj0 + 1; k++) {
@@ -148,7 +145,7 @@ void local_search2_ref(arma::mat& theta, arma::mat& Psi,
           d++;
           par2.PP[mj1 + d] = k;
           par2.WW[mj1 + d] = v.at(j, k);
-          par2.MM[mj1 + d] = gamma.at(j, k);
+          par2.MM[mj1 + d] = g.at(j, k);
 
           // Pool adjacent violators
           while (par2.MM[mj1 + d - 1] >= par2.MM[mj1 + d]) {
@@ -248,7 +245,7 @@ List local_search1_C(arma::mat& theta, int l, int m, int n,
                      arma::mat& w, arma::mat& w_ul) {
   // Declare variables
   arma::mat Psi(l, m, arma::fill::value(R_NegInf));
-  arma::mat v(l, m), gamma(l, m), lambda_star(l, m);
+  arma::mat v(l, m), g(l, m), lambda_star(l, m);
   arma::ivec PP1(l + 1);
   arma::vec MM1(l + 1);
   arma::vec WW1(l + 1);
@@ -264,11 +261,10 @@ List local_search1_C(arma::mat& theta, int l, int m, int n,
   double delta;
 
   // Compute Psi and delta
-  local_search1_ref(theta, Psi, v, gamma, lambda_star, par1, delta, par);
+  local_search1_ref(theta, Psi, v, g, lambda_star, par1, delta, par);
 
   // Return
-  return List::create(Named("Psi") = Psi,
-                      Named("delta") = delta);
+  return List::create(Named("Psi") = Psi, Named("delta") = delta);
 }
 
 //' Local search (column), C++ version
@@ -291,7 +287,7 @@ List local_search2_C(arma::mat& theta, int l, int m, int n,
                      arma::mat& w, arma::mat& w_ol) {
   // Declare variables
   arma::mat Psi(l, m, arma::fill::value(R_NegInf));
-  arma::mat v(l, m), gamma(l, m), lambda_star(l, m);
+  arma::mat v(l, m), g(l, m), lambda_star(l, m);
   arma::ivec PP2(m + 1);
   arma::vec MM2(m + 1);
   arma::vec WW2(m + 1);
@@ -307,9 +303,8 @@ List local_search2_C(arma::mat& theta, int l, int m, int n,
   double delta;
 
   // Compute Psi and delta
-  local_search2_ref(theta, Psi, v, gamma, lambda_star, par2, delta, par);
+  local_search2_ref(theta, Psi, v, g, lambda_star, par2, delta, par);
 
   // Return
-  return List::create(Named("Psi") = Psi,
-                      Named("delta") = delta);
+  return List::create(Named("Psi") = Psi, Named("delta") = delta);
 }
