@@ -8,13 +8,6 @@ NULL
 ## usethis namespace: end
 NULL
 
-#' TP2 fit function, R version
-#'
-#' @param par Model parameters
-#' @param delta0 Threshold
-#'
-#' @return h matrix and estimation time
-#' @export
 TP2_fit_R <- function(par, delta0 = 1e-8) {
   # Extract parameters
   l <- par$l
