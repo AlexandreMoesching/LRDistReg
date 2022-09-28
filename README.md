@@ -11,10 +11,10 @@ $(X_1, Y_1), \ldots , (X_n, Y_n) \in \mathbb{R}\times\mathbb{R}$ with
 unknown conditional distributions $Q_x$ of $Y$, given that $X = x$. The
 goal is to estimate these distributions under the sole assumption that
 $Q_x$ is isotonic in $x$ with respect to likelihood ratio order.
-Precisely, for $x_1<x_2$, we say that $Q_{x_1}$ is smaller $Q_{x_2}$ in
-likelihood ratio order if both distributions have respective densities
-$g_{x_1}$ and $g_{x_2}$ with respect to some dominating measure such
-that $g_{x_2}/g_{x_1}$ is isotonic on the set
+Precisely, for $x_1 < x_2$, we say that $Q_{x_1}$ is smaller $Q_{x_2}$
+in likelihood ratio order if both distributions have respective
+densities $g_{x_1}$ and $g_{x_2}$ with respect to some dominating
+measure such that $g_{x_2} / g_{x_1}$ is isotonic on the set
 $\{g_{x_1} + g_{x_2} > 0\}$.
 
 We follow an empirical likelihood approach to estimate the unknown
