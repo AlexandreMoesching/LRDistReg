@@ -48,7 +48,7 @@ $Q_x := \mathrm{Gamma}\bigl(a(x), b(x)\bigr)$ for all $x \in \mathfrak{X} := [1,
 
 ```{r true_family_of_distributions}
 rm(list = ls())
-set.seed(1)
+set.seed(1234)
 a <- function(x) 2 + (x+1)^2
 b <- function(x) 1 - exp(-10*x)
 r.cond.dist <- function(x) rgamma(1, shape = a(x), scale = b(x))
@@ -60,6 +60,7 @@ q.cond.dist <- function(x, alpha) qgamma(alpha, shape = a(x), scale = b(x))
 The following plot displays the true family of distributions. For each $(x,y)$ in a certain rectangle, the value of $(\mathrm{d}Q_x/\mathrm{d}y)(y)$ is given by the color scale.
 
 ```{r visual_output, echo = FALSE}
+par(mar = c(4.2, 4.2, 0.2, 0.2))
 xx <- seq(1, 4, length.out = 2e2)
 yy <- seq(q.cond.dist(1, 0.05), q.cond.dist(4, 0.95), length.out = 2e2)
 lattice::levelplot(outer(xx, yy, FUN = "d.cond.dist"), 
@@ -93,6 +94,7 @@ data <- gen_data(n, l0)
 We estimate the family of distributions using the function `dist_reg_R()` with default options.
 
 ```{r first_fit}
+par(mar = c(4.2, 4.2, 0.2, 0.2))
 res <- dist_reg_R(data$X, data$Y)
 plotD(res$par, indices = FALSE)
 ```
@@ -122,6 +124,7 @@ CDF_TRUE <- outer(x, y, p.cond.dist) # True CDFs
 The following plot displays the true CDF as well as its estimators for two values of $x$: One middle covariate ($x = 2.5$) and one boundary covariate ($x = 4$).
 
 ```{r plot_fit, echo = FALSE}
+par(mar = c(4.2, 4.2, 0.2, 0.2))
 plot(0, type = "n",
      xlab = expression(italic(y)), ylab = expression(italic(G[x](y))),
      xlim = range(y), ylim = c(0,1), lwd = 2)
@@ -162,7 +165,7 @@ y <- par$y
 
 beta.seq <- c(0.10, 0.25, 0.5, 0.75, 0.90); beta.n <- length(beta.seq)
 
-# Compute lower and upper quantile curves, and then a taut string
+# Compute lower and upper quantile curves, and then a taut string in between
 QLR <- matrix(0, nrow = l0, ncol = beta.n)
 for (s in seq_along(beta.seq)) {
   QL <- QU <- rep(0, l0)
@@ -176,7 +179,10 @@ for (s in seq_along(beta.seq)) {
     QLR[, s] <- taut.string(QL[, s], QU[, s], x)$Y
   }
 }
+```
 
+```{r plot_growth_quantiles, echo = FALSE}
+par(mar = c(4.2, 4.2, 0.2, 0.2))
 plot(data[ii,], pch = 16, cex = 0.3, xaxt = "n", log = "y",
      ylim = range(data$weight[ii]) * c(0.9, 1.1),
      xlab = "Age [years]", ylab = "Weight [kg]")

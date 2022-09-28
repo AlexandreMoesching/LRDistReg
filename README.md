@@ -69,7 +69,7 @@ $b: \mathfrak{X} \to (0,\infty)$.
 
 ``` r
 rm(list = ls())
-set.seed(1)
+set.seed(1234)
 a <- function(x) 2 + (x+1)^2
 b <- function(x) 1 - exp(-10*x)
 r.cond.dist <- function(x) rgamma(1, shape = a(x), scale = b(x))
@@ -110,6 +110,7 @@ We estimate the family of distributions using the function
 `dist_reg_R()` with default options.
 
 ``` r
+par(mar = c(4.2, 4.2, 0.2, 0.2))
 res <- dist_reg_R(data$X, data$Y)
 plotD(res$par, indices = FALSE)
 ```
@@ -185,7 +186,7 @@ y <- par$y
 
 beta.seq <- c(0.10, 0.25, 0.5, 0.75, 0.90); beta.n <- length(beta.seq)
 
-# Compute lower and upper quantile curves, and then a taut string
+# Compute lower and upper quantile curves, and then a taut string in between
 QLR <- matrix(0, nrow = l0, ncol = beta.n)
 for (s in seq_along(beta.seq)) {
   QL <- QU <- rep(0, l0)
@@ -199,14 +200,6 @@ for (s in seq_along(beta.seq)) {
     QLR[, s] <- taut.string(QL[, s], QU[, s], x)$Y
   }
 }
-
-plot(data[ii,], pch = 16, cex = 0.3, xaxt = "n", log = "y",
-     ylim = range(data$weight[ii]) * c(0.9, 1.1),
-     xlab = "Age [years]", ylab = "Weight [kg]")
-axis(1, at = 12 * 2:16, labels = 2:16)
-for (s in seq_along(beta.seq)) {
-  lines(x0, QLR[, s], lwd = 2.5)
-}
 ```
 
-<img src="man/figures/README-growth_data-1.png" width="80%" />
+<img src="man/figures/README-plot_growth_quantiles-1.png" width="80%" />
