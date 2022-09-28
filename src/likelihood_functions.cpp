@@ -111,7 +111,7 @@ List vg1_C(arma::mat theta, int l, int m, int n, arma::imat& mM, arma::mat& w_ul
   return List::create(Named("v") = v, Named("g") = g);
 }
 
-//' v-tilde and gamma-tilde functions (column), C++ version
+//' v-tilde and gamma-tilde functions (col), C++ version
 //'
 //' @param theta Log-parameter
 //' @param l Number of unique covariates

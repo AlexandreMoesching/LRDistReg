@@ -42,7 +42,7 @@ arma::mat lambda1_to_theta_C(arma::mat lambda, int l, int m, arma::imat& mM) {
   return theta;
 }
 
-//' Transforms lambda (column) into theta, C++ version
+//' Transforms lambda (col) into theta, C++ version
 //'
 //' @param lambda Column-wise differences
 //' @param l Number of unique covariates

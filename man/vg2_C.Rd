@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{vg2_C}
 \alias{vg2_C}
-\title{v-tilde and gamma-tilde functions (column), C++ version}
+\title{v-tilde and gamma-tilde functions (col), C++ version}
 \usage{
 vg2_C(theta, l, m, n, lL, w_ol)
 }
@@ -23,5 +23,5 @@ vg2_C(theta, l, m, n, lL, w_ol)
 v-tilde and gamma-tilde functions
 }
 \description{
-v-tilde and gamma-tilde functions (column), C++ version
+v-tilde and gamma-tilde functions (col), C++ version
 }

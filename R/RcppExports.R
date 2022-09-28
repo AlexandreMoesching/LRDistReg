@@ -53,7 +53,7 @@ vg1_C <- function(theta, l, m, n, mM, w_ul) {
     .Call(`_LRDistReg_vg1_C`, theta, l, m, n, mM, w_ul)
 }
 
-#' v-tilde and gamma-tilde functions (column), C++ version
+#' v-tilde and gamma-tilde functions (col), C++ version
 #'
 #' @param theta Log-parameter
 #' @param l Number of unique covariates
@@ -119,7 +119,7 @@ local_search1_C <- function(theta, l, m, n, lL, mM, w, w_ul) {
     .Call(`_LRDistReg_local_search1_C`, theta, l, m, n, lL, mM, w, w_ul)
 }
 
-#' Local search (column), C++ version
+#' Local search (col), C++ version
 #'
 #' @param theta Log-parameter
 #' @param l Number of unique covariates
@@ -181,7 +181,7 @@ lambda1_to_theta_C <- function(lambda, l, m, mM) {
     .Call(`_LRDistReg_lambda1_to_theta_C`, lambda, l, m, mM)
 }
 
-#' Transforms lambda (column) into theta, C++ version
+#' Transforms lambda (col) into theta, C++ version
 #'
 #' @param lambda Column-wise differences
 #' @param l Number of unique covariates

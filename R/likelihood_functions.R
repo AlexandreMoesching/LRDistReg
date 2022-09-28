@@ -21,7 +21,7 @@ vg1_R <- function(theta, l, m, n, mM, w_ul) {
   return(list(v = v, g = g))
 }
 
-#' v-tilde and gamma-tilde functions (column), R version
+#' v-tilde and gamma-tilde functions (col), R version
 #'
 #' @param theta Log-parameter
 #' @param l Number of unique covariates

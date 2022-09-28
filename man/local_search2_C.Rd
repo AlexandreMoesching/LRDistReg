@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{local_search2_C}
 \alias{local_search2_C}
-\title{Local search (column), C++ version}
+\title{Local search (col), C++ version}
 \usage{
 local_search2_C(theta, l, m, n, lL, mM, w, w_ol)
 }
@@ -27,5 +27,5 @@ local_search2_C(theta, l, m, n, lL, mM, w, w_ol)
 New proposal Psi and step-size delta
 }
 \description{
-Local search (column), C++ version
+Local search (col), C++ version
 }

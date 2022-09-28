@@ -57,7 +57,7 @@ local_search1_R <- function(theta, l, m, n, mM, lL, PP, w, w_ul) {
   return(list(Psi = Psi, delta = delta))
 }
 
-#' Local search (column), R version
+#' Local search (col), R version
 #'
 #' @param theta Log-parameter
 #' @param l Number of unique covariates

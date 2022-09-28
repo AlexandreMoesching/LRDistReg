@@ -2,7 +2,7 @@
 % Please edit documentation in R/likelihood_functions.R
 \name{vg2_R}
 \alias{vg2_R}
-\title{v-tilde and gamma-tilde functions (column), R version}
+\title{v-tilde and gamma-tilde functions (col), R version}
 \usage{
 vg2_R(theta, l, m, n, lL, w_ol)
 }
@@ -23,5 +23,5 @@ vg2_R(theta, l, m, n, lL, w_ol)
 v-tilde and gamma-tilde functions
 }
 \description{
-v-tilde and gamma-tilde functions (column), R version
+v-tilde and gamma-tilde functions (col), R version
 }

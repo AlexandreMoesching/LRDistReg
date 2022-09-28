@@ -2,7 +2,7 @@
 % Please edit documentation in R/local_search_functions.R
 \name{local_search2_R}
 \alias{local_search2_R}
-\title{Local search (column), R version}
+\title{Local search (col), R version}
 \usage{
 local_search2_R(theta, l, m, n, mM, lL, PP, w, w_ol)
 }
@@ -29,5 +29,5 @@ local_search2_R(theta, l, m, n, mM, lL, PP, w, w_ol)
 New proposal Psi and step-size delta
 }
 \description{
-Local search (column), R version
+Local search (col), R version
 }

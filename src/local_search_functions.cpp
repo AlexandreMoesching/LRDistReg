@@ -267,7 +267,7 @@ List local_search1_C(arma::mat theta, int l, int m, int n,
   return List::create(Named("Psi") = Psi, Named("delta") = delta);
 }
 
-//' Local search (column), C++ version
+//' Local search (col), C++ version
 //'
 //' @param theta Log-parameter
 //' @param l Number of unique covariates
